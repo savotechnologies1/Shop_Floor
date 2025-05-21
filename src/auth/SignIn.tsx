@@ -28,11 +28,10 @@ const SignIn = () => {
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
+      navigate("/");
       if (data.email === "user123@gmail.com" && data.password === "user123") {
         localStorage.setItem("loggedIn", "true");
-        navigate("/");
       } else {
         setError("Invalid email or password");
       }

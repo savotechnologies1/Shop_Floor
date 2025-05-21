@@ -52,7 +52,7 @@ const data_1 = [
   },
   {
     num: "15,000",
-    text: "Supplier Return",
+  text: "Supplier Return",
     img: img3,
     scrap: scrap_3,
     scrap_img: supplier_return,

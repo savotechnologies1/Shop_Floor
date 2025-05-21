@@ -348,7 +348,7 @@ const sections = [
         key: "Logout",
         label: "Logout",
         icon: logout,
-        path: "/logout",
+        path: "/sign-in",
       },
     ],
   },
