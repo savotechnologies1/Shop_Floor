@@ -89,7 +89,7 @@ const App = () => {
               localStorage.getItem("loggedIn") === "true" ? (
                 <Layout />
               ) : (
-                <Navigate to="/sign-in" />
+                <SignIn/>
               )
             }
           >
