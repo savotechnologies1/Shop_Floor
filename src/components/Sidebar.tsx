@@ -370,7 +370,7 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedIn"); // Clear the loggedIn flag from localStorage
+    // localStorage.removeItem("loggedIn"); // Clear the loggedIn flag from localStorage
     navigate("/sign-in"); // Redirect to the sign-in page
   };
 
@@ -418,11 +418,11 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
                         <Link
                           to={item.path || "#"}
                           onClick={() => {
-                            if (item.key === "Logout") {
-                              handleLogout();
-                            } else if (item.hasSubmenu) {
-                              toggleSubmenu(item.key);
-                            }
+                            handleLogout();
+                            // if (item.key === "Logout") {
+                            // } else if (item.hasSubmenu) {
+                            //   toggleSubmenu(item.key);
+                            // }
                           }}
                           className={`flex items-center justify-between w-full p-2 
                 rounded-md transition text-[#061D22] text-[16px]  ${
