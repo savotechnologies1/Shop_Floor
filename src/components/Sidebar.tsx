@@ -124,18 +124,15 @@ const sections = [
           {
             key: "SupplierInformationList",
             label: "Supplier Information List",
+              path: "/all-supplier",
             hasSubmenu: true,
             submenu: [
+             
               {
                 key: "newSupplier",
                 label: "Enter new supplier",
                 path: "/new-supplier",
-              },
-              {
-                key: "editSupplier",
-                label: "Edit supplier",
-                path: "/edit-supplier",
-              },
+              }
             ],
           },
           {
@@ -419,10 +416,10 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
                           to={item.path || "#"}
                           onClick={() => {
                             handleLogout();
-                            // if (item.key === "Logout") {
-                            // } else if (item.hasSubmenu) {
-                            //   toggleSubmenu(item.key);
-                            // }
+                            if (item.key === "Logout") {
+                            } else if (item.hasSubmenu) {
+                              toggleSubmenu(item.key);
+                            }
                           }}
                           className={`flex items-center justify-between w-full p-2 
                 rounded-md transition text-[#061D22] text-[16px]  ${

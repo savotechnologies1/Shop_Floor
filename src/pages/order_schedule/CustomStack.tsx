@@ -28,10 +28,8 @@ const CustomStack: FC<custom> = ({max=6, text, text1, text2, img, img_1}) => {
     <div className="flex flex-col py-4 gap-4 ">
       {/* <Link to="/custom-details"> */}{" "}
       <div
-        className="p-4 bg-white   shadow-m  flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6
-      "
+        className="p-4 bg-white   shadow-m  flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6"
       >
-        {" "}
         <div className="flex flex-col sm:flex-row gap-2  items-center w-full md:w-auto sm:gap-4  ">
           <div>
             <img

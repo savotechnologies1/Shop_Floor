@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import signin from "../assets/signin.png";
 import { useState } from "react";
 import fb from "../assets/facebook_ic.png";
 import google from "../assets/google_ic.png";
 import apple from "../assets/apple_ic.png";
+import { signUpApi } from "./https/authApis";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,8 +19,19 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: unknown) => {
+  const navigate = useNavigate()
+  const onSubmit =async (data: unknown) => {
     console.log("Submitted data:", data);
+     try {
+      const response = await signUpApi(data);
+      console.log("responseresponse", response);
+      if (response.status === 201) {
+        console.log("login page redirect");
+        navigate("/sign-in", { replace: true });
+      }
+    } catch (error: unknown) {
+      toast.error(error.response.message);
+    }
   };
 
   const password = watch("password");

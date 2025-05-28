@@ -1,6 +1,7 @@
 import { FaCircle } from "react-icons/fa";
 import {  NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { addSupplier } from "./https/suppliersApi";
 
 const AddSuppliers = () => {
   const {
@@ -9,8 +10,14 @@ const AddSuppliers = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data :any) => {
+  const onSubmit = (data :object) => {
     console.log("✅ Supplier Form Data:", data);
+     // eslint-disable-next-line no-useless-catch
+    try {
+      addSupplier(data).then();
+    } catch (error: unknown) {
+      throw error;
+    }
   };
   return (
     <div className="p-7">

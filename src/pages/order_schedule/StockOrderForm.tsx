@@ -1,6 +1,6 @@
-import  { useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
+import { addStockOrder } from "./https/schedulingApis";
 
 const options = [
   { value: "cortez-herring", label: "Cortez Herring" },
@@ -48,22 +48,28 @@ const StockOrderForm = () => {
   //   assignTo: "Cortez Herring",
   // });
 
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      setFile(files[0]);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   if (files && files.length > 0) {
+  //     setFile(files[0]);
+  //   }
+  // };
 
   const {
     register,
     handleSubmit,
   } = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: object) => {
     console.log("Form Data:", data);
+     // eslint-disable-next-line no-useless-catch
+     try {
+      addStockOrder(data).then();
+    } catch (error: unknown) {
+      throw error;
+    }
   };
 
   return (
@@ -85,7 +91,7 @@ const StockOrderForm = () => {
           <div>
             <label className="font-semibold">Order Date</label>
             <input
-              {...register("OrderDate", { required: "Order Date is required" })}
+              {...register("orderDate", { required: "Order Date is required" })}
               type="date"
               placeholder=""
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
@@ -94,7 +100,7 @@ const StockOrderForm = () => {
           <div>
             <label className="font-semibold">Ship Date </label>
             <input
-              {...register("ShipDate", { required: "Ship Date  is required" })}
+              {...register("shipDate", { required: "Ship Date  is required" })}
               type="date"
               placeholder=""
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
@@ -124,16 +130,16 @@ const StockOrderForm = () => {
           <div>
             <label className="font-semibold">Customer Name</label>
             <input
-              {...register("Name")}
+              {...register("customerName")}
               type="text"
-              placeholder="Enter Customer Name "
+              placeholder="Enter Customer customerName "
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
             />
           </div>
           <div className="col-span-">
             <label className="font-semibold">Customer Email</label>
             <input
-              {...register("email")}
+              {...register("customerEmail")}
               type="email"
               placeholder="Enter Customer Email"
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
@@ -142,7 +148,7 @@ const StockOrderForm = () => {
           <div className="col-span-">
             <label className="font-semibold">Customer Phone</label>
             <input
-              {...register("mobile")}
+              {...register("customerPhoneNum")}
               type="number"
               placeholder="Enter Customer Phone  "
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
@@ -164,9 +170,9 @@ const StockOrderForm = () => {
           <div>
             <label className="font-semibold">Cost</label>
             <input
-              {...register("Cost")}
+              {...register("cost")}
               type="number"
-              placeholder="Enter Cost"
+              placeholder="Enter cost"
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
             />
           </div>
@@ -174,7 +180,7 @@ const StockOrderForm = () => {
           <div>
             <label className="font-semibold">Product Quantity</label>
             <input
-              {...register("ProductQuantity", {})}
+              {...register("productQuantity", {})}
               type="number"
               placeholder="Enter Quantity"
               className="border py-3 px-4 rounded-md w-full  text-gray-600"
@@ -185,14 +191,14 @@ const StockOrderForm = () => {
           <div className="col-span-2">
             <label className="font-semibold">Product Description</label>
             <input
-              {...register("ProductDescription")}
+              {...register("productDesc")}
               type="text"
               placeholder="Meta Description"
               className="border py-6 px-4 rounded-md w-full  placeholder-gray-600"
             />
           </div>
 
-          <div>
+          {/* <div>
           <label className="font-semibold">Product Drawing</label>
             
             <label className="font-semibold border py-3 px-4  rounded-md w-full  text-gray-600 block">
@@ -210,7 +216,7 @@ const StockOrderForm = () => {
                 <span className="text-sm">CHOOSE FILE</span>
               )}
             </label>
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-white px-6 ">
@@ -240,7 +246,7 @@ const StockOrderForm = () => {
               <label className="font-semibold">Part Desc</label>
 
               <input
-                {...register("PartDesc")}
+                {...register("partDesc")}
                 type="text"
                 placeholder="Enter part desc"
                 className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
@@ -250,7 +256,7 @@ const StockOrderForm = () => {
             <div>
               <label className="font-semibold">Part Quantity</label>
               <input
-                {...register("PartQuantity")}
+                {...register("partQuantity")}
                 type="text"
                 placeholder="Enter part Quantity"
                 className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
@@ -258,11 +264,11 @@ const StockOrderForm = () => {
             </div>
 
             <div>
-              <label className="font-semibold">Part Cost</label>
+              <label className="font-semibold">Part cost</label>
               <input
-                {...register("PartCost")}
+                {...register("partCost")}
                 type="text"
-                placeholder="Enter part Cost"
+                placeholder="Enter part cost"
                 className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
               />
             </div>
@@ -273,7 +279,7 @@ const StockOrderForm = () => {
             <div>
               <label className="font-semibold">Time</label>
               <input
-                {...register("Time")}
+                {...register("totalTime")}
                 type="date"
                 placeholder="09:33 AM"
                 className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"

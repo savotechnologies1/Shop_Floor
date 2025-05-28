@@ -164,3 +164,6 @@ const LaborForecastList = () => {
 };
 
 export default LaborForecastList;
+
+
+

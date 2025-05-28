@@ -5,13 +5,17 @@ import signin from "../assets/signin.png";
 import password from "../assets/password_icon'.png";
 import visible from "../assets/visible_icon.png";
 import { useState } from "react";
+import { loginApi } from "./https/authApis";
+import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const { login } = useAuth();
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -23,22 +27,18 @@ const SignIn = () => {
   } = useForm<{ email: string; password: string }>();
 
   const onSubmit = async (data: { email: string; password: string }) => {
-    setIsLoading(true);
+    setIsLoading(false);
     setError("");
-
     try {
-      // Simulate API call
-
-      navigate("/");
-      if (data.email === "user123@gmail.com" && data.password === "user123") {
-        localStorage.setItem("loggedIn", "true");
-      } else {
-        setError("Invalid email or password");
+      const response = await loginApi(data);
+      console.log("responseresponse", response);
+      if (response.status === 200) {
+        console.log("login page redirect");
+        login(response.data.token);
+        navigate("/", { replace: true });
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
+    } catch (error: unknown) {
+      toast.error(error.response.message);
     }
   };
 

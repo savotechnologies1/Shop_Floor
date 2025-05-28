@@ -67,11 +67,9 @@ const Navbar = () => {
           <div className="flex flex-col i gap-2 bg-white py-2">
             <div className="flex gap-2 hover:bg-[#919EAB29] items-center cursor-pointer px-6">
               <div>
-                {" "}
                 <img src={flag1} alt="" />
               </div>
               <div>
-                {" "}
                 <p>English</p>
               </div>
             </div>
@@ -85,10 +83,8 @@ const Navbar = () => {
             </div>
             <div className="flex gap-2 hover:bg-[#919EAB29] items-center justi cursor-pointer px-6">
               <div>
-                {" "}
                 <img src={flag3} alt="" />
               </div>
-
               <div>
                 <p> German</p>
               </div>
