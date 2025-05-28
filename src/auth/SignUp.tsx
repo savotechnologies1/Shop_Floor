@@ -61,7 +61,7 @@ const SignUp = () => {
 
         <div className="w-full max-w-md px-6 lg:px-8 mt-16 lg:mt-0">
           <h2 className="text-2xl lg:text-3xl font-bold text-center mb-6">
-            Create an account
+            Create an accounts
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
