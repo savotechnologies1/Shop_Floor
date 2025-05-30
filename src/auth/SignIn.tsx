@@ -5,17 +5,13 @@ import signin from "../assets/signin.png";
 import password from "../assets/password_icon'.png";
 import visible from "../assets/visible_icon.png";
 import { useState } from "react";
-import { loginApi } from "./https/authApis";
-import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext";
 // import { useAuth } from "../context/AuthContext";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -26,7 +22,7 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<{ email: string; password: string }>();
 
-  const onSubmit = async (data: { email: string; password: string }) => {
+  const onSubmit = async () => {
     navigate("/", { replace: true });
     setIsLoading(false);
     // setError("");

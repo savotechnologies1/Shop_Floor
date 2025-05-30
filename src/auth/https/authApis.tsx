@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
+import { AxiosError } from "axios";
 
 
 export const signUpApi = async (userData: object) => {
@@ -12,8 +13,13 @@ export const signUpApi = async (userData: object) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error) {
-    toast.error(error.response.data.message);
+  }catch (error: unknown) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response.data.message);
+    } else {
+      toast.error("Something went wrong");
+    }
   }
 };
 
@@ -24,8 +30,13 @@ export const loginApi = async (userData: object) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error) {
-    toast.error(error.response.data.message);
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response.data.message);
+    } else {
+      toast.error("Something went wrong");
+    }
   }
 };
 

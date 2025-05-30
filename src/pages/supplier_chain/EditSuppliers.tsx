@@ -10,31 +10,45 @@ import {
 import { useEffect } from "react";
 
 const EditSuppliers = () => {
+interface SupplierFormData {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  address?: string;
+  billingTerms?: string;
+  // add more fields if needed
+}
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<SupplierFormData>();
 
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const onSubmit = async (data: any) => {
+
+  // Step 2: Strongly type the onSubmit function
+ const onSubmit = async (data: object) => {
     console.log("✅ Updated Supplier Data:", data);
     // eslint-disable-next-line no-useless-catch
     try {
-      const response = await editSupplier(data, id).then();
-      if (response.status === 201) {
-        navigate("/all-supplier");
-      }
+      const response = await editSupplier(data, id!).then();
+       navigate("/all-supplier");
+       console.log(response)
+      // if (response.status === 201) {
+      //   navigate("/all-supplier");
+      // }
     } catch (error: unknown) {
       throw error;
     }
   };
 
+
   const fetchProcessDetail = async () => {
     try {
-      const response = await supplierDetail(id);
+      const response = await supplierDetail(id!);
       const data = response.data;
       reset({
         firstName: data.firstName,
@@ -43,7 +57,7 @@ const EditSuppliers = () => {
         address: data.address,
         billingTerms: data.billingTerms,
       });
-    } catch (error) {}
+    } catch (error) {console.log(error)}
   };
 
   useEffect(() => {
@@ -54,11 +68,13 @@ const EditSuppliers = () => {
     console.log("Updated2332323");
     // eslint-disable-next-line no-useless-catch
     try {
-      const response = await deleteSupplier(id);
+      const response = await deleteSupplier(id!);
       console.log("response", response);
-      if (response.status === 200) {
         navigate("/all-supplier");
-      }
+      // if (response.status === 200) {
+      //   navigate("/all-supplier");
+      // }
+      
     } catch (error: unknown) {
       throw error;
     }
@@ -94,7 +110,7 @@ const EditSuppliers = () => {
           </span>
         </div>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mt-4 bg-white p-6 w-full rounded-2xl md:w-2/3">
           {/* Name */}
           <label className="font-semibold">Supplier's Name</label>
@@ -211,5 +227,4 @@ const EditSuppliers = () => {
     </div>
   );
 };
-
-export default EditSuppliers;
+export default EditSuppliers

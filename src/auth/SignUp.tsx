@@ -6,8 +6,8 @@ import { useState } from "react";
 import fb from "../assets/facebook_ic.png";
 import google from "../assets/google_ic.png";
 import apple from "../assets/apple_ic.png";
-import { signUpApi } from "./https/authApis";
-import { toast } from "react-toastify";
+// import { signUpApi } from "./https/authApis";
+// import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,18 +19,20 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate()
-  const onSubmit =async (data: unknown) => {
+  const navigate = useNavigate();
+  const onSubmit = async (data: unknown) => {
     console.log("Submitted data:", data);
-     try {
-      const response = await signUpApi(data);
-      console.log("responseresponse", response);
-      if (response.status === 201) {
-        console.log("login page redirect");
-        navigate("/sign-in", { replace: true });
-      }
+    try {
+      navigate("/sign-in", { replace: true });
+      // const response = await signUpApi(data);
+      // console.log("responseresponse", response);
+      // if (response.status === 201) {
+      //   console.log("login page redirect");
+      //   navigate("/sign-in", { replace: true });
+      // }
     } catch (error: unknown) {
-      toast.error(error.response.message);
+      console.log(error);
+      // toast.error(error.response.message);
     }
   };
 
@@ -145,7 +147,9 @@ const SignUp = () => {
                   })}
                   placeholder="••••••••"
                   className={`w-full p-3 rounded-lg border ${
-                    errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-gray-300"
                   } focus:outline-none focus:ring-2 focus:ring-[#052C89]`}
                 />
                 <button

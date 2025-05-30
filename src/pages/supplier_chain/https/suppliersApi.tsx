@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/axiosInstance";
+import { AxiosError } from "axios";
 
 export const addSupplier = async (apiData:object) => {
   // eslint-disable-next-line no-useless-catch
@@ -9,9 +10,13 @@ export const addSupplier = async (apiData:object) => {
       toast.success(response.data.message);
     }
     return response.data;
-  } catch (error) {
-     toast.error(error.response.data.message);
-
+  }  catch (error: unknown) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response.data.message);
+    } else {
+      toast.error("Something went wrong");
+    }
   }
 };
 
@@ -60,9 +65,14 @@ export const editSupplier = async (data: object, id: string) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: unknown) {
-    toast.error(error.response.data.message);
-  }
+  }  catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      if (axiosError.response?.data?.message) {
+        toast.error(axiosError.response.data.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
 };
 
 
@@ -75,7 +85,12 @@ export const deleteSupplier = async (id: string) => {
     }
     return response;
   } catch (error: unknown) {
-    toast.error(error.response.data.message);
+    const axiosError = error as AxiosError<{ message: string }>;
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response.data.message);
+    } else {
+      toast.error("Something went wrong");
+    }
   }
 };
 
