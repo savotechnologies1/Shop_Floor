@@ -27,7 +27,7 @@ const SignIn = () => {
   } = useForm<{ email: string; password: string }>();
 
   const onSubmit = async (data: { email: string; password: string }) => {
-      navigate("/", { replace: true });
+    navigate("/", { replace: true });
     setIsLoading(false);
     setError("");
     try {
@@ -151,7 +151,10 @@ const SignIn = () => {
             </div>
 
             {/* Forgot Password Link */}
-            <div className="text-right">
+            <div className="flex justify-between">
+              <Link to="/" className="text-sm text-[#F2451C] hover:underline">
+                Go to Dashboard
+              </Link>
               <Link
                 to="/forget-password"
                 className="text-sm text-[#F2451C] hover:underline"
