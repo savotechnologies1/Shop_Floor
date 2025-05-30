@@ -29,7 +29,7 @@ const SignIn = () => {
   const onSubmit = async (data: { email: string; password: string }) => {
     navigate("/", { replace: true });
     setIsLoading(false);
-    setError("");
+    // setError("");
     // try {
     //   const response = await loginApi(data);
     //   console.log("responseresponse", response);
