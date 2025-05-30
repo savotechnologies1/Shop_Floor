@@ -88,7 +88,8 @@ const App = () => {
 
           {/* Routes with the layout */}
 
-          <Route path="/" element={token  ? <Layout /> : <SignIn />}>
+          {/* <Route path="/" element={token  ? <Layout /> : <SignIn />}> */}
+          <Route path="/" element={<Layout />}>
             <Route index element={<DashboardDetails />} />
             <Route path="dashboardDetailes" element={<DashboardDetails />} />
             <Route path="new-supplier" element={<AddSuppliers />} />

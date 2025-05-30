@@ -27,6 +27,7 @@ const SignIn = () => {
   } = useForm<{ email: string; password: string }>();
 
   const onSubmit = async (data: { email: string; password: string }) => {
+      navigate("/", { replace: true });
     setIsLoading(false);
     setError("");
     try {
