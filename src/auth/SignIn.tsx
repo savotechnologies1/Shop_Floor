@@ -30,17 +30,17 @@ const SignIn = () => {
     navigate("/", { replace: true });
     setIsLoading(false);
     setError("");
-    try {
-      const response = await loginApi(data);
-      console.log("responseresponse", response);
-      if (response.status === 200) {
-        console.log("login page redirect");
-        login(response.data.token);
-        navigate("/", { replace: true });
-      }
-    } catch (error: unknown) {
-      toast.error(error.response.message);
-    }
+    // try {
+    //   const response = await loginApi(data);
+    //   console.log("responseresponse", response);
+    //   if (response.status === 200) {
+    //     console.log("login page redirect");
+    //     login(response.data.token);
+    //     navigate("/", { replace: true });
+    //   }
+    // } catch (error: unknown) {
+    //   toast.error(error.response.message);
+    // }
   };
 
   return (
