@@ -5,7 +5,9 @@ import signin from "../assets/signin.png";
 import password from "../assets/password_icon'.png";
 import visible from "../assets/visible_icon.png";
 import { useState } from "react";
-// import { useAuth } from "../context/AuthContext";
+import { loginApi } from "./https/authApis";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,21 +24,23 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<{ email: string; password: string }>();
 
-  const onSubmit = async () => {
+  const login = useAuth()
+  const onSubmit = async (data) => {
     navigate("/", { replace: true });
     setIsLoading(false);
     // setError("");
-    // try {
-    //   const response = await loginApi(data);
-    //   console.log("responseresponse", response);
-    //   if (response.status === 200) {
-    //     console.log("login page redirect");
-    //     login(response.data.token);
-    //     navigate("/", { replace: true });
-    //   }
-    // } catch (error: unknown) {
-    //   toast.error(error.response.message);
-    // }
+    console.log('kklj',data)
+    try {
+      const response = await loginApi(data);
+      console.log("responseresponse", response);
+      if (response.status === 200) {
+        console.log("login page redirect");
+        login(response.data.token);
+        navigate("/", { replace: true });
+      }
+    } catch (error: unknown) {
+      toast.error(error.response.message);
+    }
   };
 
   return (
