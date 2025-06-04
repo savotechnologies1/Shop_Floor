@@ -5,22 +5,20 @@ import { NavLink } from "react-router-dom";
 
 const Settings = () => {
   const [photo, setPhoto] = useState<string | null>(null);
+const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    setPhoto(URL.createObjectURL(file));
+  }
+};
 
-  const handlePhotoChange = (e:any) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(URL.createObjectURL(file));
-    }
-  };
   const form1 = useForm(); // For Account form
-  const form2 = useForm(); // For Language/Currency form
+  // For Language/Currency form
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     console.log(data);
   };
-  const onSubmit1 = (data: any) => {
-    console.log(data);
-  };
+ 
 
   return (
     <div className="p-8  min-h-screen">

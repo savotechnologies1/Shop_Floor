@@ -32,7 +32,7 @@ const Training = () => {
   const navigate = useNavigate();
 
   const [completedSteps, setCompletedSteps] = useState(new Set());
-  const handleStepClick = (stepIndex) => {
+  const handleStepClick = (stepIndex: unknown) => {
     setCompletedSteps((prev) => new Set(prev).add(stepIndex));
   };
   // Check if all steps are completed

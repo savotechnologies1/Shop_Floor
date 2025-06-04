@@ -61,20 +61,22 @@ const CustomOrderForm = () => {
   };
   const orderNumber = 1001;
   const cost = 3466;
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (event: any) => {
-    if (event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    }
-  };
+  // const handleFileChange = (event: any) => {
+  //   if (event.target.files.length > 0) {
+  //     setFile(event.target.files[0]);
+  //   }
+  // };
 
   const { register, handleSubmit, setValue } = useForm<FormData>();
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     setValue("orderNumber", orderNumber), [orderNumber, setValue];
   });
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     setValue("Cost", cost), [cost, setValue];
   });
 

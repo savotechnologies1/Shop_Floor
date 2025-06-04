@@ -84,7 +84,6 @@ const ItemSelected = () => {
           </h1>
           <div className="space-y-4">
             {availableItems.map((item) => {
-              const alreadyAdded = selectedItems.some((i) => i.id === item.id);
               return (
                 <div
                   key={item.id}

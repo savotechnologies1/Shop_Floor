@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import OrderStack from "./OrderStack";
-import img from "../../assets/secondary action.png";
-import bag from "../../assets/bag.png";
 import ItemSelected from "./ItemSelected";
 
 const StockOrderScheduleForm = () => {
@@ -40,10 +37,9 @@ const StockOrderScheduleForm = () => {
 
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     console.log("Form Data:", data);
   };
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
     <>
