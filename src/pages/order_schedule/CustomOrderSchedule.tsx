@@ -47,35 +47,40 @@ const CustomOrderSchedule = () => {
         <CustomStack
           text="Aliquam a dui vel justo fringilla euismod id id enim."
           text1="Pass GMT800 Single"
-          text2="Thermoforming2"
+          process1="Thermoforming1"
+          process2="Thermoforming2"
           img={img}
           img_1={img_1}
         />
         <CustomStack
           text="Aliquam a dui vel justo fringilla euismod id id enim."
           text1="Pass GMT800 Single"
-          text2="Thermoforming2"
+      process1="Thermoforming1"
+          process2="Thermoforming2"
           img={img}
           img_1={img_1}
         />
         <CustomStack
           text="Aliquam a dui vel justo fringilla euismod id id enim."
           text1="Pass GMT800 Single"
-          text2="Thermoforming2"
+       process1="Thermoforming1"
+          process2="Thermoforming2"
           img={img}
           img_1={img_1}
         />
         <CustomStack
           text="Aliquam a dui vel justo fringilla euismod id id enim."
           text1="Pass GMT800 Single"
-          text2="Thermoforming2"
+         process1="Thermoforming1"
+          process2="Thermoforming2"
           img={img}
           img_1={img_1}
         />
         <CustomStack
           text="Aliquam a dui vel justo fringilla euismod id id enim."
           text1="Pass GMT800 Single"
-          text2="Thermoforming2"
+          process1="Thermoforming1"
+          process2="Thermoforming2"
           img={img}
           img_1={img_1}
         />

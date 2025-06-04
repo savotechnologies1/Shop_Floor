@@ -16,7 +16,7 @@ const ClockInOut = () => {
       </div>
 
       <div className="flex flex-col xl:flex-row p-6 justify-between gap-10">
-        <div className="w-full sm:w-[80%] md:w-[100%] lg:w-[50%] xl:w-[30%] bg-white shadow-lg rounded-2xl py-6 sm:py-10 px-4 sm:px-6 text-center">
+        <div className="w-full sm:w-[80%] md:w-[100%] lg:w-[50%] xl:w-[40%] bg-white shadow-lg rounded-2xl py-6 sm:py-10 px-4 sm:px-6 text-center">
           {/* Profile Image */}
           <div className="flex justify-center">
             <img
@@ -38,34 +38,34 @@ const ClockInOut = () => {
           </div>
 
           {/* Details */}
-          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-4 sm:gap-x-8 ">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-4 sm:gap-x-4 ">
             <div className="col-span-2 sm:col-span-1">
               <p className="text-xs text-gray-500">Joined</p>
-              <p className="text-sm sm:text-base font-semibold mt-1">
+              <p className="text-sm  font-semibold mt-1">
                 22 Feb 2024
               </p>
             </div>
             <div>
               <p className="text-xs text-gray-500">Contact No.</p>
-              <p className="text-sm sm:text-base font-semibold mt-1">
+              <p className="text-sm  font-semibold mt-1">
                 7585263152
               </p>
             </div>
             <div className="col-span-2 sm:col-span-1">
               <p className="text-xs text-gray-500">Email</p>
-              <p className="text-sm sm:text-base font-semibold mt-1 truncate">
+              <p className="text-sm  font-semibold mt-1 truncate">
                 admin@gmail.com
               </p>
             </div>
             <div className="col-span-2 sm:col-span-1">
               <p className="text-xs text-gray-500">Contact No.</p>
-              <p className="text-sm sm:text-base font-semibold mt-1">
+              <p className="text-sm  font-semibold mt-1">
                 7585263152
               </p>
             </div>
           </div>
         </div>
-        <div className="w-full xl:w-[70%] ">
+        <div className="w-full xl:w-[60%] ">
           {" "}
           <QuickPunch />
         </div>

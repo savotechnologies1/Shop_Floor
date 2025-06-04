@@ -4,14 +4,17 @@ interface custom {
   max?: number;
   text: string;
   text1: string;
-  text2: string;
+  process1: string;
+  process2: string;
   img: string;
   img_1: string;
   qty?: string;
   del_date?: string;
 }
-const CustomStack: FC<custom> = ({max=6, text, text1, text2, img, img_1}) => {
+const CustomStack: FC<custom> = ({max=6, text, text1, process1, process2, img, img_1}) => {
   const [count, setCount] = useState(3);
+  const [selectedProcess, setSelectedProcess] = useState(process1);
+   const processOptions = [process1 , process2];
 
   const increment = () => {
     if (count < max) {
@@ -45,9 +48,17 @@ const CustomStack: FC<custom> = ({max=6, text, text1, text2, img, img_1}) => {
                 {text1}
               </p>
               <span className="text-gray-300">|</span>
-              <p className="text-xs sm:text-base text-[#1C252E]">
-                {text2}
-              </p>
+               <select
+                className="text-xs sm:text-base text-[#1C252E] border border-gray-300 rounded px-2 py-1"
+                value={selectedProcess}
+                onChange={(e) => setSelectedProcess(e.target.value)}
+              >
+                {processOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

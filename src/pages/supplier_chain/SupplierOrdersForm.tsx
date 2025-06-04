@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  {useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import del_img from "../../assets/delete_1.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,6 +6,8 @@ import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 const SupplierOrdersForm = () => {
   const [showFields, setShowFields] = useState(false);
+  const [orderNumber] = useState(1002); // Replace with your logic
+
 
   const handleClick = () => {
     setShowFields(true); // Show fields when clicking the Add button
@@ -33,16 +35,21 @@ const SupplierOrdersForm = () => {
   //   process: "Cortez Herring",
   //   assignTo: "Cortez Herring",
   // });
+  
 
   const {
     register,
     handleSubmit,
+     setValue,
   } = useForm();
 
   const onSubmit = (data :object) => {
     console.log("Form Data:", data);
   };
 
+  useEffect(() => {
+  setValue("orderNumber", orderNumber);
+}, [orderNumber, setValue]);
   return (
     <div className="p-4 bg-white rounded-2xl border shadow-md">
       <form onSubmit={handleSubmit(onSubmit)} className="">
@@ -55,6 +62,7 @@ const SupplierOrdersForm = () => {
                 required: "Order Number required",
               })}
               type="number"
+              readOnly
               placeholder="Enter Order Number"
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
             />

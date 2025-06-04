@@ -63,13 +63,13 @@ const TimeClockList = () => {
             <div className="p-2 md:p-4">
               <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4 p-2 md:p-4">
                 {/* Dropdown for Role */}
-                <div className="flex flex-col w-full sm:w-auto">
+                <div className="flex flex-col w-full sm:w-auto border  rounded-md p-1">
                   <label htmlFor="role" className="text-xs md:text-sm font-medium text-gray-500">
                     Role
                   </label>
                   <select
                     id="role"
-                    className="mt-1 block w-full sm:w-40 md:w-52 rounded-md border-gray-300 text-xs md:text-sm"
+                    className="mt-1 block w-full sm:w-40 md:w-52 rounded-md border-gray-300 text-xs md:text-sm outline-none"
                     defaultValue="Project Coordinator"
                   >
                     <option>Newly added</option>

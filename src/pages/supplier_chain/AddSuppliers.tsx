@@ -24,7 +24,7 @@ const AddSuppliers = () => {
       <div>
         {" "}
         <h1 className="font-bold text-[20px] md:text-[24px] text-black">
-          Create a new Supplier
+          Add new Supplier
         </h1>
       </div>
       <div className="flex justify-between mt-2 items-center">

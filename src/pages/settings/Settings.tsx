@@ -217,13 +217,13 @@ const Settings = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 mt-6">
+        {/* <div className="grid grid-cols-1 mt-6">
           <div className=" bg-white p-6 rounded-lg shadow-md">
             <form
               onSubmit={form2.handleSubmit(onSubmit1)}
             
             className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {/* Language */}
+             
               <div className="col-span-4 md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   LANGUAGE
@@ -238,7 +238,7 @@ const Settings = () => {
                 </select>
               </div>
 
-              {/* Currency */}
+        
               <div className= "col-span-4 md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   CURRENCY
@@ -254,7 +254,7 @@ const Settings = () => {
                 </select>
               </div>
 
-              {/* Notifications */}
+          
               <div className="col-span-4 md:col-span-2">
                 <div className="flex flex-col">
                   <input
@@ -267,7 +267,7 @@ const Settings = () => {
                 </div>
               </div>
 
-              {/* Terms and Conditions */}
+            
               <div className="col-span-4 md:col-span-1">
                 <input
                   type="text"
@@ -278,7 +278,7 @@ const Settings = () => {
                 />
               </div>
 
-              {/* Change Password */}
+             
               <div className="col-span-4 md:col-span-1">
                 <NavLink to="/forget-password">
                   <button
@@ -290,7 +290,6 @@ const Settings = () => {
                 </NavLink>
               </div>
 
-              {/* Auto Approval */}
               <div className="col-span-4">
                 <div className="flex items-center">
                   <input
@@ -306,7 +305,6 @@ const Settings = () => {
                 </div>
               </div>
 
-              {/* Delete Account */}
               <div className=" col-span-4 md:col-span-2">
                 <button
                   type="button"
@@ -316,7 +314,6 @@ const Settings = () => {
                 </button>
               </div>
 
-              {/* Save Settings Button */}
               <div className=" flex md:justify-end col-span-4 md:col-span-2">
                 <button
                 onClick={form2.handleSubmit(onSubmit1)}
@@ -328,7 +325,7 @@ const Settings = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

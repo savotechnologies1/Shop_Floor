@@ -33,37 +33,38 @@ const RunSchedule = () => {
   return (
     <div className="bg-[#F5F6FA] min-h-screen flex flex-col">
       {/* Header Section */}
-      <div className="bg-[#243C75] relative">
+      <div className="bg-[#243C75] relative ">
         <div className="container mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="relative w-full md:w-auto">
+          <div className="relative w-full md:w-auto">
             <img className="w-24 md:w-40" src={belt} alt="Belt icon" />
             {/* Text centered above image on all screens */}
-            <div className="text-white text-lg  font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center whitespace-nowrap">
-              tdriver GMT800 single
+            <div className="text-white text-lg  font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full  whitespace-nowrap flex justify-between">
+              <div className="gap-2 flex flex-col">
+                <p className="text-2xl 2xl:text-4xl"> tdriver GMT800 single</p>
+                <p className="md:text-xl "> 1001</p>
+                <p className="md:text-xl "> 1002</p>
+              </div>
             </div>
           </div>
-          <div className="text-white flex gap-4 md:gap-10 flex-wrap justify-center">
-            <div className="flex flex-col items-center gap-1 md:gap-2">
-              <p className="font-semibold text-sm md:text-base">Date</p>
-              <p className="text-xs md:text-sm">january 17, 2025</p>
+          <div className="text-white flex gap-4 md:gap-20 flex-wrap justify-center">
+            <div>
+              <p className="md:text-xl "> january 13 ,2025</p>
+            </div>
+            <div>
+              <p className="md:text-2xl "> Devon Lane</p>
             </div>
 
-            <div className="flex flex-col items-center gap-1 md:gap-2">
-              <p className="font-semibold text-sm md:text-base">Part Desc</p>
-              <p className="text-xs md:text-sm">20</p>
-            </div>
-
-            <div className="flex flex-col items-center gap-1 md:gap-2">
-              <p className="font-semibold text-sm md:text-base">Step No.</p>
-              <p className="text-xs md:text-sm">1</p>
+            <div className="flex flex-col  gap-1 md:gap-2">
+              <p className="text-sm md:text-base">Date: january 17, 2025</p>
+              <p className=" text-sm md:text-base">Qty: 20</p>
             </div>
           </div>
         </div>
 
         {/* Logout Button */}
         <div className="flex items-center gap-2 text-white bg-[#17274C] w-full justify-end p-2">
-          <button 
-            onClick={handleLogout} 
+          <button
+            onClick={handleLogout}
             className="text-xs md:text-sm font-semibold flex items-center gap-1"
           >
             Log out
@@ -96,15 +97,15 @@ const RunSchedule = () => {
         {/* Steps Section */}
         <div className="py-4 flex flex-col gap-4">
           {data.map((item, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="flex flex-col md:flex-row gap-4 md:gap-20 items-center bg-white rounded-lg shadow-sm p-4"
             >
               <div className="w-full md:w-auto">
-                <img 
-                  className="rounded-md w-full max-w-xs md:max-w-none" 
-                  src={item.img} 
-                  alt={item.title} 
+                <img
+                  className="rounded-md w-full max-w-xs md:max-w-none"
+                  src={item.img}
+                  alt={item.title}
                 />
               </div>
               <div className="text-center md:text-left">
@@ -130,7 +131,7 @@ const RunSchedule = () => {
       </div>
 
       {/* Footer Section */}
-      <div className="bg-[#243C75] sticky bottom-0 w-full">
+      <div className="bg-[#243C75]  bottom-0 w-full">
         <div className="container mx-auto p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Process & Inspection Section */}
           <div className="text-white flex gap-4 md:gap-10 items-center flex-wrap justify-center">
@@ -151,8 +152,8 @@ const RunSchedule = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 md:gap-4  justify-center">
-            <NavLink to="/current-status" className="w-full sm:w-auto">
+          <div className="flex gap-2 md:gap-6  justify-center">
+            {/* <NavLink to="/current-status" className="w-full sm:w-auto">
               <button className="bg-white text-black px-3 py-1 md:px-6 md:py-2 rounded-md shadow-md hover:bg-gray-200 transition text-xs md:text-sm">
                 Process
               </button>
@@ -174,7 +175,16 @@ const RunSchedule = () => {
               <button className="bg-white text-black px-3 py-1 md:px-6 md:py-2 rounded-md shadow-md hover:bg-gray-200 transition text-xs md:text-sm">
                 Cycle
               </button>
-            </NavLink>
+            </NavLink> */}
+
+           <div className="flex flex-col items-center text-white">
+              <p className="text-sm md:text-base font-semibold"> Employee</p>
+              <p className="text-sm md:text-base">Devon Lane</p>
+            </div>
+            <div className="flex flex-col items-center text-white">
+              <p className="text-sm md:text-base font-semibold">Cycle count</p>
+              <p className="text-sm md:text-base">150</p>
+            </div>
           </div>
         </div>
       </div>

@@ -110,15 +110,15 @@ const InventoryStatus = () => {
       {/* Filters */}
       <div className="bg-white  p-4 mt-6">
         <div className="flex flex-col md:flex-row justify- gap-4 items-end">
-          <div className="w-full md:w-1/2">
-            <label className="block text-sm font-medium">Process</label>
+          <div className="w-full ">
+            <label className="block text-sm font-semibold">Part Family</label>
             <select className="border w-full px-3 py-2 rounded-md">
-              <option>Project Coordinator</option>
-              <option>Production Manager</option>
+              <option>Cut trim</option>
+              <option>Sending</option>
             </select>
           </div>
 
-          <div className="flex items-center w-full">
+          {/* <div className="flex items-center w-full">
             <div className="w-full">
               <input
                 type="text"
@@ -129,7 +129,7 @@ const InventoryStatus = () => {
             <div>
               <img src={more} alt="" />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

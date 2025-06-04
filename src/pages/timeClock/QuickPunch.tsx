@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import timer from "../../assets/timer.png";
 
 const QuickPunch = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
     {/* Header */}
@@ -51,8 +53,10 @@ const QuickPunch = () => {
         End Exception
       </button>
   
-      <button className="col-span-2 bg-[#243C75] hover:bg-black py-2 sm:py-3 rounded-full transition-colors">
-        Request Time Off
+      <button className="col-span-2 bg-[#243C75] hover:bg-black py-2 sm:py-3 rounded-full transition-colors"
+       onClick={() => navigate("/vaction-request")}>
+        
+       Vacation Request
       </button>
     </div>
   </div>

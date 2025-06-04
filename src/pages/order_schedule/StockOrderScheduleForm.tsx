@@ -1,8 +1,9 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import OrderStack from "./OrderStack";
 import img from "../../assets/secondary action.png";
 import bag from "../../assets/bag.png";
+import ItemSelected from "./ItemSelected";
 
 const StockOrderScheduleForm = () => {
   // const [formData, setFormData] = useState({
@@ -37,14 +38,12 @@ const StockOrderScheduleForm = () => {
     }
   };
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = (data: any) => {
     console.log("Form Data:", data);
   };
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
     <>
@@ -138,98 +137,9 @@ const StockOrderScheduleForm = () => {
         </div> */}
         </form>
       </div>
-      <div className="grid xl:grid-cols-2">
-        <div>
-          <h1 className="bg-[#CBCBCB] text-center p-2 font-semibold">
-            Qty on order vs stock avaibale are displayed for all
-          </h1>
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={bag}
-            bg="#1D7BF50F"
-            place="Enter Qty"
-          />
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={bag}
-            bg="#1D7BF50F"
-            place="Enter Qty"
-          />
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={bag}
-            bg="#1D7BF50F"
-            place="Enter Qty"
-          />
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={bag}
-            bg="#1D7BF50F"
-            place="Enter Qty"
-          />
-        </div>
-        <div>
-          <h1 className="bg-[#CBCBCB] text-center p-2 font-semibold ">
-            Qty on order vs stock avaibale are displayed for all
-          </h1>
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={img}
-            bg="#FFF8F8"
-            place="Delivery"
-          />
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={img}
-            bg="#FFF8F8"
-            place="Delivery"
-          />
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={img}
-            bg="#FFF8F8"
-            place="Delivery"
-          />
-          <OrderStack
-            text="Aliquam a dui vel justo fringilla euismod id id enim."
-            text1="Pass GMT800 Single"
-            text2="Thermoforming2"
-            qty="5"
-            del_date="25 Jun 2025"
-            img={img}
-            bg="#FFF8F8"
-            place="Delivery"
-          />
-        </div>
-      </div>
+
+      <ItemSelected/>
+ 
     </>
   );
 };

@@ -124,13 +124,17 @@ const sections = [
           {
             key: "SupplierInformationList",
             label: "Supplier Information List",
-              path: "/all-supplier",
             hasSubmenu: true,
             submenu: [
              
               {
+                key: "SupplierList",
+                label: "Supplier List",
+                path: "/all-supplier",
+              },
+              {
                 key: "newSupplier",
-                label: "Enter new supplier",
+                label: "Add & Edit supplier",
                 path: "/new-supplier",
               }
             ],
@@ -140,11 +144,11 @@ const sections = [
             label: "Supplier Order",
             path: "/supplier-order",
           },
-          {
-            key: "SupplierPartList",
-            label: "Supplier part list",
-            path: "/supplier-list",
-          },
+          // {
+          //   key: "SupplierPartList",
+          //   label: "Supplier part list",
+          //   path: "/supplier-list",
+          // },
           {
             key: "SupplierInventory",
             label: "Supplier inventory",
@@ -205,11 +209,11 @@ const sections = [
         icon: time_clock,
         hasSubmenu: true,
         submenu: [
-          {
-            key: "Employee User Access Setup",
-            label: "Employee User Access Setup",
-            path: "/employees",
-          },
+          // {
+          //   key: "Employee User Access Setup",
+          //   label: "Employee User Access Setup",
+          //   path: "/employees",
+          // },
           {
             key: "Vacation Request approval",
             label: "Vacation Request approval",
@@ -223,34 +227,34 @@ const sections = [
         ],
       },
 
-      {
-        key: "Product & BOM  ",
-        label: "Product & BOM ",
-        icon: time_clock,
-        hasSubmenu: true,
-        submenu: [
-          {
-            key: "Enter/Edit part number",
-            label: "Enter/Edit part number ",
-            path: "/partform",
-          },
-          {
-            key: "Enter/Edit delete product number",
-            label: "Enter/Edit delete product number ",
-            path: "/edit-partform",
-          },
-          {
-            key: "Product tree view",
-            label: "Porduct tree view ",
-            path: "/product-tree",
-          },
-          {
-            key: "Browse BOM",
-            label: "Browse BOM ",
-            path: "/part-table",
-          },
-        ],
-      },
+      // {
+      //   key: "Product & BOM  ",
+      //   label: "Product & BOM ",
+      //   icon: time_clock,
+      //   hasSubmenu: true,
+      //   submenu: [
+      //     {
+      //       key: "Enter/Edit part number",
+      //       label: "Enter/Edit part number ",
+      //       path: "/partform",
+      //     },
+      //     {
+      //       key: "Enter/Edit delete product number",
+      //       label: "Enter/Edit delete product number ",
+      //       path: "/edit-partform",
+      //     },
+      //     {
+      //       key: "Product tree view",
+      //       label: "Porduct tree view ",
+      //       path: "/product-tree",
+      //     },
+      //     {
+      //       key: "Browse BOM",
+      //       label: "Browse BOM ",
+      //       path: "/part-table",
+      //     },
+      //   ],
+      // },
 
       {
         key: "Work Instruction ",
@@ -258,21 +262,22 @@ const sections = [
         icon: work,
         hasSubmenu: true,
         submenu: [
+           {
+            key: "All work Instruction",
+            label: "All work Instruction",
+            path: "/all-work-instruction",
+          },
           {
             key: "select process & product",
             label: "select process & product",
             path: "/work-instruction",
           },
           {
-            key: "Add work Instruction",
-            label: "Add work Instruction ",
+            key: "Add & Edit work Instruction",
+            label: "Add & Edit work Instruction ",
             path: "/add-work-instruction",
           },
-          {
-            key: "Edit work Instruction",
-            label: "Edit work Instruction",
-            path: "/edit-work-instruction",
-          },
+         
           {
             key: "Apply work instruction to diffrent product/process",
             label: " Apply work instruction to diffrent product/process ",
@@ -370,6 +375,7 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
     // localStorage.removeItem("loggedIn"); // Clear the loggedIn flag from localStorage
     navigate("/sign-in"); // Redirect to the sign-in page
   };
+ 
 
   return (
     <>
@@ -650,13 +656,14 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
             </ul>
           </div>
 
-          {activeMenu && (
-            <div className="justify-center flex items-center mt-12 w-full mb-4">
-              <button className="w-full mx-6 py-2 rounded-md bg-gradient-to-b from-[#22C55E] to-[#118D57] text-white font-semibold">
+         
+            {/* <div className="justify-center flex items-center mt-12 w-full mb-4">
+              <button
+               className="w-full mx-6 py-2 rounded-md bg-gradient-to-b from-[#22C55E] to-[#118D57] text-white font-semibold">
                 Admin Login
               </button>
-            </div>
-          )}
+            </div> */}
+         
         </div>
       </div>
       {activeMenu && (

@@ -10,8 +10,8 @@ const Account = () => {
 
   const section = [
     {
-      key: "Home",
-      label: "Home",
+      key: "Dashboard",
+      label: "Dashboard",
       icon: home,
       path: "dashboardDetailes",
     },
@@ -19,7 +19,13 @@ const Account = () => {
       key: "Profile",
       label: "Profile",
       icon: home,
-      path: "dashboard/suppliers",
+      path: "dashboard/profile",
+    },
+    {
+      key: "Time Clock",
+      label: "Time Clock",
+      icon: home,
+      path: "clock-in-out",
     },
     {
       key: "Projects",
@@ -27,12 +33,7 @@ const Account = () => {
       icon: home,
       path: "dashboard/suppliers",
     },
-    {
-      key: "Subscription",
-      label: "Subscription",
-      icon: home,
-      path: "dashboard/suppliers",
-    },
+   
     {
       key: "Security",
       label: "Security",

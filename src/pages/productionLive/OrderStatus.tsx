@@ -20,11 +20,7 @@ const OrderStatus = () => {
               <option value="">feb 2025</option>
             </select>
           </div>
-          <div>
-            <button className="bg-brand text-white p-1 md:p-2 rounded-md">
-              Create Order
-            </button>
-          </div>
+         
         </div>
       </div>
 

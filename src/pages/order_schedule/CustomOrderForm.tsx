@@ -1,6 +1,8 @@
-import  { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
+import del_img from "../../assets/delete_1.png";
+
 
 const options = [
   { value: "cortez-herring", label: "Cortez Herring" },
@@ -48,18 +50,33 @@ const CustomOrderForm = () => {
   //   assignTo: "Cortez Herring",
   // });
 
-   const [file, setFile] = useState<File | null>(null);
+   const [showFields, setShowFields] = useState(false);
+    const [showPart, setShowPart] = useState(false);
   
-    const handleFileChange = (event :any) => {
-      if (event.target.files.length > 0) {
-        setFile(event.target.files[0]);
-      }
+    const handleClick = () => {
+      setShowFields(true); // Show fields when clicking the Add button
     };
+     const handleClick2 = () => {
+    setShowPart(true); // Show fields when clicking the Add button
+  };
+  const orderNumber = 1001;
+  const cost = 3466;
+  const [file, setFile] = useState<File | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm<FormData>();
+  const handleFileChange = (event: any) => {
+    if (event.target.files.length > 0) {
+      setFile(event.target.files[0]);
+    }
+  };
+
+  const { register, handleSubmit, setValue } = useForm<FormData>();
+
+  useEffect(() => {
+    setValue("orderNumber", orderNumber), [orderNumber, setValue];
+  });
+  useEffect(() => {
+    setValue("Cost", cost), [cost, setValue];
+  });
 
   interface FormData {
     orderNumber: number;
@@ -78,6 +95,13 @@ const CustomOrderForm = () => {
     PartQuantity?: string;
     PartCost?: string;
     Time?: string;
+    customerName1?: string;
+    customerEmail1?: string;
+    customerPhone1?: string;
+    partNumber1?: number;
+    partDesc1?: string;
+    partQuantity1?: string;
+    partCost1?: string;
   }
 
   const onSubmit = (data: FormData) => {
@@ -91,14 +115,15 @@ const CustomOrderForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white p-6 ">
           <div>
             <label className="font-semibold">Order Number</label>
-            <input
+
+            <p
               {...register("orderNumber", {
                 required: "Order Number required",
               })}
-              type="number"
-              placeholder="Enter Order Number"
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
-            />
+            >
+              {orderNumber}
+            </p>
           </div>
           <div>
             <label className="font-semibold">Order Date</label>
@@ -159,7 +184,76 @@ const CustomOrderForm = () => {
               className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
             />
           </div>
+            <div className=" flex  justify-start gap-2">
+            <span
+              className="text-blue-500 text-sm flex items-center gap-1 cursor-pointer"
+              onClick={handleClick}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add New supplier
+            </span>
+          </div>
         </div>
+
+         {/* Render Fields When Clicked */}
+        {showFields && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4  bg-white p-4  ">
+            <div>
+              <label className="font-semibold">Customer Name</label>
+              <input
+                {...register("customerName1", {
+                  required: "Customer name required",
+                })}
+                type="text"
+                placeholder="Enter Customer Name"
+                className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              />
+            </div>
+            <div>
+              <label className="font-semibold">Customer Email</label>
+              <input
+                {...register("customerEmail1", {
+                  required: "Customer Email  required",
+                })}
+                type="email"
+                placeholder="Enter Customer Email"
+                className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <div>
+                <label className="font-semibold">Customer Phone</label>
+                <input
+                  {...register("customerPhone1", {
+                    required: "Customer number  required",
+                  })}
+                  type="number"
+                  placeholder="Enter Customer Phone"
+                  className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+                />
+              </div>
+              <div
+                onClick={() => setShowFields(false)}
+                className="bg-red-600 p-2 rounded-full cursor-pointer"
+              >
+                <img src={del_img} alt="" />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Codes & Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 bg-white px-6 ">
@@ -174,12 +268,12 @@ const CustomOrderForm = () => {
           </div>
           <div>
             <label className="font-semibold">Cost</label>
-            <input
-              {...register("Cost")}
-              type="number"
-              placeholder="Enter Cost"
-              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
-            />
+            <p 
+             {...register("Cost")}
+              
+              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600">
+                {cost}
+              </p>
           </div>
 
           <div>
@@ -198,30 +292,11 @@ const CustomOrderForm = () => {
             <input
               {...register("ProductDescription")}
               type="text"
-              placeholder="Meta Description"
+              placeholder="Product Description"
               className="border py-6 px-4 rounded-md w-full  placeholder-gray-600"
             />
           </div>
 
-          <div>
-          <label className="font-semibold">Product Drawing</label>
-            
-            <label className="font-semibold border py-3 px-4  rounded-md w-full  text-gray-600 block">
-              <input
-                {...register("ProductDrawing", {})}
-                type="file"
-                placeholder="CHOOSE  FILE"
-                className=" hidden "
-                onChange={handleFileChange}
-              />
-
-              {file ? (
-                <span className="">{file.name}</span>
-              ) : (
-                <span className="text-sm">CHOOSE FILE</span>
-              )}
-            </label>
-          </div>
         </div>
 
         {/* Bank Details */}
@@ -279,15 +354,93 @@ const CustomOrderForm = () => {
               />
             </div>
           </div>
+
+            <div className=" flex  justify-start gap-2">
+            <span
+              className="text-blue-500 text-sm flex items-center gap-1 cursor-pointer"
+              onClick={handleClick2}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add Another Part
+            </span>
+          </div>
         </div>
+
+          {/* Render Fields When Clicked */}
+        {showPart && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4  bg-white p-4  ">
+            <div>
+              <label className="font-semibold">Part Number</label>
+
+              <input
+                {...register("partNumber1")}
+                type="number"
+                placeholder="Enter part Number"
+                className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Part Desc</label>
+
+              <input
+                {...register("partDesc1")}
+                type="text"
+                placeholder="Enter part desc"
+                className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              />
+            </div>
+
+            <div>
+              <label className="font-semibold">Part Quantity</label>
+              <input
+                {...register("partQuantity1")}
+                type="text"
+                placeholder="Enter part Quantity"
+                className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              />
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div>
+                <label className="font-semibold">Part cost</label>
+                <input
+                  {...register("partCost1")}
+                  type="text"
+                  placeholder="Enter part cost"
+                  className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+                />
+              </div>
+              <div
+                onClick={() => setShowPart(false)}
+                className="bg-red-600 p-2 rounded-full cursor-pointer"
+              >
+                <img src={del_img} alt="" />
+              </div>
+            </div>
+          </div>
+        )}
         <div className="bg-white px-6 ">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-4 gap-4 items-center">
             <div>
-              <label className="font-semibold">Time</label>
+              <label className="font-semibold">Total Time</label>
               <input
                 {...register("Time")}
-                type="date"
-                placeholder="09:33 AM"
+                type="text"
+                placeholder="65 min"
                 className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
               />
             </div>
@@ -305,11 +458,11 @@ const CustomOrderForm = () => {
               <div className="">
                 <label className="font-semibold">Assign To </label>
                 <Select
-                isMulti
-                options={assignOption}
-                className="w-full "
-                placeholder="Select part"
-              ></Select>
+                  isMulti
+                  options={assignOption}
+                  className="w-full "
+                  placeholder="Select part"
+                ></Select>
               </div>
               <div className="items-center justify-center  ">
                 <p className="bg-brand text-white p-2  text-sm rounded-sm">

@@ -22,7 +22,7 @@ const LaborForecastList = () => {
       <div className="flex gap-2 flex-col">
         {/* First Row */}
         <div className="flex flex-col md:flex-row items-end gap-3 mb-4">
-          <div className="flex flex-col w-full md:w-1/2 gap-2">
+          <div className="flex flex-col w-full  gap-2">
             <label className="font-semibold">Select Process</label>
             <select
               {...register("process", { required: "Process is required" })}
@@ -37,21 +37,19 @@ const LaborForecastList = () => {
             )}
           </div>
 
-          <span className="text-sm font-semibold text-gray-600">OR</span>
+          {/* <span className="text-sm font-semibold text-gray-600">OR</span> */}
 
-          <div className="flex flex-col w-full md:w-1/2 gap-2">
-            <label className="font-semibold">Address</label>
+          {/* <div className="flex flex-col w-full md:w-1/2 gap-2">
             <select
               {...register("address", { required: "Address is required" })}
               className="border py-3 px-4 rounded-md placeholder-gray-600"
             >
-              <option value="">Select Address</option>
               <option value="99">99 - ‘06 Silverado / Sierra cab 4 - Door</option>
             </select>
             {errors.address && (
               <span className="text-red-500 text-sm">{String(errors.address.message)}</span>
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Second Row */}

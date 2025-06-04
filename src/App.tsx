@@ -62,6 +62,7 @@ import BusinessIntelligence from "./pages/business-intelligence/BusinessIntellig
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "./context/AuthContext";
 import SupplierList from "./pages/supplier_chain/supplierList";
+import AllWorkInstruction from "./pages/Work_Instrcution.tsx/AllWorkInstruction";
 
 const App = () => {
    const { token } = useAuth();
@@ -129,6 +130,10 @@ const App = () => {
             <Route path="part-table" element={<PartTable />} />
             <Route path="work-instruction" element={<WorkInstruction />} />
             <Route
+              path="all-work-instruction"
+              element={<AllWorkInstruction />}
+            />
+            <Route
               path="add-work-instruction"
               element={<AddWorkInstruction />}
             />
@@ -140,6 +145,7 @@ const App = () => {
               path="apply-work-instruction"
               element={<ApplyWorkInstruction />}
             />
+            
             <Route
               path="operation-performance"
               element={<OperationPerformance />}

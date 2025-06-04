@@ -140,6 +140,14 @@ const SupplierInventory = () => {
       {/* Filters */}
       <div className="bg-white  p-4 mt-6">
         <div className="flex flex-col md:flex-row justify-between gap-4 items-end">
+           <div className="w-full md:w-1/2">
+            <label className="block text-sm font-medium">Suppliers Name</label>
+            <input
+              type="text"
+              placeholder="Enter Supplier Name"
+              className="border w-full px-3 py-2 rounded-md"
+            />
+          </div>
           <div className="w-full md:w-1/2">
             <label className="block text-sm font-medium">Process</label>
             <select className="border w-full px-3 py-2 rounded-md">
