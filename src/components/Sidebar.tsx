@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowForward, IoMdMenu } from "react-icons/io";
 import logo from "../assets/logo.png";
@@ -30,331 +30,333 @@ const invoice = <FontAwesomeIcon icon={faFileInvoiceDollar} />;
 const blog = <FontAwesomeIcon icon={faNewspaper} />;
 const work = <FontAwesomeIcon icon={faBriefcase} />;
 const logout = <FontAwesomeIcon icon={faRightFromBracket} color="red" />;
-
-const sections = [
-  {
-    category: "Overview",
-    items: [
-      {
-        key: "Dashboard",
-        label: "Dashboard",
-        icon: dashboard,
-        path: "/dashboardDetailes",
-      },
-    ],
-  },
-  {
-    category: "Daily Activity",
-    items: [
-      {
-        key: "Order Scheduling",
-        label: "Order Scheduling",
-        icon: order,
-        hasSubmenu: true,
-        submenu: [
-          {
-            key: "Customer Order",
-            label: "Customer Order",
-            hasSubmenu: true,
-            submenu: [
-              {
-                key: "Stock Order",
-                label: "Stock Order",
-                path: "/stock-order",
-              },
-              {
-                key: "Custom Order",
-                label: "Custom Order",
-                path: "/custom-order",
-              },
-            ],
-          },
-          {
-            key: "Order Schedule",
-            label: "Order Schedule",
-            hasSubmenu: true,
-            submenu: [
-              {
-                key: "Stock Order Schedule",
-                label: "Stock Order Schedule",
-                path: "/stock-order-schedule",
-              },
-              {
-                key: "Custom Order Schedule",
-                label: "Custom Order Schedule",
-                path: "/custom-order-schedule",
-              },
-              {
-                key: "Daily Schedule",
-                label: "Daily Schedule",
-                hasSubmenu: true,
-                submenu: [
-                  {
-                    key: "Daily schedule",
-                    label: "Daily schedule",
-                    path: "/daily-schedule",
-                  },
-                  {
-                    key: "Capacity Status",
-                    label: "Capacity Status",
-                    path: "/capacity-status",
-                  },
-                  {
-                    key: "Labor Forecast",
-                    label: "Labor Forecast",
-                    path: "/labor-forecast",
-                  },
-                  {
-                    key: "Inventory Status",
-                    label: "Inventory Status",
-                    path: "/inventory-status",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        key: "Supply Chain",
-        label: "Supply Chain",
-        icon: supply_chain,
-        hasSubmenu: true,
-        submenu: [
-          {
-            key: "SupplierInformationList",
-            label: "Supplier Information List",
-            hasSubmenu: true,
-            submenu: [
+// const sections = [
+//   {
+//     category: "Overview",
+//     items: [
+//       {
+//         key: "Dashboard",
+//         label: "Dashboard",
+//         icon: dashboard,
+//         path: "/dashboardDetailes",
+//       },
+//     ],
+//   },
+//   {
+//     category: "Daily Activity",
+//     items: [
+//       {
+//         key: "Order Scheduling",
+//         label: "Order Scheduling",
+//         icon: order,
+//         hasSubmenu: true,
+//         submenu: [
+//           {
+//             key: "Customer Order",
+//             label: "Customer Order",
+//             hasSubmenu: true,
+//             submenu: [
+//               {
+//                 key: "Stock Order",
+//                 label: "Stock Order",
+//                 path: "/stock-order",
+//               },
+//               {
+//                 key: "Custom Order",
+//                 label: "Custom Order",
+//                 path: "/custom-order",
+//               },
+//             ],
+//           },
+//           {
+//             key: "Order Schedule",
+//             label: "Order Schedule",
+//             hasSubmenu: true,
+//             submenu: [
+//               {
+//                 key: "Stock Order Schedule",
+//                 label: "Stock Order Schedule",
+//                 path: "/stock-order-schedule",
+//               },
+//               {
+//                 key: "Custom Order Schedule",
+//                 label: "Custom Order Schedule",
+//                 path: "/custom-order-schedule",
+//               },
+//               {
+//                 key: "Daily Schedule",
+//                 label: "Daily Schedule",
+//                 hasSubmenu: true,
+//                 submenu: [
+//                   {
+//                     key: "Daily schedule",
+//                     label: "Daily schedule",
+//                     path: "/daily-schedule",
+//                   },
+//                   {
+//                     key: "Capacity Status",
+//                     label: "Capacity Status",
+//                     path: "/capacity-status",
+//                   },
+//                   {
+//                     key: "Labor Forecast",
+//                     label: "Labor Forecast",
+//                     path: "/labor-forecast",
+//                   },
+//                   {
+//                     key: "Inventory Status",
+//                     label: "Inventory Status",
+//                     path: "/inventory-status",
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//       {
+//         key: "Supply Chain",
+//         label: "Supply Chain",
+//         icon: supply_chain,
+//         hasSubmenu: true,
+//         submenu: [
+//           {
+//             key: "SupplierInformationList",
+//             label: "Supplier Information List",
+//             hasSubmenu: true,
+//             submenu: [
              
-              {
-                key: "SupplierList",
-                label: "Supplier List",
-                path: "/all-supplier",
-              },
-              {
-                key: "newSupplier",
-                label: "Add & Edit supplier",
-                path: "/new-supplier",
-              }
-            ],
-          },
-          {
-            key: "SupplierOrder",
-            label: "Supplier Order",
-            path: "/supplier-order",
-          },
-          // {
-          //   key: "SupplierPartList",
-          //   label: "Supplier part list",
-          //   path: "/supplier-list",
-          // },
-          {
-            key: "SupplierInventory",
-            label: "Supplier inventory",
-            path: "/supplier-inventory",
-          },
-        ],
-      },
-      {
-        key: "Time Clock",
-        label: "Time Clock",
-        icon: time_clock,
-        hasSubmenu: true,
-        submenu: [
-          {
-            key: "Clockinout",
-            label: "Clock in and out",
-            path: "/clock-in-out",
-          },
-          {
-            key: "VacationRequest",
-            label: "Vacation Request",
-            path: "/vaction-request",
-          },
-          {
-            key: "Time_Sheet",
-            label: "Time Sheet",
-            path: "/time-sheet",
-          },
-        ],
-      },
-      {
-        key: "Production Live",
-        label: "Production Live",
-        icon: production_live,
-        hasSubmenu: true,
-        submenu: [
-          {
-            key: "liveProduction",
-            label: "Live Production goal board",
-            path: "/live-production",
-          },
-          {
-            key: "currentState",
-            label: "Current status of each process",
-            path: "/current-status",
-          },
-          {
-            key: "currentQuality",
-            label: "Current quality performance",
-            path: "/current-quality",
-          },
-        ],
-      },
+//               {
+//                 key: "SupplierList",
+//                 label: "Supplier List",
+//                 path: "/all-supplier",
+//               },
+//               {
+//                 key: "newSupplier",
+//                 label: "Add & Edit supplier",
+//                 path: "/new-supplier",
+//               }
+//             ],
+//           },
+//           {
+//             key: "SupplierOrder",
+//             label: "Supplier Order",
+//             path: "/supplier-order",
+//           },
+//           // {
+//           //   key: "SupplierPartList",
+//           //   label: "Supplier part list",
+//           //   path: "/supplier-list",
+//           // },
+//           {
+//             key: "SupplierInventory",
+//             label: "Supplier inventory",
+//             path: "/supplier-inventory",
+//           },
+//         ],
+//       },
+//       {
+//         key: "Time Clock",
+//         label: "Time Clock",
+//         icon: time_clock,
+//         hasSubmenu: true,
+//         submenu: [
+//           {
+//             key: "Clockinout",
+//             label: "Clock in and out",
+//             path: "/clock-in-out",
+//           },
+//           {
+//             key: "VacationRequest",
+//             label: "Vacation Request",
+//             path: "/vaction-request",
+//           },
+//           {
+//             key: "Time_Sheet",
+//             label: "Time Sheet",
+//             path: "/time-sheet",
+//           },
+//         ],
+//       },
+//       {
+//         key: "Production Live",
+//         label: "Production Live",
+//         icon: production_live,
+//         hasSubmenu: true,
+//         submenu: [
+//           {
+//             key: "liveProduction",
+//             label: "Live Production goal board",
+//             path: "/live-production",
+//           },
+//           {
+//             key: "currentState",
+//             label: "Current status of each process",
+//             path: "/current-status",
+//           },
+//           {
+//             key: "currentQuality",
+//             label: "Current quality performance",
+//             path: "/current-quality",
+//           },
+//         ],
+//       },
 
-      {
-        key: "Employee Information",
-        label: "Employee Information ",
-        icon: time_clock,
-        hasSubmenu: true,
-        submenu: [
-          // {
-          //   key: "Employee User Access Setup",
-          //   label: "Employee User Access Setup",
-          //   path: "/employees",
-          // },
-          {
-            key: "Vacation Request approval",
-            label: "Vacation Request approval",
-            path: "/vacation-list",
-          },
-          {
-            key: "Time Clock approval",
-            label: "Time Clock approval",
-            path: "/time-clock",
-          },
-        ],
-      },
+//       {
+//         key: "Employee Information",
+//         label: "Employee Information ",
+//         icon: time_clock,
+//         hasSubmenu: true,
+//         submenu: [
+//           // {
+//           //   key: "Employee User Access Setup",
+//           //   label: "Employee User Access Setup",
+//           //   path: "/employees",
+//           // },
+//           {
+//             key: "Vacation Request approval",
+//             label: "Vacation Request approval",
+//             path: "/vacation-list",
+//           },
+//           {
+//             key: "Time Clock approval",
+//             label: "Time Clock approval",
+//             path: "/time-clock",
+//           },
+//         ],
+//       },
 
-      // {
-      //   key: "Product & BOM  ",
-      //   label: "Product & BOM ",
-      //   icon: time_clock,
-      //   hasSubmenu: true,
-      //   submenu: [
-      //     {
-      //       key: "Enter/Edit part number",
-      //       label: "Enter/Edit part number ",
-      //       path: "/partform",
-      //     },
-      //     {
-      //       key: "Enter/Edit delete product number",
-      //       label: "Enter/Edit delete product number ",
-      //       path: "/edit-partform",
-      //     },
-      //     {
-      //       key: "Product tree view",
-      //       label: "Porduct tree view ",
-      //       path: "/product-tree",
-      //     },
-      //     {
-      //       key: "Browse BOM",
-      //       label: "Browse BOM ",
-      //       path: "/part-table",
-      //     },
-      //   ],
-      // },
+//       // {
+//       //   key: "Product & BOM  ",
+//       //   label: "Product & BOM ",
+//       //   icon: time_clock,
+//       //   hasSubmenu: true,
+//       //   submenu: [
+//       //     {
+//       //       key: "Enter/Edit part number",
+//       //       label: "Enter/Edit part number ",
+//       //       path: "/partform",
+//       //     },
+//       //     {
+//       //       key: "Enter/Edit delete product number",
+//       //       label: "Enter/Edit delete product number ",
+//       //       path: "/edit-partform",
+//       //     },
+//       //     {
+//       //       key: "Product tree view",
+//       //       label: "Porduct tree view ",
+//       //       path: "/product-tree",
+//       //     },
+//       //     {
+//       //       key: "Browse BOM",
+//       //       label: "Browse BOM ",
+//       //       path: "/part-table",
+//       //     },
+//       //   ],
+//       // },
 
-      {
-        key: "Work Instruction ",
-        label: "Work Instruction ",
-        icon: work,
-        hasSubmenu: true,
-        submenu: [
-           {
-            key: "All work Instruction",
-            label: "All work Instruction",
-            path: "/all-work-instruction",
-          },
-          {
-            key: "select process & product",
-            label: "select process & product",
-            path: "/work-instruction",
-          },
-          {
-            key: "Add & Edit work Instruction",
-            label: "Add & Edit work Instruction ",
-            path: "/add-work-instruction",
-          },
+//       {
+//         key: "Work Instruction ",
+//         label: "Work Instruction ",
+//         icon: work,
+//         hasSubmenu: true,
+//         submenu: [
+//            {
+//             key: "All work Instruction",
+//             label: "All work Instruction",
+//             path: "/all-work-instruction",
+//           },
+//           {
+//             key: "select process & product",
+//             label: "select process & product",
+//             path: "/work-instruction",
+//           },
+//           {
+//             key: "Add & Edit work Instruction",
+//             label: "Add & Edit work Instruction ",
+//             path: "/add-work-instruction",
+//           },
          
-          {
-            key: "Apply work instruction to diffrent product/process",
-            label: " Apply work instruction to diffrent product/process ",
-            path: "/apply-work-instruction",
-          },
-        ],
-      },
+//           {
+//             key: "Apply work instruction to diffrent product/process",
+//             label: " Apply work instruction to diffrent product/process ",
+//             path: "/apply-work-instruction",
+//           },
+//         ],
+//       },
 
-      {
-        key: "Production Response",
-        label: "Production Response",
-        icon: production_response,
-        path: "/station-login",
-      },
-    ],
-  },
-  {
-    category: "INSIGHT",
-    items: [
-      {
-        key: "Operation performance",
-        label: "Operation performance",
-        icon: operation,
-        path: "/operation-performance",
-      },
-      {
-        key: " Quality Performance",
-        label: " Quality Performance",
-        icon: invoice,
-        path: "/quality-performance",
-      },
-      {
-        key: "Continuous Improvement",
-        label: "Continuous Improvement ",
-        icon: blog,
-        path: "/continuous-improvement",
-      },
+//       {
+//         key: "Production Response",
+//         label: "Production Response",
+//         icon: production_response,
+//         path: "/station-login",
+//       },
+//     ],
+//   },
+//   {
+//     category: "INSIGHT",
+//     items: [
+//       {
+//         key: "Operation performance",
+//         label: "Operation performance",
+//         icon: operation,
+//         path: "/operation-performance",
+//       },
+//       {
+//         key: " Quality Performance",
+//         label: " Quality Performance",
+//         icon: invoice,
+//         path: "/quality-performance",
+//       },
+//       {
+//         key: "Continuous Improvement",
+//         label: "Continuous Improvement ",
+//         icon: blog,
+//         path: "/continuous-improvement",
+//       },
 
-      {
-        key: "Customer relation",
-        label: "Customer relation",
-        icon: order,
-        path: "/customer-relation",
-      },
-      {
-        key: "Business Intelligence ",
-        label: "Business Intelligence  ",
-        icon: order,
-        path: "/business-intelligence",
-      },
-      {
-        key: "Business Analysis",
-        label: "Business Analysis ",
-        icon: blog,
-        path: "/business-analysis",
-      },
-      {
-        key: "projecion ",
-        label: "Projecion  ",
-        icon: production_response,
-        path: "/projecion",
-      },
-      {
-        key: "Setting",
-        label: "Settings",
-        icon: setting,
-        path: "/settings",
-      },
-      {
-        key: "Logout",
-        label: "Logout",
-        icon: logout,
-        path: "/sign-in",
-      },
-    ],
-  },
-];
+//       {
+//         key: "Customer relation",
+//         label: "Customer relation",
+//         icon: order,
+//         path: "/customer-relation",
+//       },
+//       {
+//         key: "Business Intelligence ",
+//         label: "Business Intelligence  ",
+//         icon: order,
+//         path: "/business-intelligence",
+//       },
+//       {
+//         key: "Business Analysis",
+//         label: "Business Analysis ",
+//         icon: blog,
+//         path: "/business-analysis",
+//       },
+//       {
+//         key: "projecion ",
+//         label: "Projecion  ",
+//         icon: production_response,
+//         path: "/projecion",
+//       },
+//       {
+//         key: "Setting",
+//         label: "Settings",
+//         icon: setting,
+//         path: "/settings",
+//       },
+//       {
+//         key: "Logout",
+//         label: "Logout",
+//         icon: logout,
+//         path: "/sign-in",
+//       },
+//     ],
+//   },
+// ];
+
+
+
 
 interface SidebarProps {
   activeMenu: boolean;
@@ -362,6 +364,396 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
+ const [role, setRole] = useState(localStorage.getItem("role"));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setRole(localStorage.getItem("role"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const isShopFloor = role === "shopfloor";
+
+const sections = isShopFloor 
+  ? [
+    {
+        category: "Overview",
+        items: [
+          {
+            key: "Dashboard",
+            label: "Dashboard",
+            icon: dashboard,
+            path: "/dashboardDetailes",
+          },
+        ],
+      },
+      {
+        category: "Daily Activity",
+        items: [
+          {
+            key: "Time Clock",
+            label: "Time Clock",
+            icon: time_clock,
+            hasSubmenu: true,
+            submenu: [
+              {
+                key: "Clockinout",
+                label: "Clock in and out",
+                path: "/clock-in-out",
+              },
+              {
+                key: "VacationRequest",
+                label: "Vacation Request",
+                path: "/vaction-request",
+              },
+              {
+                key: "Time_Sheet",
+                label: "Time Sheet",
+                path: "/time-sheet",
+              },
+            ],
+          },
+          {
+            key: "Production Response",
+            label: "Production Response",
+            icon: production_response,
+            path: "/station-login",
+          },
+        ],
+      },
+   
+        {
+        category: "INSIGHT",
+        items: [
+          {
+            key: "Operation performance",
+            label: "Operation performance",
+            icon: operation,
+            path: "/operation-performance",
+          },
+          {
+            key: " Quality Performance",
+            label: " Quality Performance",
+            icon: invoice,
+            path: "/quality-performance",
+          },
+          {
+            key: "Continuous Improvement",
+            label: "Continuous Improvement ",
+            icon: blog,
+            path: "/continuous-improvement",
+          },
+          {
+            key: "Customer relation",
+            label: "Customer relation",
+            icon: order,
+            path: "/customer-relation",
+          },
+          {
+            key: "Business Intelligence ",
+            label: "Business Intelligence  ",
+            icon: order,
+            path: "/business-intelligence",
+          },
+          {
+            key: "Business Analysis",
+            label: "Business Analysis ",
+            icon: blog,
+            path: "/business-analysis",
+          },
+          {
+            key: "projecion ",
+            label: "Projecion  ",
+            icon: production_response,
+            path: "/projecion",
+          },
+          {
+            key: "Setting",
+            label: "Settings",
+            icon: setting,
+            path: "/settings",
+          },
+          {
+            key: "Logout",
+            label: "Logout",
+            icon: logout,
+            path: "/sign-in",
+          },
+        ],
+      },
+    ]
+  : [
+      {
+        category: "Overview",
+        items: [
+          {
+            key: "Dashboard",
+            label: "Dashboard",
+            icon: dashboard,
+            path: "/dashboardDetailes",
+          },
+        ],
+      },
+      {
+        category: "Daily Activity",
+        items: [
+          {
+            key: "Order Scheduling",
+            label: "Order Scheduling",
+            icon: order,
+            hasSubmenu: true,
+            submenu: [
+              {
+                key: "Customer Order",
+                label: "Customer Order",
+                hasSubmenu: true,
+                submenu: [
+                  {
+                    key: "Stock Order",
+                    label: "Stock Order",
+                    path: "/stock-order",
+                  },
+                  {
+                    key: "Custom Order",
+                    label: "Custom Order",
+                    path: "/custom-order",
+                  },
+                ],
+              },
+              {
+                key: "Order Schedule",
+                label: "Order Schedule",
+                hasSubmenu: true,
+                submenu: [
+                  {
+                    key: "Stock Order Schedule",
+                    label: "Stock Order Schedule",
+                    path: "/stock-order-schedule",
+                  },
+                  {
+                    key: "Custom Order Schedule",
+                    label: "Custom Order Schedule",
+                    path: "/custom-order-schedule",
+                  },
+                  {
+                    key: "Daily Schedule",
+                    label: "Daily Schedule",
+                    hasSubmenu: true,
+                    submenu: [
+                      {
+                        key: "Daily schedule",
+                        label: "Daily schedule",
+                        path: "/daily-schedule",
+                      },
+                      {
+                        key: "Capacity Status",
+                        label: "Capacity Status",
+                        path: "/capacity-status",
+                      },
+                      {
+                        key: "Labor Forecast",
+                        label: "Labor Forecast",
+                        path: "/labor-forecast",
+                      },
+                      {
+                        key: "Inventory Status",
+                        label: "Inventory Status",
+                        path: "/inventory-status",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            key: "Supply Chain",
+            label: "Supply Chain",
+            icon: supply_chain,
+            hasSubmenu: true,
+            submenu: [
+              {
+                key: "SupplierInformationList",
+                label: "Supplier Information List",
+                hasSubmenu: true,
+                submenu: [
+                  {
+                    key: "SupplierList",
+                    label: "Supplier List",
+                    path: "/all-supplier",
+                  },
+                  {
+                    key: "newSupplier",
+                    label: "Add & Edit supplier",
+                    path: "/new-supplier",
+                  },
+                ],
+              },
+              {
+                key: "SupplierOrder",
+                label: "Supplier Order",
+                path: "/supplier-order",
+              },
+              {
+                key: "SupplierInventory",
+                label: "Supplier inventory",
+                path: "/supplier-inventory",
+              },
+            ],
+          },
+
+          {
+            key: "Time Clock",
+            label: "Time Clock",
+            icon: time_clock,
+            hasSubmenu: true,
+            submenu: [
+              {
+                key: "Clockinout",
+                label: "Clock in and out",
+                path: "/clock-in-out",
+              },
+              {
+                key: "VacationRequest",
+                label: "Vacation Request",
+                path: "/vaction-request",
+              },
+              {
+                key: "Time_Sheet",
+                label: "Time Sheet",
+                path: "/time-sheet",
+              },
+            ],
+          },
+
+          {
+            key: "Production Live",
+            label: "Production Live",
+            icon: production_live,
+            hasSubmenu: true,
+            submenu: [
+              {
+                key: "liveProduction",
+                label: "Live Production goal board",
+                path: "/live-production",
+              },
+              {
+                key: "currentState",
+                label: "Current status of each process",
+                path: "/current-status",
+              },
+              {
+                key: "currentQuality",
+                label: "Current quality performance",
+                path: "/current-quality",
+              },
+            ],
+          },
+
+          {
+            key: "Work Instruction ",
+            label: "Work Instruction ",
+            icon: work,
+            hasSubmenu: true,
+            submenu: [
+              {
+                key: "All work Instruction",
+                label: "All work Instruction",
+                path: "/all-work-instruction",
+              },
+              {
+                key: "select process & product",
+                label: "select process & product",
+                path: "/work-instruction",
+              },
+              {
+                key: "Add & Edit work Instruction",
+                label: "Add & Edit work Instruction ",
+                path: "/add-work-instruction",
+              },
+              {
+                key: "Apply work instruction to diffrent product/process",
+                label:
+                  " Apply work instruction to diffrent product/process ",
+                path: "/apply-work-instruction",
+              },
+            ],
+          },
+
+          {
+            key: "Production Response",
+            label: "Production Response",
+            icon: production_response,
+            path: "/station-login",
+          },
+        ],
+      },
+      {
+        category: "INSIGHT",
+        items: [
+          {
+            key: "Operation performance",
+            label: "Operation performance",
+            icon: operation,
+            path: "/operation-performance",
+          },
+          {
+            key: " Quality Performance",
+            label: " Quality Performance",
+            icon: invoice,
+            path: "/quality-performance",
+          },
+          {
+            key: "Continuous Improvement",
+            label: "Continuous Improvement ",
+            icon: blog,
+            path: "/continuous-improvement",
+          },
+          {
+            key: "Customer relation",
+            label: "Customer relation",
+            icon: order,
+            path: "/customer-relation",
+          },
+          {
+            key: "Business Intelligence ",
+            label: "Business Intelligence  ",
+            icon: order,
+            path: "/business-intelligence",
+          },
+          {
+            key: "Business Analysis",
+            label: "Business Analysis ",
+            icon: blog,
+            path: "/business-analysis",
+          },
+          {
+            key: "projecion ",
+            label: "Projecion  ",
+            icon: production_response,
+            path: "/projecion",
+          },
+          {
+            key: "Setting",
+            label: "Settings",
+            icon: setting,
+            path: "/settings",
+          },
+          {
+            key: "Logout",
+            label: "Logout",
+            icon: logout,
+            path: "/sign-in",
+          },
+        ],
+      },
+    ];
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
   const location = useLocation();
