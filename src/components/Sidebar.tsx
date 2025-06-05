@@ -608,29 +608,29 @@ const sections = isShopFloor
             ],
           },
 
-          {
-            key: "Time Clock",
-            label: "Time Clock",
-            icon: time_clock,
-            hasSubmenu: true,
-            submenu: [
-              {
-                key: "Clockinout",
-                label: "Clock in and out",
-                path: "/clock-in-out",
-              },
-              {
-                key: "VacationRequest",
-                label: "Vacation Request",
-                path: "/vaction-request",
-              },
-              {
-                key: "Time_Sheet",
-                label: "Time Sheet",
-                path: "/time-sheet",
-              },
-            ],
-          },
+          // {
+          //   key: "Time Clock",
+          //   label: "Time Clock",
+          //   icon: time_clock,
+          //   hasSubmenu: true,
+          //   submenu: [
+          //     {
+          //       key: "Clockinout",
+          //       label: "Clock in and out",
+          //       path: "/clock-in-out",
+          //     },
+          //     {
+          //       key: "VacationRequest",
+          //       label: "Vacation Request",
+          //       path: "/vaction-request",
+          //     },
+          //     {
+          //       key: "Time_Sheet",
+          //       label: "Time Sheet",
+          //       path: "/time-sheet",
+          //     },
+          //   ],
+          // },
 
           {
             key: "Production Live",
@@ -686,12 +686,12 @@ const sections = isShopFloor
             ],
           },
 
-          {
-            key: "Production Response",
-            label: "Production Response",
-            icon: production_response,
-            path: "/station-login",
-          },
+          // {
+          //   key: "Production Response",
+          //   label: "Production Response",
+          //   icon: production_response,
+          //   path: "/station-login",
+          // },
         ],
       },
       {
