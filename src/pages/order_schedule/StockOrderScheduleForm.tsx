@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+<<<<<<< HEAD
 
+=======
+>>>>>>> 17f0f25616719fd32e33652ce11e390421d42f4e
 import ItemSelected from "./ItemSelected";
 
 const StockOrderScheduleForm = () => {
@@ -38,7 +41,7 @@ const StockOrderScheduleForm = () => {
 
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     console.log("Form Data:", data);
   };
 
