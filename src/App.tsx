@@ -1,8 +1,4 @@
-import {
-  Route,
-  Routes,
-  BrowserRouter as Router,
-} from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Layout from "./components/Layout";
 import SignIn from "./auth/SignIn";
 import DashboardDetails from "./pages/Dashboard/DasboardDetails";
@@ -65,8 +61,9 @@ import SupplierList from "./pages/supplier_chain/supplierList";
 import AllWorkInstruction from "./pages/Work_Instrcution.tsx/AllWorkInstruction";
 
 const App = () => {
-   const { token } = useAuth();
-   console.log('tokentokentoken',token)
+  const { token } = useAuth();
+  
+  console.log("tokentokentoken", token);
   return (
     <PartProvider>
       <ToastContainer />
@@ -145,7 +142,7 @@ const App = () => {
               path="apply-work-instruction"
               element={<ApplyWorkInstruction />}
             />
-            
+
             <Route
               path="operation-performance"
               element={<OperationPerformance />}

@@ -76,19 +76,18 @@ const ItemSelected = () => {
 
   return (
     <div className="py-6">
-      <div className="grid md:grid-cols-2 gap-6 bg-white rounded-xl p-4">
+      <div className="grid xl:grid-cols-2 gap-6 bg-white rounded-xl p-4">
         {/* Left Section */}
         <div>
-          <h1 className="bg-[#CBCBCB] text-center p-2 font-semibold">
+          <h1 className="bg-[#CBCBCB] text-center p-2 font-semibold ">
             Qty on order vs stock available are displayed for all
           </h1>
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             {availableItems.map((item) => {
-              const alreadyAdded = selectedItems.some((i) => i.id === item.id);
               return (
                 <div
                   key={item.id}
-                  className="p-4 bg-white shadow-m flex flex-col md:flex-row justify-between md:items-center gap-2 md:gap-0"
+                  className="p-4 bg-white shadow-md flex flex-col md:flex-row justify-between md:items-center gap-2 md:gap-0  "
                 >
                   <div className="space-y-1">
                     <p className="font-semibold">{item.text}</p>

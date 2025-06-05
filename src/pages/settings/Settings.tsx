@@ -13,14 +13,14 @@ const Settings = () => {
     }
   };
   const form1 = useForm(); // For Account form
-  const form2 = useForm(); // For Language/Currency form
+  // const form2 = useForm(); // For Language/Currency form
 
   const onSubmit = (data: any) => {
     console.log(data);
   };
-  const onSubmit1 = (data: any) => {
-    console.log(data);
-  };
+  // const onSubmit1 = (data: any) => {
+  //   console.log(data);
+  // };
 
   return (
     <div className="p-8  min-h-screen">

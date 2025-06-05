@@ -68,14 +68,16 @@ const StockOrderForm = () => {
   const handleClick2 = () => {
     setShowPart(true); // Show fields when clicking the Add button
   };
-  const orderNumber = "1002";
+  const [orderNumber, setOrderNumber] = useState("");
   const cost = "4500";
 
   const { register, handleSubmit, setValue } = useForm();
 
-  useEffect(() => {
-    setValue("orderNumber", orderNumber), [orderNumber, setValue];
-  });
+ useEffect(() => {
+    // Generates random order number like: ORD-594203
+    const randomOrder =  + Math.floor(10000 + Math.random() * 90000);
+    setOrderNumber(randomOrder.toString());
+  }, []);
   useEffect(() => {
     setValue("cost", cost), [cost, setValue];
   });
@@ -98,7 +100,7 @@ const StockOrderForm = () => {
           <div>
             <label className="font-semibold">Order Number</label>
             <p
-              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600 bg-gray-100"
               {...register("orderNumber", {
                 required: "Order Number required",
               })}
@@ -259,7 +261,7 @@ const StockOrderForm = () => {
             <label className="font-semibold">Cost</label>
 
             <p
-              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600 bg-gray-100"
               {...register("cost")}
             >
               {cost}

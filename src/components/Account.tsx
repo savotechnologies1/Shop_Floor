@@ -5,8 +5,12 @@ import home from "../assets/home.png";
 import { Link } from "react-router-dom";
 import upgrade from "../assets/upgrade.png";
 
-const Account = () => {
+interface AccountProps {
+  onClose: () => void;
+}
+const Account = ({ onClose }: AccountProps) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState("Dashboard");
 
   const section = [
     {
@@ -33,7 +37,7 @@ const Account = () => {
       icon: home,
       path: "dashboard/suppliers",
     },
-   
+
     {
       key: "Security",
       label: "Security",
@@ -47,10 +51,10 @@ const Account = () => {
       <div className="fixed overflow-y-auto right-0 top-0 z-20 w-[320px] h-full bg-white shadow-lg">
         <div className="p-4">
           <div>
-            <img 
-              src={cross} 
-              alt="Close sidebar" 
-              onClick={() => setIsOpen(!isOpen)}
+            <img
+              src={cross}
+              alt="Close sidebar"
+              onClick={onClose}
               className="cursor-pointer"
             />
           </div>
@@ -58,6 +62,7 @@ const Account = () => {
             <div>
               <img
                 src={img}
+                onClick={() => setIsOpen(!isOpen)}
                 alt="User Avatar"
                 className="rounded-full w-[90px] border-2 border-green-400 mb-2"
               />
@@ -67,7 +72,7 @@ const Account = () => {
               <p className="text-sm text-gray-500">demo@minimals.cc</p>
             </div>
           </div>
-          
+
           {/* Menu Items */}
           <div className="flex flex-col justify-between">
             <div>
@@ -76,7 +81,9 @@ const Account = () => {
                   <li key={section.key}>
                     <Link to={`/${section.path}`}>
                       <button
-                        className={`flex items-center space-x-4 w-full px-2 py-3 rounded-md hover:bg-brand hover:text-white`}
+                        className={`flex items-center space-x-4 w-full px-2 py-3 rounded-md hover:bg-brand hover:text-white
+                           ${activeTab === section.key ? 'bg-brand text-white' : 'hover:bg-brand hover:text-white'}`}
+                             onClick={() => setActiveTab(section.key)}
                       >
                         <img
                           src={section.icon}
@@ -105,11 +112,15 @@ const Account = () => {
                 </button>
               </div>
               <div className="absolute right-0 bottom-0 py-4 px-4">
-                <img className="w-28" src={upgrade} alt="Upgrade illustration" />
+                <img
+                  className="w-28"
+                  src={upgrade}
+                  alt="Upgrade illustration"
+                />
               </div>
             </div>
           </div>
-          
+
           <button className="mt-4 w-full bg-[#FF563014] text-[#B71D18] py-2 rounded-lg font-semibold text-lg">
             Logout
           </button>

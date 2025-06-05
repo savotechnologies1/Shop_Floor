@@ -59,21 +59,16 @@ const CustomOrderForm = () => {
      const handleClick2 = () => {
     setShowPart(true); // Show fields when clicking the Add button
   };
-  const orderNumber = 1001;
+  const [orderNumber, setOrderNumber] = useState("");
   const cost = 3466;
-  const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (event: any) => {
-    if (event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    }
-  };
 
   const { register, handleSubmit, setValue } = useForm<FormData>();
 
-  useEffect(() => {
-    setValue("orderNumber", orderNumber), [orderNumber, setValue];
-  });
+useEffect(() => {
+   const randomOrder = Math.floor(10000 + Math.random() * 90000);
+   setOrderNumber(randomOrder.toString());
+}, []);
   useEffect(() => {
     setValue("Cost", cost), [cost, setValue];
   });
@@ -120,7 +115,7 @@ const CustomOrderForm = () => {
               {...register("orderNumber", {
                 required: "Order Number required",
               })}
-              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600"
+              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600 bg-gray-100"
             >
               {orderNumber}
             </p>
@@ -271,7 +266,7 @@ const CustomOrderForm = () => {
             <p 
              {...register("Cost")}
               
-              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600">
+              className="border py-3 px-4 rounded-md w-full  placeholder-gray-600 bg-gray-100">
                 {cost}
               </p>
           </div>

@@ -1,8 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { FaCircle } from "react-icons/fa";
-import img from "../../assets/secondary action.png";
-import img_1 from "../../assets/stack_1.png";
-import CustomStack from "./CustomStack";
+
+import CustomOrderScheduleForm from "./CustomOrderScheduleForm";
 
 const CustomOrderSchedule = () => {
   return (
@@ -43,48 +42,11 @@ const CustomOrderSchedule = () => {
         </div>
       </div>
 
-      <div className="py-6">
-        <CustomStack
-          text="Aliquam a dui vel justo fringilla euismod id id enim."
-          text1="Pass GMT800 Single"
-          process1="Thermoforming1"
-          process2="Thermoforming2"
-          img={img}
-          img_1={img_1}
-        />
-        <CustomStack
-          text="Aliquam a dui vel justo fringilla euismod id id enim."
-          text1="Pass GMT800 Single"
-      process1="Thermoforming1"
-          process2="Thermoforming2"
-          img={img}
-          img_1={img_1}
-        />
-        <CustomStack
-          text="Aliquam a dui vel justo fringilla euismod id id enim."
-          text1="Pass GMT800 Single"
-       process1="Thermoforming1"
-          process2="Thermoforming2"
-          img={img}
-          img_1={img_1}
-        />
-        <CustomStack
-          text="Aliquam a dui vel justo fringilla euismod id id enim."
-          text1="Pass GMT800 Single"
-         process1="Thermoforming1"
-          process2="Thermoforming2"
-          img={img}
-          img_1={img_1}
-        />
-        <CustomStack
-          text="Aliquam a dui vel justo fringilla euismod id id enim."
-          text1="Pass GMT800 Single"
-          process1="Thermoforming1"
-          process2="Thermoforming2"
-          img={img}
-          img_1={img_1}
-        />
+        <div className="py-6">
+        <CustomOrderScheduleForm />
       </div>
+
+     
     </div>
   );
 };

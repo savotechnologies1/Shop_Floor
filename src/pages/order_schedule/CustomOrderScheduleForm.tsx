@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import ItemSelected from "./ItemSelected";
+import CustomItemSelected from "./CustomItemSelected";
 
-const StockOrderScheduleForm = () => {
+const CustomOrderScheduleForm = () => {
   // const [formData, setFormData] = useState({
   //   orderNumber: "",
   //   orderDate: "2025-02-26",
@@ -135,10 +135,10 @@ const StockOrderScheduleForm = () => {
         </form>
       </div>
 
-      <ItemSelected/>
+      <CustomItemSelected/>
  
     </>
   );
 };
 
-export default StockOrderScheduleForm;
+export default CustomOrderScheduleForm;

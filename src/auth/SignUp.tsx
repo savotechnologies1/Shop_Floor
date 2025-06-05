@@ -27,7 +27,7 @@ const SignUp = () => {
       navigate("/sign-in", { replace: true });
       const response = await signUpApi(data);
       console.log("responseresponse", response);
-      if (response.status === 201) {
+      if (npmresponse.status === 201) {
         console.log("login page redirect");
         navigate("/sign-in", { replace: true });
       }
