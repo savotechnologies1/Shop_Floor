@@ -811,17 +811,17 @@ const sections = isShopFloor
                     section.items.map((item) => (
                       <div key={item.key} className="mb-2">
                         <Link
-                          to={item.path || "#"}
+                          to={"path" in item && item.path ? item.path : "#"}
                           onClick={() => {
                             handleLogout();
                             if (item.key === "Logout") {
-                            } else if (item.hasSubmenu) {
+                            } else if ("hasSubmenu" in item && item.hasSubmenu) {
                               toggleSubmenu(item.key);
                             }
                           }}
                           className={`flex items-center justify-between w-full p-2 
                 rounded-md transition text-[#061D22] text-[16px]  ${
-                  location.pathname === item.path
+                  "path" in item && item.path && location.pathname === item.path
                     ? "bg-brand text-white"
                     : "hover:bg-gray-100 "
                 }`}
@@ -832,7 +832,7 @@ const sections = isShopFloor
                               className={`block truncate max-w-[160px] overflow-hidden text-ellipsis ${
                                 activeMenu ? "inline" : "hidden xl:inline"
                               }  ${
-                                location.pathname === item.path
+                                "path" in item && item.path && location.pathname === item.path
                                   ? "text-white"
                                   : "text-gray-700"
                               }`}
@@ -841,7 +841,7 @@ const sections = isShopFloor
                             </span>
                           </div>
 
-                          {item.hasSubmenu && (
+                          {"hasSubmenu" in item && item.hasSubmenu && (
                             <IoIosArrowForward
                               color="#637381"
                               className={`${
@@ -852,7 +852,7 @@ const sections = isShopFloor
                         </Link>
 
                         {/* Render Submenu */}
-                        {item.hasSubmenu && openSections[item.key] && (
+                        {"hasSubmenu" in item && item.hasSubmenu && openSections[item.key] && (
                           <ul className="ml-4">
                             {item.submenu.map((submenu) => (
                               <li key={submenu.key} className="mt-2 ">
@@ -865,6 +865,7 @@ const sections = isShopFloor
                                         : "#"
                                     }
                                     onClick={() =>
+                                      "hasSubmenu" in submenu &&
                                       submenu.hasSubmenu &&
                                       toggleSubmenu(submenu.key)
                                     }
@@ -890,7 +891,7 @@ const sections = isShopFloor
                                     >
                                       {submenu.label}
                                     </span>
-                                    {submenu.hasSubmenu && (
+                                    {"hasSubmenu" in submenu && submenu.hasSubmenu && (
                                       <IoIosArrowForward
                                         color="#637381"
                                         className={
@@ -898,17 +899,18 @@ const sections = isShopFloor
                                             activeMenu
                                               ? "inline"
                                               : "hidden xl:inline"
-                                          }
-                                         ${openSections[submenu.key]}`
-                                            ? "rotate-90"
-                                            : ""
+                                          } ${
+                                            openSections[submenu.key]
+                                              ? "rotate-90"
+                                              : ""
+                                          }`
                                         }
                                       />
                                     )}
                                   </Link>
                                 </div>
                                 {/* Render Nested Submenu */}
-                                {submenu.hasSubmenu &&
+                                {"hasSubmenu" in submenu && submenu.hasSubmenu &&
                                   openSections[submenu.key] && (
                                     <ul className="ml-4">
                                       {submenu.submenu.map((subSubmenu) => (

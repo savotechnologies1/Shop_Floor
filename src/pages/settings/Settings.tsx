@@ -13,7 +13,6 @@ const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
   const form1 = useForm(); // For Account form
-<<<<<<< HEAD
   // const form2 = useForm(); // For Language/Currency form
 
   const onSubmit = (data: any) => {
@@ -22,14 +21,6 @@ const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   // const onSubmit1 = (data: any) => {
   //   console.log(data);
   // };
-=======
-  // For Language/Currency form
-
-  const onSubmit = (data: unknown) => {
-    console.log(data);
-  };
- 
->>>>>>> 17f0f25616719fd32e33652ce11e390421d42f4e
 
   return (
     <div className="p-8  min-h-screen">

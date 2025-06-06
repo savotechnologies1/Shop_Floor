@@ -1,9 +1,5 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-<<<<<<< HEAD
-
-=======
->>>>>>> 17f0f25616719fd32e33652ce11e390421d42f4e
 import ItemSelected from "./ItemSelected";
 
 const StockOrderScheduleForm = () => {
