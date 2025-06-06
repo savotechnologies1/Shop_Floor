@@ -373,10 +373,6 @@ interface SimpleMenuItem extends BaseMenuItem {
 
 type MenuItem = SubMenuItem | SimpleMenuItem;
 
-interface MenuSection {
-  category: string;
-  items: MenuItem[] | MenuItem;
-}
 
 interface SidebarProps {
   activeMenu: boolean;

@@ -56,18 +56,14 @@ import QualityPerformance from "./pages/qualityPerformance/QualityPerformance";
 import BusinessAnalysis from "./pages/business-analysis/BusinessAnalysis";
 import BusinessIntelligence from "./pages/business-intelligence/BusinessIntelligence";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "./context/AuthContext";
 import SupplierList from "./pages/supplier_chain/supplierList";
 import AllWorkInstruction from "./pages/Work_Instrcution.tsx/AllWorkInstruction";
-import { useEffect, useState } from "react";
 
 const App = () => {
   // const { token } = useAuth();
-  const token = localStorage.getItem('token')
-  
-  console.log("tokentokentoken", token);
+  const token = localStorage.getItem("token");
 
- 
+  console.log("tokentokentoken", token);
 
   return (
     <PartProvider>
@@ -88,11 +84,8 @@ const App = () => {
           <Route path="run-with-scan" element={<RunWithScan />} />
           <Route path="training" element={<Training />} />
           {/* <Route path="/" element={token  ? <Layout /> : <SignIn />}> */}
-        <Route path="/" element={<Layout />}>
-  <Route
-    index
-    element={ <DashboardDetails />}
-  />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<DashboardDetails />} />
 
             <Route path="dashboardDetailes" element={<DashboardDetails />} />
             <Route path="new-supplier" element={<AddSuppliers />} />
