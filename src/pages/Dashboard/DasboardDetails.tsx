@@ -12,11 +12,25 @@ import overlay4 from "../../assets/Overlay_4.png";
 import overlay41 from "../../assets/Overlay_41.png";
 
 import OrderStatus from "./OrderStatus";
+import ClockInOut from "../timeClock/ClockInOut";
+import { useEffect, useState } from "react";
 
 const DasboardDetails = () => {
+   const [role, setRole] = useState<string | null>(null); // initially null
   
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    setRole(storedRole);
+  }, []);
+  if (role === null) {
+    return null; // or <Loader />
+  }
+  console.log('rolerole',role);
   return (
-    <div className="p-4">
+  <>
+ {
+  role == "frontline-manager"?
+   <div className="p-4">
       <h1 className="text-xl font-semibold">Welcome back, USER👋</h1>
 
       <div className="py-4">
@@ -63,7 +77,12 @@ const DasboardDetails = () => {
           <OrderStatus />
         </div>
       </div>
-    </div>
+    </div>:
+  <ClockInOut />
+
+ }
+   
+  </>  
   );
 };
 

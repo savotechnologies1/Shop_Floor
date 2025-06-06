@@ -10,11 +10,11 @@ const options = [
   { value: "jane-smith", label: "Jane Smith" },
 ];
 
-const partOption = [
-  { value: "cortez-herring", label: "Cortez Herring" },
-  { value: "john-doe", label: "John Doe" },
-  { value: "jane-smith", label: "Jane Smith" },
-];
+// const partOption = [
+//   { value: "cortez-herring", label: "Cortez Herring" },
+//   { value: "john-doe", label: "John Doe" },
+//   { value: "jane-smith", label: "Jane Smith" },
+// ];
 const processOption = [
   { value: "cortez-herring", label: "Cortez Herring" },
   { value: "john-doe", label: "John Doe" },
@@ -51,14 +51,14 @@ const CustomOrderForm = () => {
   // });
 
    const [showFields, setShowFields] = useState(false);
-    const [showPart, setShowPart] = useState(false);
+    // const [showPart, setShowPart] = useState(false);
   
     const handleClick = () => {
       setShowFields(true); // Show fields when clicking the Add button
     };
-     const handleClick2 = () => {
-    setShowPart(true); // Show fields when clicking the Add button
-  };
+  //    const handleClick2 = () => {
+  //   setShowPart(true); // Show fields when clicking the Add button
+  // };
   const [orderNumber, setOrderNumber] = useState("");
   const cost = 3466;
 
@@ -296,7 +296,7 @@ useEffect(() => {
         </div>
 
         {/* Bank Details */}
-        <div className="bg-white px-6 ">
+        {/* <div className="bg-white px-6 ">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 mt-4 gap-4">
             <div>
               <label className="font-semibold">Select Part Family</label>
@@ -373,10 +373,10 @@ useEffect(() => {
               Add Another Part
             </span>
           </div>
-        </div>
+        </div> */}
 
           {/* Render Fields When Clicked */}
-        {showPart && (
+        {/* {showPart && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4  bg-white p-4  ">
             <div>
               <label className="font-semibold">Part Number</label>
@@ -428,7 +428,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div className="bg-white px-6 ">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-4 gap-4 items-center">
             <div>

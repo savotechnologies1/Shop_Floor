@@ -10,21 +10,21 @@ const options = [
   { value: "jane-smith", label: "Jane Smith" },
 ];
 
-const partOption = [
-  { value: "cortez-herring", label: "Cortez Herring" },
-  { value: "john-doe", label: "John Doe" },
-  { value: "jane-smith", label: "Jane Smith" },
-];
-const processOption = [
-  { value: "cortez-herring", label: "Cortez Herring" },
-  { value: "john-doe", label: "John Doe" },
-  { value: "jane-smith", label: "Jane Smith" },
-];
-const assignOption = [
-  { value: "cortez-herring", label: "Cortez Herring" },
-  { value: "john-doe", label: "John Doe" },
-  { value: "jane-smith", label: "Jane Smith" },
-];
+// const partOption = [
+//   { value: "cortez-herring", label: "Cortez Herring" },
+//   { value: "john-doe", label: "John Doe" },
+//   { value: "jane-smith", label: "Jane Smith" },
+// ];
+// const processOption = [
+//   { value: "cortez-herring", label: "Cortez Herring" },
+//   { value: "john-doe", label: "John Doe" },
+//   { value: "jane-smith", label: "Jane Smith" },
+// ];
+// const assignOption = [
+//   { value: "cortez-herring", label: "Cortez Herring" },
+//   { value: "john-doe", label: "John Doe" },
+//   { value: "jane-smith", label: "Jane Smith" },
+// ];
 
 const StockOrderForm = () => {
   // const [formData, setFormData] = useState({
@@ -60,27 +60,27 @@ const StockOrderForm = () => {
   // };
 
   const [showFields, setShowFields] = useState(false);
-  const [showPart, setShowPart] = useState(false);
+  // const [showPart, setShowPart] = useState(false);
 
   const handleClick = () => {
     setShowFields(true); // Show fields when clicking the Add button
   };
-  const handleClick2 = () => {
-    setShowPart(true); // Show fields when clicking the Add button
-  };
+  // const handleClick2 = () => {
+  //   setShowPart(true); // Show fields when clicking the Add button
+  // };
   const [orderNumber, setOrderNumber] = useState("");
   const cost = "4500";
 
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit } = useForm();
 
  useEffect(() => {
     // Generates random order number like: ORD-594203
     const randomOrder =  + Math.floor(10000 + Math.random() * 90000);
     setOrderNumber(randomOrder.toString());
   }, []);
-  useEffect(() => {
-    setValue("cost", cost), [cost, setValue];
-  });
+  // useEffect(() => {
+  //   setValue("cost", cost), [cost, setValue];
+  // });
 
   const onSubmit = (data: object) => {
     console.log("Form Data:", data);
@@ -310,7 +310,7 @@ const StockOrderForm = () => {
           </div> */}
         </div>
 
-        <div className=" px-6 ">
+        {/* <div className=" px-6 ">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 mt-4 gap-4">
             <div>
               <label className="font-semibold">Select Part Family</label>
@@ -387,10 +387,10 @@ const StockOrderForm = () => {
               Add Another Part
             </span>
           </div>
-        </div>
+        </div> */}
 
         {/* Render Fields When Clicked */}
-        {showPart && (
+        {/* {showPart && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4  bg-white p-4  ">
             <div>
               <label className="font-semibold">Part Number</label>
@@ -481,7 +481,7 @@ const StockOrderForm = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <div className=" mt-6">

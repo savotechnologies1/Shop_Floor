@@ -46,12 +46,14 @@ type LoginFormData = {
 const onSubmit = async (data:LoginFormData) => {
   setIsLoading(true); // loading start
   console.log('Submitted data:', data);
-
+  
   try {
     // const response = await loginApi(data);
     // console.log("API Response:", response);
-
+    
     let role = ""; // default role
+    
+    localStorage.setItem("token", "true");
 
     if  (data.email === "support@gmail.com") {
       role = "shopfloor";

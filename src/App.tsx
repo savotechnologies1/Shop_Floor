@@ -59,11 +59,16 @@ import { ToastContainer } from "react-toastify";
 import { useAuth } from "./context/AuthContext";
 import SupplierList from "./pages/supplier_chain/supplierList";
 import AllWorkInstruction from "./pages/Work_Instrcution.tsx/AllWorkInstruction";
+import { useEffect, useState } from "react";
 
 const App = () => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
+  const token = localStorage.getItem('token')
   
   console.log("tokentokentoken", token);
+
+ 
+
   return (
     <PartProvider>
       <ToastContainer />
@@ -82,12 +87,13 @@ const App = () => {
           <Route path="run-schedule" element={<RunSchedule />} />
           <Route path="run-with-scan" element={<RunWithScan />} />
           <Route path="training" element={<Training />} />
-
-          {/* Routes with the layout */}
-
           {/* <Route path="/" element={token  ? <Layout /> : <SignIn />}> */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<DashboardDetails />} />
+        <Route path="/" element={<Layout />}>
+  <Route
+    index
+    element={ <DashboardDetails />}
+  />
+
             <Route path="dashboardDetailes" element={<DashboardDetails />} />
             <Route path="new-supplier" element={<AddSuppliers />} />
             <Route path="stock-order" element={<StockOrder />} />
