@@ -119,7 +119,6 @@ const LaborForecastList = () => {
               <tr className="border-b bg-[#F4F6F8] text-left text-[#637381] whitespace-nowrap">
                 {[
                   "Product Tree",
-                  "Com",
                   "Avialable  ",
                   "Need ",
                   "Forc ",
@@ -139,7 +138,6 @@ const LaborForecastList = () => {
                     <p>{item.product_name}</p>
                     <p>{item.sub_name}</p>
                   </td>
-                  <td className="px-3 py-2">{item.Com}</td>
 
                   <td className="px-3 py-2 flex flex-col">{item.Available}</td>
 

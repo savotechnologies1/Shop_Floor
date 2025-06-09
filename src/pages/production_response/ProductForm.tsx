@@ -84,7 +84,7 @@ const ProductForm = () => {
               type="text"
               {...register("supplier")}
               placeholder="Enter supplier"
-              className="border py-3 px-4 rounded-md w-full text-gray-600"
+              className="border py-3 px-4 rounded-md w-full text-gray-600 "
             />
           </div>
         </div>
