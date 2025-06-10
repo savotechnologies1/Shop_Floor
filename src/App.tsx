@@ -68,7 +68,7 @@ const App = () => {
   return (
     <PartProvider>
       <ToastContainer />
-      <Router basename="/Frontline">
+      <Router basename="/Shopfloor">
         <Routes>
           {/* Routes without the layout */}
           <Route path="sign-in" element={<SignIn />} />

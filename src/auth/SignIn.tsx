@@ -51,18 +51,15 @@ const onSubmit = async (data:LoginFormData) => {
     // const response = await loginApi(data);
     // console.log("API Response:", response);
     
-    let role = ""; // default role
+    // let role = ""; 
     
-    localStorage.setItem("token", "true");
+    // localStorage.setItem("token", "true");
 
-    if  (data.email === "support@gmail.com") {
-      role = "shopfloor";
-    } else {
-      role = "frontline-manager";
-    }
-
+    // if  (data.email === "support@gmail.com") {
+    //   role = "shopfloor";
+    // } 
     // Save role to localStorage or context if needed
-    localStorage.setItem("role", role);
+    // localStorage.setItem("role", role);
 
     // Navigate to home page
     navigate("/", { replace: true });
