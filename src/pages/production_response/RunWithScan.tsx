@@ -66,9 +66,7 @@ const RunWithScan = () => {
               </div>
             </div>
             <div className="text-white flex gap-4 md:gap-20 flex-wrap justify-center">
-              <div>
-                <p className="md:text-xl "> january 13 ,2025</p>
-              </div>
+              
               <div>
                 <p className="md:text-2xl "> Devon Lane</p>
               </div>
