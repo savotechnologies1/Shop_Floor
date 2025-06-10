@@ -1,192 +1,191 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircle } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { deleteSupplier, supplierList } from "./https/suppliersApi";
+import { NavLink, useNavigate } from "react-router-dom";
 
-// Define the Supplier data type
-interface CustomerItem {
+interface WorkInstructionItem {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  address: string;
-  billingTerms: string;
+  imageUrl: string;
+  name: string;
+  partDesc: string;
+  stepNumber: string;
+  description: string;
+  submitDate: string;
+  statusColor: string; 
 }
 
-// Define the API response shape
-interface SupplierListResponse {
-  data: CustomerItem[];
-  pagination: {
-    totalPages: number;
-    currentPage: number;
-  };
-}
+const mockData: WorkInstructionItem[] = [
+  {
+    id: "1",
+    imageUrl: "/avatar1.jpg",
+    name: "John Smith",
+    partDesc: "Cut Trim",
+    stepNumber: "Step 1",
+    description: "Remove burn and sharp edges",
+    submitDate: "18/09/2016",
+    statusColor: "green",
+  },
+  {
+    id: "2",
+    imageUrl: "/avatar2.jpg",
+    name: "Emily Johnson",
+    partDesc: "Cut Trim",
+    stepNumber: "Step 2",
+    description: "Remove burn and sharp edges",
+    submitDate: "12/06/2020",
+    statusColor: "yellow",
+  },
+  {
+    id: "3",
+    imageUrl: "/avatar3.jpg",
+    name: "Michael Brown",
+    partDesc: "Cut Trim",
+    stepNumber: "Step 3",
+    description: "Remove burn and sharp edges",
+    submitDate: "15/08/2017",
+    statusColor: "red",
+  },
+  {
+    id: "4",
+    imageUrl: "/avatar4.jpg",
+    name: "Sarah Wilson",
+    partDesc: "Cut Trim",
+    stepNumber: "Step 4",
+    description: "Remove burn and sharp edges",
+    submitDate: "07/05/2016",
+    statusColor: "gray",
+  },
+  {
+    id: "5",
+    imageUrl: "/avatar5.jpg",
+    name: "David Lee",
+    partDesc: "Cut Trim",
+    stepNumber: "Step 5",
+    description: "Remove burn and sharp edges",
+    submitDate: "28/10/2012",
+    statusColor: "green",
+  },
+];
+
+
 
 const SupplierList: React.FC = () => {
-  const [customerData, setCustomerData] = useState<CustomerItem[]>([]);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [openOptionsIndex, setOpenOptionsIndex] = useState<number | null>(null);
-  const rowsPerPage = 5;
-
-  const navigate = useNavigate();
+  const rowsPerPage = 4;
+  const currentPage = 2;
 
   const toggleOptions = (index: number) => {
-    setOpenOptionsIndex((prevIndex) => (prevIndex === index ? null : index));
+    setOpenOptionsIndex((prev) => (prev === index ? null : index));
   };
 
-  const goToPreviousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const fetchCustomerList = async (page: number = 1) => {
-    try {
-      const response: SupplierListResponse = await supplierList(page, rowsPerPage);
-      setCustomerData(response.data);
-      setTotalPages(response.pagination?.totalPages || 1);
-    } catch (error) {
-      console.error("Error fetching suppliers:", error);
+  const getColorClass = (color: string) => {
+    switch (color) {
+      case "green":
+        return "bg-green-200 text-green-700";
+      case "yellow":
+        return "bg-yellow-200 text-yellow-800";
+      case "red":
+        return "bg-red-200 text-red-700";
+      default:
+        return "bg-gray-200 text-gray-600";
     }
   };
 
-  const handleEditClick = (id: string) => {
-    navigate(`/edit-supplier/${id}`);
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteSupplier(id);
-      fetchCustomerList(currentPage);
-    } catch (error) {
-      console.error("Error deleting supplier:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCustomerList(currentPage);
-  }, [currentPage]);
+  const navigate = useNavigate ();
+const handleEdit = () =>{
+  navigate("/edit-work-instruction");
+}
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      {/* Header and Breadcrumb */}
-      <div className="flex items-center text-sm text-gray-500 mb-4" />
-      <h1 className="font-semibold text-[20px] md:text-[24px] text-black">Suppliers</h1>
+      <h1 className="font-semibold text-[20px] md:text-[24px] text-black mb-2">
+        Supplier List
+      </h1>
 
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 items-center">
-          <p className="text-[14px] text-black">
-            <NavLink to="/dashboardDetailes">Dashboard</NavLink>
-          </p>
-          <FaCircle className="text-[6px] text-gray-500" />
-          <span className="text-[14px]">Suppliers</span>
-          <FaCircle className="text-[6px] text-gray-500" />
-          <span className="text-[14px]">List</span>
-        </div>
+      <div className="flex gap-2 items-center text-sm text-gray-500">
+        <NavLink to="/dashboardDetailes">Dashboard</NavLink>
+        <FaCircle className="text-[6px]" />
+        <span>Supplier List</span>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white p-4 mt-6">
-        <div className="flex flex-col md:flex-row justify-between gap-4 items-end">
-          <div className="w-full md:w-1/2">
-            <label className="block text-sm font-medium">Search</label>
-            <input
-              type="text"
-              placeholder="Enter Supplier Name"
-              className="border w-full px-3 py-2 rounded-md"
-            />
-          </div>
-          <div className="w-full md:w-1/2">
-            <label className="block text-sm font-medium">Filter By</label>
-            <select className="border w-full px-3 py-2 rounded-md">
-              <option>New Supplier</option>
-              <option>Production Manager</option>
-            </select>
-          </div>
+      <div className="bg-white p-4 mt-6 rounded-lg">
+        <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
+          <select className="border w-full md:w-1/3 px-3 py-2 rounded-md">
+            <option>Project Cordinator</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="border w-full md:w-2/3 px-3 py-2 rounded-md"
+          />
         </div>
-      </div>
 
-      {/* Table */}
-      <div className="bg-white overflow-x-auto mt-6">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-sm whitespace-nowrap">
-              <th className="text-left p-3">Name</th>
-              <th className="text-left p-3">Email</th>
-              <th className="text-left p-3">Address</th>
-              <th className="text-left p-3">Billing Terms</th>
-              <th className="text-left p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customerData.map((item, index) => (
-              <React.Fragment key={item.id}>
-                <tr className="border-b hover:bg-gray-50 text-sm">
-                  <td className="p-3 whitespace-nowrap">
-                    {item.firstName} {item.lastName}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Address</th>
+                <th className="px-4 py-3">Billings Terms</th>
+                <th className="px-4 py-3">Submit By</th>
+                <th className="px-4 py-3">Submit Date</th>
+                <th className="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mockData.map((item, index) => (
+                <tr key={item.id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-3 flex items-center gap-2">
+                  
+                    <span>{item.name}</span>
                   </td>
-                  <td className="p-3 whitespace-nowrap">{item.email}</td>
-                  <td className="p-3">{item.address}</td>
-                  <td className="p-3">{item.billingTerms}</td>
-                  <td className="p-3 flex items-center gap-4 relative">
+                  <td className="px-4 py-3">{item.partDesc}</td>
+                  <td className="px-4 py-3">{item.stepNumber}</td>
+                  <td className="px-4 py-3">{item.description}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-semibold ${getColorClass(
+                        item.statusColor
+                      )}`}
+                    >
+                      {item.submitDate}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 relative flex items-center gap-4">
                     <FiEdit2
-                      onClick={() => handleEditClick(item.id)}
-                      className="text-black cursor-pointer text-lg"
-                      title="Quick Edit"
+                        onClick={handleEdit}
+
+                      className="cursor-pointer text-lg"
+                      title="Quick edit"
                     />
                     <BsThreeDotsVertical
+                      className="cursor-pointer text-lg"
                       onClick={() => toggleOptions(index)}
-                      className="text-black cursor-pointer text-lg"
-                      title="More Options"
                     />
                     {openOptionsIndex === index && (
-                      <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-md z-10">
-                        <button
-                          onClick={() => navigate(`/edit-supplier/${item.id}`)}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
+                      <div className="absolute right-0 mt-8 w-32 bg-white border border-gray-200 rounded shadow-md z-10">
+                        <button 
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           Edit
                         </button>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
-                        >
+                        <button className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100">
                           Delete
                         </button>
                       </div>
                     )}
                   </td>
                 </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        {/* Pagination */}
-        <div className="flex justify-between items-center mt-4 p-2">
-          <button
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
-            className={`px-2 py-2 rounded-md ${currentPage === 1 ? "bg-gray-300" : "bg-brand text-white"}`}
-          >
-            Previous
-          </button>
+        <div className="flex justify-between items-center mt-4 text-sm">
+          <span>Rows per page: 5</span>
           <span>
-            Page {currentPage} of {totalPages}
+            {rowsPerPage * (currentPage - 1) + 1} - {rowsPerPage * currentPage} of 11
           </span>
-          <button
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-md ${currentPage === totalPages ? "bg-gray-300" : "bg-brand text-white"}`}
-          >
-            Next
-          </button>
         </div>
       </div>
     </div>
