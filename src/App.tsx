@@ -85,7 +85,7 @@ const App = () => {
           <Route path="training" element={<Training />} />
           {/* <Route path="/" element={token  ? <Layout /> : <SignIn />}> */}
           <Route path="/" element={<Layout />}>
-            <Route index element={<DashboardDetails />} />
+            <Route index element={<ClockInOut />} />
 
             <Route path="dashboardDetailes" element={<DashboardDetails />} />
             <Route path="new-supplier" element={<AddSuppliers />} />
