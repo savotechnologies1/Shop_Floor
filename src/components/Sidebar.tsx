@@ -449,10 +449,6 @@ const sections =
     setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleLogout = () => {
-    // localStorage.removeItem("loggedIn"); // Clear the loggedIn flag from localStorage
-    navigate("/sign-in"); // Redirect to the sign-in page
-  };
  
 const hasSubmenu = (
   item: any

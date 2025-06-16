@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { FaArrowLeft, FaChevronRight } from "react-icons/fa";
 import logo from "../../assets/logo.png";
-import setting from "../../assets/settings_icon.png";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const StationLogin = () => {
