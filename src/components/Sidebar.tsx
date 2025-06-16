@@ -66,6 +66,16 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
 
   // const isShopFloor = role === "shopfloor";
 
+    const handleMenuItemClick = (item: BaseMenuItem) => {
+    if (item.key === "Logout") {
+      localStorage.removeItem("token");
+      navigate("/sign-in");
+    } else if ("hasSubmenu" in item && item.hasSubmenu) {
+      toggleSubmenu(item.key);
+    } else if ("path" in item && item.path) {
+      navigate(item.path);
+    }
+  };
 const sections =  
    [
     
@@ -498,14 +508,10 @@ const hasSubmenu = (
                 <div key={item.key} className="mb-2">
                   <Link
                     to={item.path || "#"}
-                    onClick={() => {
-                      handleLogout();
-                      if (item.key === "Logout") {
-                        localStorage.removeItem('token')
-                      } else if (hasSubmenu(item)) {
-                        toggleSubmenu(item.key);
-                      }
-                    }}
+                     onClick={(e) => {
+                            e.preventDefault(); // Prevent default navigation
+                            handleMenuItemClick(item);
+                          }}
                     className={`flex items-center justify-between w-full p-2 
                       rounded-md transition text-[#061D22] text-[16px] ${
                         location.pathname === item.path
