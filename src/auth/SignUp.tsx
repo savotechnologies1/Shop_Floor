@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import signin from "../assets/signin.png";
 import { useState } from "react";
 import fb from "../assets/facebook_ic.png";
 import google from "../assets/google_ic.png";
 import apple from "../assets/apple_ic.png";
+import { signUpApi } from "./https/authApis";
 // import { signUpApi } from "./https/authApis";
 // import { signUpApi } from "./https/authApis";
 // import { toast } from "react-toastify";
@@ -21,11 +22,15 @@ const SignUp = () => {
   } = useForm();
 
   // const navigate = useNavigate();
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = async (data: object) => {
     console.log("Submitted data:", data);
+    const payload = {
+      ...data,
+      role: "Shop-Floor",
+    };
     try {
       // navigate("/sign-in", { replace: true });
-      // const response = await signUpApi(data);
+      // const response = await signUpApi(payload);
       // console.log("responseresponse", response);
       // if (response.status === 201) {
       //   console.log("login page redirect");

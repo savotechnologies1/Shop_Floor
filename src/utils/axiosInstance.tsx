@@ -1,20 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 const apiUrl = import.meta.env.VITE_SERVER_URL;
-export const BASE_URL = "http://localhost:8080"
+export const BASE_URL = "http://localhost:8080";
 
 const axiosInstance = axios.create({
-  baseURL: `${apiUrl}/api/user`,
+  baseURL: `${apiUrl}/api/shopFloor`,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token'); 
-    
+    const token = localStorage.getItem("auth_token");
+
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },

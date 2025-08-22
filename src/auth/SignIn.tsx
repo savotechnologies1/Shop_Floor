@@ -5,6 +5,8 @@ import signin from "../assets/signin.png";
 import password from "../assets/password_icon'.png";
 import visible from "../assets/visible_icon.png";
 import { useState } from "react";
+import { loginApi } from "./https/authApis";
+import { useAuth } from "../context/AuthContext";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,17 +16,16 @@ const SignIn = () => {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ email: string; password: string }>();
-type LoginFormData = {
-  email: string;
-  password: string;
-};
-
+  } = useForm<{ userName: string; password: string }>();
+  type LoginFormData = {
+    userName: string;
+    password: string;
+  };
   // const login = useAuth()
   // const onSubmit = async (data) => {
   //   navigate("/", { replace: true });
@@ -43,33 +44,27 @@ type LoginFormData = {
   //     toast.error(error.response.message);
   //   }
   // };
-const onSubmit = async (data:LoginFormData) => {
-  setIsLoading(true); // loading start
-  console.log('Submitted data:', data);
-  
-  try {
-    // const response = await loginApi(data);
-    // console.log("API Response:", response);
-    
-    // let role = ""; 
-    
-    // localStorage.setItem("token", "true");
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    try {
+      console.log("datadata", data);
 
-    // if  (data.email === "support@gmail.com") {
-    //   role = "shopfloor";
-    // } 
-    // Save role to localStorage or context if needed
-    // localStorage.setItem("role", role);
-
-    // Navigate to home page
-    navigate("/", { replace: true });
-  } catch (error) {
-    console.error("Login error:", error);
-    // Show error to user if needed
-  } finally {
-    setIsLoading(false); // loading end
-  }
-};
+      const response = await loginApi(data);
+      console.log("responseresponse", response);
+      if (response.status === 201) {
+        login(response.data.token);
+        console.log("login page redirect");
+        navigate("/", { replace: true });
+      }
+      // Navigate to home page
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Login error:", error);
+      // Show error to user if needed
+    } finally {
+      setIsLoading(false); // loading end
+    }
+  };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
@@ -117,7 +112,7 @@ const onSubmit = async (data:LoginFormData) => {
               </label>
               <input
                 type="email"
-                {...register("email", {
+                {...register("userName", {
                   required: "Email is required",
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -126,13 +121,13 @@ const onSubmit = async (data:LoginFormData) => {
                 })}
                 placeholder="Enter your email"
                 className={`w-full p-3 rounded-lg border ${
-                  errors.email ? "border-red-500" : "border-gray-300"
+                  errors.userName ? "border-red-500" : "border-gray-300"
                 } focus:outline-none focus:ring-2 focus:ring-[#052C89]`}
                 autoComplete="email"
               />
-              {errors.email && (
+              {errors.userName && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message as string}
+                  {errors.userName.message as string}
                 </p>
               )}
             </div>

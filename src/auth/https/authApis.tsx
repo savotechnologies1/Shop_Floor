@@ -2,18 +2,17 @@ import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInstance";
 import { AxiosError } from "axios";
 
-
 export const signUpApi = async (userData: object) => {
   try {
     const response = await axiosInstance.post("/register", userData);
-    console.log('responseresponse22',response.data.message)
-    console.log('responseresponse22',response.status)
+    console.log("responseresponse22", response.data.message);
+    console.log("responseresponse22", response.status);
     if (response.status === 201) {
-        console.log("dfklsdfjsdfjkl")
+      console.log("dfklsdfjsdfjkl");
       toast.success(response.data.message);
     }
     return response;
-  }catch (error: unknown) {
+  } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     if (axiosError.response?.data?.message) {
       toast.error(axiosError.response.data.message);
@@ -26,6 +25,10 @@ export const signUpApi = async (userData: object) => {
 export const loginApi = async (userData: object) => {
   try {
     const response = await axiosInstance.post("/login", userData);
+    console.log("299999999999999999980");
+
+    console.log("responseresponse", response);
+
     if (response.status === 201) {
       toast.success(response.data.message);
     }
