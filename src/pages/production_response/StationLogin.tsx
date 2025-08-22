@@ -485,7 +485,6 @@ const StationLogin = () => {
             <div>
               <label className="block text-gray-700 font-medium">Name</label>
 
-              {/* ***** CAMBIO 2: Mostrar el nombre y email del primer usuario del array 'stationUsers' ***** */}
               <input
                 type="text"
                 // Usamos encadenamiento opcional (?.) para evitar errores si los datos aún no han llegado.

@@ -520,20 +520,40 @@ const RunWithScan = () => {
         navigate("/station-login");
         return;
       }
+
+      // This can be 'string' or 'null'
+      const stationUserId = localStorage.getItem("stationUserId");
+
+      // FIX: Add a guard clause to handle the 'null' case.
+      // If there's no stationUserId, we cannot proceed.
+      // It's best to redirect to the login page.
+      if (!stationUserId) {
+        console.error(
+          "No station user ID found in localStorage. Redirecting to login."
+        );
+        setLoading(false);
+        navigate("/station-login");
+        return; // Stop the function execution here.
+      }
+
       try {
         setLoading(true);
-        const stationUserId = localStorage.getItem("stationUserId");
+        // Now, TypeScript knows that stationUserId MUST be a string because of the check above.
         const response = await stationProcessDetail(jobId, stationUserId);
         const data = response?.data;
-        if (data) setJobData(data);
+        if (data) {
+          setJobData(data);
+        }
       } catch (error: any) {
-        if (error?.status === 404) navigate("/station-login");
+        if (error?.status === 404) {
+          navigate("/station-login");
+        }
       } finally {
         setLoading(false);
       }
     },
     [navigate]
-  );
+  ); // The dependency array is correct
 
   useEffect(() => {
     fetchJobDetails(id);
@@ -549,7 +569,9 @@ const RunWithScan = () => {
     const productId = jobData.productId || jobData.order?.productId;
 
     if (!employeeId || !productId) {
-      console.error("Missing employee ID or product ID. Cannot complete order.");
+      console.error(
+        "Missing employee ID or product ID. Cannot complete order."
+      );
       return;
     }
 
@@ -578,7 +600,8 @@ const RunWithScan = () => {
         jobData.part_id,
         employeeId,
         productId,
-        jobData.type
+        jobData.type,
+        `${jobData.employeeInfo.firstName} ${jobData.employeeInfo.lastName}`
       );
       fetchJobDetails(id);
     } catch (error: any) {
@@ -630,7 +653,8 @@ const RunWithScan = () => {
       if (["input", "textarea"].includes(target.tagName.toLowerCase())) return;
 
       if (event.key === "Enter") {
-        if (scanned === COMPLETE_BARCODE && COMPLETE_BARCODE) handleCompleteOrder();
+        if (scanned === COMPLETE_BARCODE && COMPLETE_BARCODE)
+          handleCompleteOrder();
         else if (scanned === SCRAP_BARCODE && SCRAP_BARCODE) handleScrapOrder();
         else console.log("❌ Barcode not matched:", scanned);
 
@@ -760,7 +784,7 @@ const RunWithScan = () => {
             </div>
           )}
         </div>
-        
+
         <div className="mt-10 p-4 border-2 border-dashed border-gray-400 rounded-lg text-center bg-gray-50">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-8">
             {/* Complete Order Barcode */}
@@ -827,7 +851,9 @@ const RunWithScan = () => {
             <div className="flex flex-col items-center text-white">
               <p className="text-sm md:text-base font-semibold"> Qty</p>
               {/* FIX: Corrected typo from completedQty to completedQuantity to match interface */}
-              <p className="text-sm md:text-base">{jobData.completedQuantity}</p>
+              <p className="text-sm md:text-base">
+                {jobData.completedQuantity}
+              </p>
             </div>
             <div className="flex flex-col items-center text-white">
               <p className="text-sm md:text-base font-semibold">Cycle Time</p>

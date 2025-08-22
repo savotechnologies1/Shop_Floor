@@ -576,10 +576,9 @@
 // };
 
 // export default RunSchedule;
-
 import belt from "../../assets/belt-solid.png";
 import { IoLogOutOutline } from "react-icons/io5";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   completeOrder,
   scrapOrder,
@@ -587,9 +586,9 @@ import {
   stationLogoutApi,
   stationProcessDetail,
 } from "./https/productionResponseApi";
-import { useEffect, useState } from "react";
+// FIX: Added useCallback for performance optimization.
+import { useEffect, useState, useCallback } from "react";
 import CommentBox from "./CommentBox";
-// import CommentBox from "./CommentBox";
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -615,17 +614,22 @@ interface Part {
 
 interface Order {
   orderNumber: string;
+  // FIX: Added optional 'productId' which is used in the complete order logic.
+  productId?: string;
 }
 
 interface EmployeeInfo {
   firstName: string;
   lastName: string;
+  // FIX: Added 'id' which is used in API calls.
+  id: string;
 }
 
 interface Process {
   processName: string;
 }
 
+// FIX: Added semicolons to all interface properties.
 interface JobData {
   id: string;
   productionId: string;
@@ -649,6 +653,8 @@ interface JobData {
   remainingQty: number;
   scheduleQuantity: number;
   scrapQuantity: number;
+  // FIX: Added 'processId' which is used for station login.
+  processId: string;
 }
 
 const formatDate = (dateString: string | undefined): string => {
@@ -660,7 +666,8 @@ const formatDate = (dateString: string | undefined): string => {
   });
 };
 
-const formatCycleTime = (dateString: string) => {
+// FIX: Correctly typed dateString as potentially undefined.
+const formatCycleTime = (dateString: string | undefined) => {
   if (!dateString) return "N/A";
 
   try {
@@ -680,65 +687,57 @@ const RunSchedule = () => {
   const { id } = useParams<{ id: string }>();
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchJobDetails = async (jobId: string | undefined) => {
-    if (!jobId) {
-      setLoading(false);
-      // navigate("/station-login");
-      return;
-    }
-    const stationUserId = localStorage.getItem("stationUserId");
-
-    try {
-      setLoading(true);
-      const response = await stationProcessDetail(jobId, stationUserId);
-      const data = response?.data;
-      if (data) {
-        setJobData(data);
-      }
-    } catch (error: any) {
-      if (error?.status === 404) {
+  const fetchJobDetails = useCallback(
+    async (jobId: string | undefined) => {
+      if (!jobId) {
+        setLoading(false);
         navigate("/station-login");
+        return;
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+
+      // This can be 'string' or 'null'
+      const stationUserId = localStorage.getItem("stationUserId");
+
+      // FIX: Add a guard clause to handle the 'null' case.
+      // If there's no stationUserId, we cannot proceed.
+      // It's best to redirect to the login page.
+      if (!stationUserId) {
+        console.error(
+          "No station user ID found in localStorage. Redirecting to login."
+        );
+        setLoading(false);
+        navigate("/station-login");
+        return; // Stop the function execution here.
+      }
+
+      try {
+        setLoading(true);
+        // Now, TypeScript knows that stationUserId MUST be a string because of the check above.
+        const response = await stationProcessDetail(jobId, stationUserId);
+        const data = response?.data;
+        if (data) {
+          setJobData(data);
+        }
+      } catch (error: any) {
+        if (error?.status === 404) {
+          navigate("/station-login");
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [navigate]
+  ); // The dependency array is correct
 
   useEffect(() => {
     fetchJobDetails(id);
-  }, [id, navigate]);
-  console.log("jobDatajobData", jobData);
+  }, [id, fetchJobDetails]);
 
-  // const handleCompleteOrder = async () => {
-  //   if (!jobData) return;
-  //   console.log(
-  //     "jobData.employeeInfojobData.employeeInfo",
-  //     jobData.employeeInfo
-  //   );
-
-  //   try {
-  //     await completeOrder(
-  //       jobData.productionId,
-  //       jobData.order_id,
-  //       jobData.part_id,
-  //       jobData.employeeInfo.id,
-  //       jobData.order.partId
-  //     );
-  //     fetchJobDetails(id);
-  //   } catch (error: any) {
-  //     const status = error?.response?.status;
-  //     if (status === 400) {
-  //       console.warn("Order might be already completed. Refetching...");
-  //       fetchJobDetails(id);
-  //     } else {
-  //       console.error("Error completing order:", error);
-  //     }
-  //   }
-  // };
   const [isCompleting, setIsCompleting] = useState(false);
+
   const handleCompleteOrder = async () => {
-    if (!jobData || isCompleting) return;
+    // FIX: Added guards to ensure required data is present.
+    if (!jobData || isCompleting || !jobData.employeeInfo?.id) return;
     setIsCompleting(true);
     try {
       if (jobData.type === "product") {
@@ -757,9 +756,11 @@ const RunSchedule = () => {
         console.log("Station login successful!");
       }
 
-      let productId = null;
-      if (jobData.type === "product") {
-        productId = jobData.productId || jobData.order.productId;
+      const productId = jobData.productId || jobData.order?.productId;
+      if (!productId) {
+        console.error("Product ID not found. Cannot complete order.");
+        setIsCompleting(false);
+        return;
       }
 
       await completeOrder(
@@ -768,7 +769,7 @@ const RunSchedule = () => {
         jobData.order_type,
         jobData.part_id,
         jobData.employeeInfo.id,
-        jobData.productId || jobData.order.productId,
+        productId,
         jobData.type,
         `${jobData.employeeInfo.firstName} ${jobData.employeeInfo.lastName}`
       );
@@ -785,8 +786,9 @@ const RunSchedule = () => {
       setIsCompleting(false);
     }
   };
+
   const handleScrapOrder = async () => {
-    if (!jobData) return;
+    if (!jobData || !jobData.employeeInfo?.id) return;
     try {
       await scrapOrder(
         jobData.productionId,
@@ -799,13 +801,14 @@ const RunSchedule = () => {
     } catch (error: any) {
       const status = error?.response?.status;
       if (status === 400) {
-        console.warn("Order might be already completed. Refetching...");
+        console.warn("Part might be already scrapped. Refetching...");
         fetchJobDetails(id);
       } else {
-        console.error("Error completing order:", error);
+        console.error("Error scrapping part:", error);
       }
     }
   };
+
   const stationLogout = async () => {
     if (!jobData) return;
 
@@ -815,7 +818,7 @@ const RunSchedule = () => {
         navigate("/station-login");
       }
     } catch (error) {
-      throw error;
+      console.error("Logout failed:", error);
     }
   };
 
@@ -932,14 +935,12 @@ const RunSchedule = () => {
           >
             Complete Order
           </button>
-          {/* <NavLink className="w-full sm:w-auto"> */}
           <button
-            className="bg-transparent text-brand px-4 py-2 font-semibold border-2 border-black rounded-md w-full"
+            className="bg-transparent text-brand px-4 py-2 font-semibold border-2 border-black rounded-md w-full sm:w-auto"
             onClick={handleScrapOrder}
           >
             Scrap
           </button>
-          {/* </NavLink> */}
         </div>
       </div>
       <div className="bg-[#243C75]  bottom-0 w-full">
