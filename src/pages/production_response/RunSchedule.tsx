@@ -627,6 +627,7 @@ interface Process {
 }
 
 interface JobData {
+  id: string;
   productionId: string;
   order_id: string;
   part_id: string;
@@ -640,6 +641,14 @@ interface JobData {
   quantity: number;
   completedQuantity: number;
   cycleTime: string;
+  order_type: string;
+  productId: string;
+  type: string;
+  completedQty: number;
+  scrapQty: number;
+  remainingQty: number;
+  scheduleQuantity: number;
+  scrapQuantity: number;
 }
 
 const formatDate = (dateString: string | undefined): string => {
@@ -651,7 +660,7 @@ const formatDate = (dateString: string | undefined): string => {
   });
 };
 
-const formatCycleTime = (dateString) => {
+const formatCycleTime = (dateString: string) => {
   if (!dateString) return "N/A";
 
   try {
@@ -679,7 +688,6 @@ const RunSchedule = () => {
       return;
     }
     const stationUserId = localStorage.getItem("stationUserId");
-    console.log("stationUserIdstationUserId", stationUserId);
 
     try {
       setLoading(true);
@@ -924,14 +932,14 @@ const RunSchedule = () => {
           >
             Complete Order
           </button>
-          <NavLink className="w-full sm:w-auto">
-            <button
-              className="bg-transparent text-brand px-4 py-2 font-semibold border-2 border-black rounded-md w-full"
-              onClick={handleScrapOrder}
-            >
-              Scrap
-            </button>
-          </NavLink>
+          {/* <NavLink className="w-full sm:w-auto"> */}
+          <button
+            className="bg-transparent text-brand px-4 py-2 font-semibold border-2 border-black rounded-md w-full"
+            onClick={handleScrapOrder}
+          >
+            Scrap
+          </button>
+          {/* </NavLink> */}
         </div>
       </div>
       <div className="bg-[#243C75]  bottom-0 w-full">

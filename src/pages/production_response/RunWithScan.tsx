@@ -399,7 +399,6 @@
 // };
 
 // export default RunWithScan;
-
 import belt from "../../assets/belt-solid.png";
 import { IoLogOutOutline } from "react-icons/io5";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
@@ -414,35 +413,50 @@ import { useEffect, useState, useCallback } from "react";
 // 1. NAYI LIBRARY IMPORT KAREIN
 import Barcode from "react-barcode";
 import CommentBox from "./CommentBox";
+
 // Server ka base URL
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
+
 // --- BARCODE SCANNER CONFIGURATION ---
 interface Image {
   imagePath: string;
 }
+
 interface Step {
   id: string;
   title: string;
   instruction: string;
   images: Image[];
 }
+
 interface WorkInstruction {
   steps: Step[];
 }
+
 interface Part {
   partDescription: string;
   WorkInstruction: WorkInstruction[];
+  // FIX: Added 'partNumber' which is used for the scrap barcode.
+  partNumber: string;
 }
+
 interface Order {
   orderNumber: string;
+  // FIX: Added optional 'productId' used in the complete order logic.
+  productId?: string;
 }
+
 interface EmployeeInfo {
   firstName: string;
   lastName: string;
+  // FIX: Added 'id' which is used in API calls.
+  id: string;
 }
+
 interface Process {
   processName: string;
 }
+
 interface JobData {
   productionId: string;
   order_id: string;
@@ -457,7 +471,17 @@ interface JobData {
   quantity: number;
   completedQuantity: number;
   cycleTime: string;
+  // FIX: Added properties that were used in the component but missing from the type definition.
+  type: string;
+  processId: string;
+  order_type: string;
+  productId?: string;
+  scrapQty: number;
+  scheduleQuantity: number;
+  remainingQty: number;
+  scrapQuantity: number;
 }
+
 const formatDate = (dateString: string | undefined): string => {
   if (!dateString) return "Not Available";
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -466,7 +490,9 @@ const formatDate = (dateString: string | undefined): string => {
     year: "numeric",
   });
 };
-const formatCycleTime = (dateString) => {
+
+// FIX: Added a proper type for the 'dateString' parameter.
+const formatCycleTime = (dateString: string | undefined) => {
   if (!dateString) return "N/A";
   try {
     const date = new Date(dateString);
@@ -479,12 +505,14 @@ const formatCycleTime = (dateString) => {
     return "N/A";
   }
 };
+
 const RunWithScan = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(true);
   const [scannedCode, setScannedCode] = useState("");
+
   const fetchJobDetails = useCallback(
     async (jobId: string | undefined) => {
       if (!jobId) {
@@ -506,19 +534,31 @@ const RunWithScan = () => {
     },
     [navigate]
   );
+
   useEffect(() => {
     fetchJobDetails(id);
   }, [id, fetchJobDetails]);
+
   const [isCompleting, setIsCompleting] = useState(false);
 
   const handleCompleteOrder = async () => {
+    // FIX: Added guards to ensure all required data is present before proceeding.
     if (!jobData || isCompleting) return;
+
+    const employeeId = jobData.employeeInfo?.id;
+    const productId = jobData.productId || jobData.order?.productId;
+
+    if (!employeeId || !productId) {
+      console.error("Missing employee ID or product ID. Cannot complete order.");
+      return;
+    }
+
     setIsCompleting(true);
     try {
       if (jobData.type === "product") {
         const stationLoginData = {
           processId: jobData.processId,
-          stationUserId: jobData.employeeInfo.id,
+          stationUserId: employeeId,
           type: "run_schedule",
         };
 
@@ -531,18 +571,13 @@ const RunWithScan = () => {
         console.log("Station login successful!");
       }
 
-      let productId = null;
-      if (jobData.type === "product") {
-        productId = jobData.productId || jobData.order.productId;
-      }
-
       await completeOrder(
         jobData.productionId,
         jobData.order_id,
         jobData.order_type,
         jobData.part_id,
-        jobData.employeeInfo.id,
-        jobData.productId || jobData.order.productId,
+        employeeId,
+        productId,
         jobData.type
       );
       fetchJobDetails(id);
@@ -560,7 +595,14 @@ const RunWithScan = () => {
   };
 
   const handleScrapOrder = useCallback(async () => {
+    // FIX: Added guards for required data.
     if (!jobData) return;
+    const employeeId = jobData.employeeInfo?.id;
+    if (!employeeId) {
+      console.error("Missing employee ID. Cannot scrap part.");
+      return;
+    }
+
     console.log("ACTION: Scrapping part...");
     try {
       await scrapOrder(
@@ -568,15 +610,17 @@ const RunWithScan = () => {
         jobData.order_id,
         jobData.order_type,
         jobData.part_id,
-        jobData.employeeInfo.id
+        employeeId
       );
       fetchJobDetails(id);
     } catch (error: any) {
       console.error("Error scrapping part:", error);
     }
   }, [jobData, id, fetchJobDetails]);
-  let COMPLETE_BARCODE = `${jobData?.order.orderNumber}`;
-  let SCRAP_BARCODE = `${jobData?.part.partNumber}`;
+
+  // FIX: Safely access nested properties using optional chaining (?.) and provide a fallback value.
+  const COMPLETE_BARCODE = jobData?.order?.orderNumber || "";
+  const SCRAP_BARCODE = jobData?.part?.partNumber || "";
 
   useEffect(() => {
     let scanned = "";
@@ -586,8 +630,8 @@ const RunWithScan = () => {
       if (["input", "textarea"].includes(target.tagName.toLowerCase())) return;
 
       if (event.key === "Enter") {
-        if (scanned === COMPLETE_BARCODE) handleCompleteOrder();
-        else if (scanned === SCRAP_BARCODE) handleScrapOrder();
+        if (scanned === COMPLETE_BARCODE && COMPLETE_BARCODE) handleCompleteOrder();
+        else if (scanned === SCRAP_BARCODE && SCRAP_BARCODE) handleScrapOrder();
         else console.log("❌ Barcode not matched:", scanned);
 
         scanned = "";
@@ -611,19 +655,23 @@ const RunWithScan = () => {
       console.error("Logout failed:", error);
     }
   }, [jobData, navigate]);
+
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
         Loading...
       </div>
     );
+
   if (!jobData)
     return (
       <div className="min-h-screen flex items-center justify-center">
         No job data available.
       </div>
     );
+
   const { part, order, employeeInfo, process, upcommingOrder } = jobData;
+
   return (
     <div className="bg-[#F5F6FA] min-h-screen flex flex-col">
       <div className="bg-[#243C75] relative ">
@@ -666,7 +714,8 @@ const RunWithScan = () => {
                 Date: {formatDate(jobData.delivery_date)}
               </p>
               <p className=" text-sm md:text-base">
-                Qty: {jobData.completedQty}
+                {/* FIX: Corrected typo from completedQty to completedQuantity to match interface */}
+                Qty: {jobData.completedQuantity}
               </p>
               <p className=" text-sm md:text-base">
                 Scrap Qty: {jobData.scrapQty}
@@ -711,23 +760,7 @@ const RunWithScan = () => {
             </div>
           )}
         </div>
-        {/* 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
-          <button
-            className="bg-brand text-white px-4 py-2 rounded-md text-sm md:text-base font-semibold w-full sm:w-auto"
-            onClick={handleCompleteOrder}
-          >
-            Complete Order
-          </button>
-          <NavLink className="w-full sm:w-auto">
-            <button
-              className="bg-transparent text-brand px-4 py-2 font-semibold border-2 border-black rounded-md w-full"
-              onClick={handleScrapOrder}
-            >
-              Scrap
-            </button>
-          </NavLink>
-        </div> */}
+        
         <div className="mt-10 p-4 border-2 border-dashed border-gray-400 rounded-lg text-center bg-gray-50">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-8">
             {/* Complete Order Barcode */}
@@ -793,7 +826,8 @@ const RunWithScan = () => {
             </div>
             <div className="flex flex-col items-center text-white">
               <p className="text-sm md:text-base font-semibold"> Qty</p>
-              <p className="text-sm md:text-base">{jobData.completedQty}</p>
+              {/* FIX: Corrected typo from completedQty to completedQuantity to match interface */}
+              <p className="text-sm md:text-base">{jobData.completedQuantity}</p>
             </div>
             <div className="flex flex-col items-center text-white">
               <p className="text-sm md:text-base font-semibold">Cycle Time</p>
