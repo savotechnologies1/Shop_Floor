@@ -60,13 +60,20 @@ import SupplierList from "./pages/supplier_chain/supplierList";
 import AllWorkInstruction from "./pages/Work_Instrcution.tsx/AllWorkInstruction";
 import { useAuth } from "./context/AuthContext";
 import AllScrapEntries from "./pages/production_response/AllScrapEntries";
+import { BiLoader } from "react-icons/bi";
+import TimeSheet from "./pages/timeClock/TimeSheet";
 
 const App = () => {
-  // const { token } = useAuth();
-  const { token } = useAuth();
+  const { isLoading, token } = useAuth();
 
-  console.log("tokentokentoken", token);
-
+  if (isLoading) {
+    // Show loader until token check is done
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <BiLoader className="text-brand" />
+      </div>
+    );
+  }
   return (
     // <PartProvider>
     //   <ToastContainer />
@@ -266,6 +273,7 @@ const App = () => {
             <Route path="update" element={<TimeClockUpdate />} />
             <Route path="clock-in-out" element={<ClockInOut />} />
             <Route path="vaction-request" element={<VacationRequest />} />
+            <Route path="time-sheet" element={<TimeSheet />} />
             <Route
               path="operation-performance"
               element={<OperationPerformance />}
