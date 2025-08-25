@@ -349,12 +349,9 @@
 // export default StationLogin;
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaArrowLeft, FaChevronRight } from "react-icons/fa";
-import logo from "../../assets/logo.png";
-import setting from "../../assets/settings_icon.png";
+import { FaChevronRight } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-
 import { toast } from "react-toastify";
 import {
   selecEmployeeProcessApi,

@@ -155,10 +155,6 @@ interface EmployeeData {
 type ClockStatus = "LOADING" | "CLOCKED_IN" | "CLOCKED_OUT" | string;
 
 const ClockInOut: FC = () => {
-  // --- STATE HOOKS WITH TYPES ---
-  // currentTime is implicitly typed as Date, which is fine.
-  const [currentTime, setCurrentTime] = useState(new Date());
-
   // Use the ClockStatus type for the status state
   const [status, setStatus] = useState<ClockStatus>("LOADING");
 
@@ -169,6 +165,7 @@ const ClockInOut: FC = () => {
 
   // The error can be a string or null
   const [error, setError] = useState<string | null>(null);
+  console.log(error, lastPunch, status);
 
   // CRITICAL FIX: Initialize employeeData with `null` instead of `false` and apply the EmployeeData type
   const [employeeData, setEmployeeData] = useState<EmployeeData | null>(null);

@@ -401,7 +401,7 @@
 // export default RunWithScan;
 import belt from "../../assets/belt-solid.png";
 import { IoLogOutOutline } from "react-icons/io5";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   completeOrder,
   scrapOrder,
@@ -410,7 +410,6 @@ import {
   stationProcessDetail,
 } from "./https/productionResponseApi";
 import { useEffect, useState, useCallback } from "react";
-// 1. NAYI LIBRARY IMPORT KAREIN
 import Barcode from "react-barcode";
 import CommentBox from "./CommentBox";
 
@@ -511,7 +510,6 @@ const RunWithScan = () => {
   const { id } = useParams<{ id: string }>();
   const [jobData, setJobData] = useState<JobData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [scannedCode, setScannedCode] = useState("");
 
   const fetchJobDetails = useCallback(
     async (jobId: string | undefined) => {

@@ -1,8 +1,4 @@
 import { FC, useEffect, useState } from "react";
-import { FaCircle } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-// import ItemSelector from "./ItemSelector";
-import more from "../../assets/more.png";
 import { employeeAllTimeLine } from "./https/timeClock";
 
 interface TimeSheetEntry {
@@ -45,7 +41,7 @@ const TimeSheet: FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await employeeAllTimeLine(page);
+      const response = await employeeAllTimeLine();
       const apiData: ApiResponse = response.data;
       setTimeSheetData(apiData.data);
       setPagination(apiData.pagination);

@@ -574,7 +574,6 @@
 import belt from "../../assets/belt-solid.png";
 import { IoLogOutOutline } from "react-icons/io5";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-// FIX: Added useCallback for performance optimization.
 import { useEffect, useState, useCallback } from "react";
 import {
   completeTraningApi,

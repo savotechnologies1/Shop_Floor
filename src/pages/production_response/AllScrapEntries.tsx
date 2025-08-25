@@ -3,7 +3,6 @@ import edit from "../../assets/edit_icon.png";
 import { FaCircle, FaTrash } from "react-icons/fa";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import add from "../../assets/add.png";
-import { Trash2 } from "lucide-react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -332,11 +331,9 @@ interface ScrapEntry {
 }
 
 const AllScrapEntries: React.FC = () => {
-  const [openOptionsIndex, setOpenOptionsIndex] = useState<number | null>(null);
   const rowsPerPage = 5;
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [workData, setWorkData] = useState<ScrapEntry[]>([]);
@@ -380,11 +377,7 @@ const AllScrapEntries: React.FC = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
-  const fetchWorkInstructionList = async (
-    page = 1,
-    searchTerm = "",
-    type = ""
-  ) => {
+  const fetchWorkInstructionList = async (page = 1) => {
     try {
       const response = await allScrapEntries(
         page,
@@ -400,19 +393,15 @@ const AllScrapEntries: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchWorkInstructionList(currentPage, selectedValue, debouncedSearchVal);
+    fetchWorkInstructionList(currentPage);
   }, [currentPage, selectedValue, debouncedSearchVal]);
 
-  const handleDelete = async (id: string | null, type: string) => {
+  const handleDelete = async (id: string | null) => {
     if (!id) return;
     try {
       await deleteScrapEntry(id);
       await new Promise((r) => setTimeout(r, 500));
-      await fetchWorkInstructionList(
-        currentPage,
-        selectedValue,
-        debouncedSearchVal
-      );
+      await fetchWorkInstructionList(currentPage);
     } catch (error) {
       console.error("Error deleting process:", error);
     }

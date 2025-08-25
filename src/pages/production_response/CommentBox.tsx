@@ -148,7 +148,7 @@ const CommentBox: FC<CommentBoxProps> = ({ employeeInfo }) => {
 
     try {
       // The 'res' variable is now typed based on the return type of the API call
-      const res = await sendStationNotification(formData);
+      await sendStationNotification(formData);
 
       // Reset form state after successful submission
       setComment("");

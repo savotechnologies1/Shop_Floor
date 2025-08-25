@@ -258,7 +258,7 @@ export const deleteScrapEntry = async (id: string) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: unknown) {
+  } catch (error: any) {
     toast.error(error.response.data.message);
   }
 };

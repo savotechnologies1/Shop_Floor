@@ -44,7 +44,8 @@ const ScrapBar = () => {
     maintainAspectRatio: false, // Allows chart to stretch vertically
     plugins: {
       legend: {
-        position: window.innerWidth < 768 ? "bottom" as const : "top" as const,
+        position:
+          window.innerWidth < 768 ? ("bottom" as const) : ("top" as const),
         labels: {
           usePointStyle: true,
           boxWidth: 8,

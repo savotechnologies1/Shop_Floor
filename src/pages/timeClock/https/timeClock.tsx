@@ -41,7 +41,7 @@ export const employeeTimeLine = async () => {
   }
 };
 
-export const employeeAllTimeLine = async (page: number) => {
+export const employeeAllTimeLine = async () => {
   try {
     const response = await axiosInstance.get(`/all-employee-timeline`);
     return response;

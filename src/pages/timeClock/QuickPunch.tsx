@@ -68,10 +68,8 @@
 import { useState, useEffect, FC } from "react";
 import { useNavigate } from "react-router-dom";
 import timer from "../../assets/timer.png";
-import axios from "axios";
 import {
   creeateEmployeeTimeLineApi,
-  employeeTimeLineDetail,
   employeeTimeLineStatus,
 } from "./https/timeClock";
 
