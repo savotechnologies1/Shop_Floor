@@ -396,7 +396,7 @@ const AllScrapEntries: React.FC = () => {
     fetchWorkInstructionList(currentPage);
   }, [currentPage, selectedValue, debouncedSearchVal]);
 
-  const handleDelete = async (id: string | null) => {
+  const handleDelete = async (id: string | null, type: string) => {
     if (!id) return;
     try {
       await deleteScrapEntry(id);

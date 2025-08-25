@@ -37,7 +37,7 @@ const TimeSheet: FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   // --- DATA FETCHING LOGIC ---
-  const fetchTimeSheet = async (page: number) => {
+  const fetchTimeSheet = async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -56,7 +56,7 @@ const TimeSheet: FC = () => {
   };
 
   useEffect(() => {
-    fetchTimeSheet(currentPage);
+    fetchTimeSheet();
   }, [currentPage]);
 
   // --- EVENT HANDLERS (No changes needed) ---
