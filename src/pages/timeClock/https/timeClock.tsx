@@ -49,3 +49,17 @@ export const employeeAllTimeLine = async () => {
     throw error;
   }
 };
+
+export const applyVacationReq = async (data: object) => {
+  try {
+    console.log("datadata", data);
+
+    const response = await axiosInstance.post(`/apply-vacation-request`, data);
+    if (response.status === 201) {
+      toast.success(response.data.message);
+    }
+    return response;
+  } catch (error: any) {
+    toast.error(error.response.data.message);
+  }
+};

@@ -215,7 +215,7 @@ const App = () => {
             }
           > */}
           <Route path="/" element={token ? <Layout /> : <SignIn />}>
-            <Route index element={<DashboardDetails />} />
+            <Route index element={<ClockInOut />} />
             <Route path="dashboardDetailes" element={<DashboardDetails />} />
             <Route path="work-instruction" element={<WorkInstruction />} />
             <Route

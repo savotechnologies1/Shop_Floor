@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { FaCircle } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { applyVacationReq } from "./https/timeClock";
 
 const VacationRequest = () => {
   const {
@@ -9,8 +10,9 @@ const VacationRequest = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log("📦 Request Data:", data);
+    await applyVacationReq(data);
   };
   return (
     <div>
@@ -103,15 +105,15 @@ const VacationRequest = () => {
               </div>
 
               {/* PIN */}
-              <label className="font-semibold">PIN</label>
+              <label className="font-semibold">Notes</label>
               <div className="mt-2 w-full">
                 <input
-                  {...register("pin", {
+                  {...register("notes", {
                     required: "PIN is required",
                     minLength: { value: 4, message: "Minimum 4 digits" },
                   })}
-                  type="password"
-                  placeholder="Enter PIN"
+                  type="text"
+                  placeholder="Enter Note"
                   className="border py-4 px-4 rounded-md w-full"
                 />
                 {errors.pin && (
