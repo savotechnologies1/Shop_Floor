@@ -357,8 +357,6 @@ const SignIn: FC = () => {
                 </p>
               )}
             </div>
-
-            {/* Password Field */}
             <div>
               <label className="block text-gray-700 mb-2 font-medium">
                 Password
@@ -399,7 +397,6 @@ const SignIn: FC = () => {
               )}
             </div>
 
-            {/* Links */}
             <div className="flex justify-between">
               <Link to="/" className="text-sm text-[#F2451C] hover:underline">
                 Go to Dashboard
