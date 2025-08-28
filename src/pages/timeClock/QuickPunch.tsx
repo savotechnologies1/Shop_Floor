@@ -302,8 +302,6 @@ const calculateTimeAgo = (timestamp: string): string => {
   return "Last Punch was just now.";
 };
 
-// --- COMPONENT DEFINITION ---
-
 const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
   const navigate = useNavigate();
 
@@ -379,9 +377,10 @@ const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
   };
 
   const currentStatusInfo = statusInfo[status] || {
-    text: "CLOCKED OUT",
-    color: "bg-red-500",
+    text: "CLOCKED IN",
+    color: "bg-green-500",
   };
+  console.log("currentStatusInfocurrentStatusInfo", statusInfo);
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">

@@ -80,9 +80,8 @@
 // export default Timeline;
 
 import { FC, useEffect, useState } from "react";
-import { employeeTimeLine } from "./https/timeClock"; // मान रहे हैं कि यह आपकी API कॉल है
+import { employeeTimeLine } from "./https/timeClock";
 
-// Define the specific event types for better type safety and autocompletion.
 type EventType =
   | "CLOCK_IN"
   | "CLOCK_OUT"
@@ -92,23 +91,16 @@ type EventType =
   | "END_EXCEPTION"
   | "LOGIN";
 
-// Define the shape of a single timeline event object from the API.
 interface TimelineEvent {
   eventType: EventType;
-  timestamp: string; // ISO date string
-  // Add other properties from your API if they exist, e.g., id: string;
+  timestamp: string;
 }
 
-// Define the shape of the details for each event type.
 interface EventDetails {
   label: string;
   color: string;
 }
 
-// --- HELPER OBJECT & FUNCTIONS WITH TYPES ---
-
-// Use `Record` to create a strongly-typed map.
-// This ensures that every key is one of the defined EventTypes.
 const eventDetailsMap: Record<EventType, EventDetails> = {
   CLOCK_IN: { label: "Clock In Punch", color: "bg-red-500" },
   CLOCK_OUT: { label: "Clock Out Punch", color: "bg-gray-500" },
@@ -119,7 +111,6 @@ const eventDetailsMap: Record<EventType, EventDetails> = {
   LOGIN: { label: "Login Successfully", color: "bg-purple-500" },
 };
 
-// Type the function parameter and return value.
 const formatDateTime = (isoString: string): string => {
   const date = new Date(isoString);
   const options: Intl.DateTimeFormatOptions = {
@@ -135,10 +126,7 @@ const formatDateTime = (isoString: string): string => {
     .replace(",", "");
 };
 
-// --- COMPONENT DEFINITION ---
-
 const Timeline: FC = () => {
-  // --- STATE HOOKS WITH TYPES ---
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -149,17 +137,13 @@ const Timeline: FC = () => {
       setError(null);
       try {
         const response = await employeeTimeLine();
-        // Check if the data exists and is an array before setting state
         if (response.data && Array.isArray(response.data.data)) {
-          // The API data is cast to our defined type for safety.
           const events = response.data.data as TimelineEvent[];
-          // .reverse() mutates the array, so it's safer to create a copy first.
           setTimelineEvents([...events].reverse());
         } else {
-          setTimelineEvents([]); // Handle cases with no data gracefully
+          setTimelineEvents([]);
         }
       } catch (err: any) {
-        // Type the caught error
         const errorMessage =
           err.response?.data?.message || "Failed to fetch timeline.";
         setError(errorMessage);
@@ -170,7 +154,7 @@ const Timeline: FC = () => {
     };
 
     fetchTimelineData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   if (isLoading) {
     return (
@@ -193,17 +177,13 @@ const Timeline: FC = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Timeline</h2>
-
       {timelineEvents.length > 0 ? (
         <div className="relative border-l-2 border-gray-200 ml-1.5">
           {timelineEvents.map((event, index) => {
-            // TypeScript knows `event.eventType` is of type `EventType`,
-            // so this lookup is now 100% type-safe.
             const details = eventDetailsMap[event.eventType] || {
-              label: event.eventType.replace("_", " "), // Fallback for safety
+              label: event.eventType.replace("_", " "),
               color: "bg-gray-400",
             };
-
             return (
               <div key={index} className="mb-8 ml-6 relative">
                 <span
