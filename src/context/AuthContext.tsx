@@ -175,7 +175,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (storedToken) {
         try {
           const response = await axios.get<AuthResponse>(
-            `${BASE_URL}/api/admin/check-token`,
+            `${BASE_URL}/api/shopFloor/check-token`,
             {
               headers: {
                 Authorization: `Bearer ${storedToken}`,
