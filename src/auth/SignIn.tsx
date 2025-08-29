@@ -7,7 +7,6 @@ import visible from "../assets/visible_icon.png";
 import { useState } from "react";
 import { loginApi } from "./https/authApis";
 import { useAuth } from "../context/AuthContext";
-
 // const SignIn = () => {
 //   const [showPassword, setShowPassword] = useState(false);
 //   const [isLoading, setIsLoading] = useState(false);
@@ -274,6 +273,8 @@ const SignIn: FC = () => {
 
       // Check for a successful response (e.g., status 200 or 201)
       if (response.status === 201 && response.data?.token) {
+        console.log("90090909", response.data?.token);
+
         login(response.data.token);
         // *** CORRECTED ***: Navigate *only* on successful login.
         navigate("/", { replace: true });
@@ -397,10 +398,10 @@ const SignIn: FC = () => {
               )}
             </div>
 
-            <div className="flex justify-between">
-              <Link to="/" className="text-sm text-[#F2451C] hover:underline">
+            <div className="flex justify-end">
+              {/* <Link to="/" className="text-sm text-[#F2451C] hover:underline">
                 Go to Dashboard
-              </Link>
+              </Link> */}
               <Link
                 to="/forget-password"
                 className="text-sm text-[#F2451C] hover:underline"

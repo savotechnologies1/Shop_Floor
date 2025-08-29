@@ -66,14 +66,14 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
 
   const handleMenuItemClick = (item: BaseMenuItem) => {
     if (item.key === "Logout") {
-      localStorage.removeItem("token");
-      navigate("/sign-in");
+      handleLogout(); // call the async logout function
     } else if ("hasSubmenu" in item && item.hasSubmenu) {
       toggleSubmenu(item.key);
     } else if ("path" in item && item.path) {
       navigate(item.path);
     }
   };
+
   const sections = [
     {
       category: "Daily Activity",
@@ -462,7 +462,10 @@ const Sidebar = ({ activeMenu, clicked }: SidebarProps) => {
   } => {
     return item.hasSubmenu === true && Array.isArray(item.submenu);
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem("auth_token"); // Clear the loggedIn flag from localStorage
+    navigate("/sign-in"); // Redirect to the sign-in page
+  };
   return (
     <>
       <div className="">

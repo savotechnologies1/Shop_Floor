@@ -192,7 +192,7 @@ const ClockInOut: FC = () => {
 
   return (
     <>
-      <div className="bg-[#243C75] p-4 text-end pb-10">
+      <div className="bg-[#243C75] p-4 text-end pb-10 mt-8">
         <h1 className="text-2xl text-white">{formattedDate}</h1>
         <p className="text-lg text-white">Today</p>
       </div>

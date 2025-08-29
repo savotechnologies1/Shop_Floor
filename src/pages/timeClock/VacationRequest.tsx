@@ -16,7 +16,7 @@ const VacationRequest = () => {
   };
   return (
     <div>
-      <div className="p-7">
+      <div className="p-7  mt-8">
         {/* Title */}
         <div>
           <h1 className="font-bold text-[20px] md:text-[24px] text-black">

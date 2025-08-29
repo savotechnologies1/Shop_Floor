@@ -268,8 +268,6 @@ type PunchEventType =
   | "START_EXCEPTION"
   | "END_EXCEPTION";
 
-// --- HELPER FUNCTIONS WITH TYPES ---
-
 const formatTime = (date: Date): string => {
   // Your implementation is fine, but toLocaleTimeString already returns a string.
   // The .replace() part is a stylistic choice.
@@ -304,8 +302,6 @@ const calculateTimeAgo = (timestamp: string): string => {
 
 const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
   const navigate = useNavigate();
-
-  // --- STATES WITH TYPES ---
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [status, setStatus] = useState<ClockStatus>("LOADING");
   const [lastPunch, setLastPunch] = useState<LastPunch | null>(null);
@@ -356,7 +352,6 @@ const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
   }, []);
 
   useEffect(() => {
-    // Ensure employeeId exists before fetching
     if (employeeId) {
       fetchStatus();
     }
@@ -366,7 +361,6 @@ const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
     ? calculateTimeAgo(lastPunch.timestamp)
     : "No punches recorded today.";
 
-  // Type the statusInfo object for better autocompletion and error checking
   const statusInfo: Record<ClockStatus, { text: string; color: string }> = {
     CLOCK_IN: { text: "CLOCKED IN", color: "bg-green-500" },
     START_LUNCH: { text: "ON LUNCH", color: "bg-yellow-500" },
@@ -384,7 +378,6 @@ const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-      {/* --- JSX remains largely the same, but benefits from typed logic --- */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
         <h1 className="text-lg sm:text-xl font-bold">Quick Punch</h1>
         <span

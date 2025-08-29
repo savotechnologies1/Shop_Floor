@@ -360,7 +360,7 @@ const TimeSheet: FC = () => {
   ];
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen mt-8">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Time List</h1>

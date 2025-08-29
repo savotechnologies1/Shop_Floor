@@ -177,7 +177,7 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="sign-in" element={<SignIn />} />
-          <Route path="sign-up" element={<SignUp />} />
+          {/* <Route path="sign-up" element={<SignUp />} /> */}
           <Route path="forget-password" element={<ForgetPassowrd />} />
           <Route path="otp-verify" element={<OTP />} />
           <Route path="reset-password" element={<ResetPassword />} />
