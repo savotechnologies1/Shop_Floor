@@ -299,6 +299,10 @@ const calculateTimeAgo = (timestamp: string): string => {
 
   return "Last Punch was just now.";
 };
+// utils/timezone.ts
+export const getUserTimezone = (): string => {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
 
 const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
   const navigate = useNavigate();
@@ -323,24 +327,49 @@ const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
     }
   };
 
+  // const handlePunch = async (eventType: PunchEventType): Promise<void> => {
+  //   setIsLoading(true);
+  //   setError(null);
+  //   try {
+  //     const clickTimestamp = new Date().toISOString();
+  //     const data = {
+  //       employeeId,
+  //       eventType,
+  //       timestamp: clickTimestamp,
+  //     };
+  //     await creeateEmployeeTimeLineApi(data);
+  //     // Refetch the status to update the UI
+  //     await fetchStatus();
+  //   } catch (err: any) {
+  //     const errorMessage =
+  //       err.response?.data?.error || `Error performing action: ${eventType}`;
+  //     setError(errorMessage);
+  //     console.error(err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handlePunch = async (eventType: PunchEventType): Promise<void> => {
     setIsLoading(true);
     setError(null);
     try {
       const clickTimestamp = new Date().toISOString();
+      const timezone = getUserTimezone(); // User ka local timezone get karo
+
       const data = {
         employeeId,
         eventType,
         timestamp: clickTimestamp,
+        timezone, // Send timezone to backend
       };
+
       await creeateEmployeeTimeLineApi(data);
-      // Refetch the status to update the UI
       await fetchStatus();
     } catch (err: any) {
       const errorMessage =
         err.response?.data?.error || `Error performing action: ${eventType}`;
       setError(errorMessage);
-      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -386,10 +415,15 @@ const QuickPunch: FC<QuickPunchProps> = ({ employeeId }) => {
           {currentStatusInfo.text}
         </span>
       </div>
+      {status !== "LOADING" && lastPunch && (
+        <p className="text-orange-500 text-xs sm:text-sm mt-3 sm:mt-4 text-center h-4">
+          {calculateTimeAgo(lastPunch.timestamp)}
+          {calculateTimeAgo(lastPunch.timestamp).includes("future") && (
+            <span className="text-red-500 ml-2">(Check server clock)</span>
+          )}
+        </p>
+      )}
 
-      <p className="text-orange-500 text-xs sm:text-sm mt-3 sm:mt-4 text-center h-4">
-        {status !== "LOADING" && lastPunch && timeAgo}
-      </p>
       {error && (
         <p className="text-red-500 text-center text-xs mt-1">{error}</p>
       )}

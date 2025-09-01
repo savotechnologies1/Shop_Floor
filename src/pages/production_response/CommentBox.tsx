@@ -86,20 +86,8 @@
 // }
 
 import React, { useState, FC, useEffect } from "react";
+import { sendStationNotification } from "./https/productionResponseApi";
 
-// --- MOCK API FUNCTION FOR DEMONSTRATION ---
-// Replace this with your actual API import. It's typed for this example.
-const sendStationNotification = async (
-  formData: FormData
-): Promise<{ success: boolean }> => {
-  console.log("Sending notification with data:");
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
-  await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
-  console.log("Upload successful!");
-  return Promise.resolve({ success: true });
-};
 // --- END MOCK API FUNCTION ---
 
 // 1. Define an interface for the shape of the employeeInfo prop
@@ -115,7 +103,8 @@ interface CommentBoxProps {
 
 // 3. Type the component as a Functional Component (FC) and destructure its props
 const CommentBox: FC<CommentBoxProps> = ({ employeeInfo }) => {
-  // 4. Use generics (<>) to strongly type your state variables
+  console.log("employeeInfoemployeeInfo", employeeInfo);
+
   const [comment, setComment] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
