@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 import signin from "../assets/signin.png";
 import password from "../assets/password_icon'.png";
 import visible from "../assets/visible_icon.png";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { loginApi } from "./https/authApis";
 import { useAuth } from "../context/AuthContext";
 // const SignIn = () => {
@@ -272,7 +272,7 @@ const SignIn: FC = () => {
       const response = await loginApi(data);
 
       // Check for a successful response (e.g., status 200 or 201)
-      if (response.status === 201 && response.data?.token) {
+      if (response && response.status === 201 && response.data?.token) {
         console.log("90090909", response.data?.token);
 
         login(response.data.token);

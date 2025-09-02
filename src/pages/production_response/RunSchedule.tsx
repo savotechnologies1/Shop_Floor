@@ -613,14 +613,12 @@ interface Part {
 
 interface Order {
   orderNumber: string;
-  // FIX: Added optional 'productId' which is used in the complete order logic.
   productId?: string;
 }
 
 interface EmployeeInfo {
   firstName: string;
   lastName: string;
-  // FIX: Added 'id' which is used in API calls.
   id: string;
 }
 
@@ -628,7 +626,6 @@ interface Process {
   processName: string;
 }
 
-// FIX: Added semicolons to all interface properties.
 interface JobData {
   id: string;
   productionId: string;
@@ -652,7 +649,6 @@ interface JobData {
   remainingQty: number;
   scheduleQuantity: number;
   scrapQuantity: number;
-  // FIX: Added 'processId' which is used for station login.
   processId: string;
 }
 

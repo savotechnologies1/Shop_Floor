@@ -59,6 +59,7 @@ import { useAuth } from "./context/AuthContext";
 import AllScrapEntries from "./pages/production_response/AllScrapEntries";
 import { BiLoader } from "react-icons/bi";
 import TimeSheet from "./pages/timeClock/TimeSheet";
+import StockOrderScheduleList from "./pages/order_schedule/StockOrderScheduleList";
 
 const App = () => {
   const { isLoading, token } = useAuth();
