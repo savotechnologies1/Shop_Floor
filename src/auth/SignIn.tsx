@@ -446,16 +446,6 @@ const SignIn: FC = () => {
                 "Sign In"
               )}
             </button>
-
-            <div className="text-center text-gray-600">
-              Don't have an account?{" "}
-              <Link
-                to="/sign-up"
-                className="text-[#4AA6BB] hover:underline font-medium"
-              >
-                Sign Up
-              </Link>
-            </div>
           </form>
         </div>
       </div>
