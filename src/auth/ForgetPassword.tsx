@@ -235,95 +235,39 @@ const ForgetPassword = () => {
             code to your email.
           </p>
 
-          <Tabs
-            selectedIndex={tabIndex}
-            onSelect={(index) => setTabIndex(index)}
-          >
-            <TabList className="flex bg-[#F2F6FD] rounded-full p-1">
-              <Tab
-                className="py-2 px-4 md:px-6 cursor-pointer text-sm md:text-base text-center flex-1"
-                selectedClassName="bg-white rounded-full shadow-sm font-medium"
-              >
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2 font-medium">
                 Email
-              </Tab>
-              <Tab
-                className="py-2 px-4 md:px-6 cursor-pointer text-sm md:text-base text-center flex-1"
-                selectedClassName="bg-white rounded-full shadow-sm font-medium"
-              >
-                Mobile Number
-              </Tab>
-            </TabList>
+              </label>
+              <input
+                type="email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: "Invalid email format",
+                  },
+                })}
+                placeholder="Enter your email"
+                className="w-full p-3 rounded-lg bg-[#F6F7FA] border border-[#F6F7FA] focus:outline-none focus:ring-2 focus:ring-[#052C89] focus:border-transparent"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">
+                  {String(errors.email.message)}
+                </p>
+              )}
+            </div>
 
-            <TabPanel className="mt-6">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    {...register("email", {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^\S+@\S+$/i,
-                        message: "Invalid email format",
-                      },
-                    })}
-                    placeholder="Enter your email"
-                    className="w-full p-3 rounded-lg bg-[#F6F7FA] border border-[#F6F7FA] focus:outline-none focus:ring-2 focus:ring-[#052C89] focus:border-transparent"
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {String(errors.email.message)}
-                    </p>
-                  )}
-                </div>
+            <button
+              type="submit"
+              className="w-full bg-[#052C89] text-white p-3 rounded-lg font-medium hover:bg-[#041E66] transition-colors mt-4"
+            >
+              Send OTP
+            </button>
+          </form>
 
-                <button
-                  type="submit"
-                  className="w-full bg-[#052C89] text-white p-3 rounded-lg font-medium hover:bg-[#041E66] transition-colors mt-4"
-                >
-                  Send OTP
-                </button>
-              </form>
-            </TabPanel>
-
-            <TabPanel className="mt-6">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2 font-medium">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="tel"
-                    {...register("mobile", {
-                      // required: "Mobile number is required",
-                      pattern: {
-                        value: /^[0-9]{10}$/,
-                        message: "Invalid mobile number (10 digits required)",
-                      },
-                    })}
-                    placeholder="Enter your mobile number"
-                    className="w-full p-3 rounded-lg bg-[#F6F7FA] border border-[#F6F7FA] focus:outline-none focus:ring-2 focus:ring-[#052C89] focus:border-transparent"
-                  />
-                  {errors.mobile && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {String(errors.mobile.message)}
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-[#052C89] text-white p-3 rounded-lg font-medium hover:bg-[#041E66] transition-colors mt-4"
-                >
-                  Send OTP
-                </button>
-              </form>
-            </TabPanel>
-          </Tabs>
-
-          <div className="text-center text-sm">
+          <div className="text-center text-sm mt-2">
             Remember Password?{" "}
             <Link
               to="/sign-in"

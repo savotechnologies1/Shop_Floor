@@ -89,10 +89,10 @@ const VacationRequest = () => {
               <label className="font-semibold">How Many Hours</label>
               <div className="mt-2 w-full mb-6">
                 <input
-                  {...register("hours", {
-                    required: "Please enter hours",
-                    min: { value: 1, message: "Hours must be at least 1" },
-                  })}
+                  // {...register("hours", {
+                  //   required: "Please enter hours",
+                  //   min: { value: 1, message: "Hours must be at least 1" },
+                  // })}
                   type="number"
                   placeholder="Enter Hours"
                   className="border py-4 px-4 rounded-md w-full"
