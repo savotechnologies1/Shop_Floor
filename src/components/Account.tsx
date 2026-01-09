@@ -162,12 +162,6 @@ function Account({ onClose, profileDetail }: AccountProps) {
 
   const section = [
     {
-      key: "Dashboard",
-      label: "Dashboard",
-      icon: home,
-      path: "dashboardDetailes",
-    },
-    {
       key: "Profile",
       label: "Profile",
       icon: home,
@@ -204,7 +198,7 @@ function Account({ onClose, profileDetail }: AccountProps) {
                 }
                 alt="Profile"
                 onClick={() => setIsOpen(!isOpen)}
-                className="rounded-full w-[100px] border-2 border-green-400 mb-2 py-4"
+                className="rounded-full w-[100px] border-2 border-green-400 mb-2 "
               />
             </div>
             <div className="ml-3">

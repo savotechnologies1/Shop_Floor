@@ -805,9 +805,9 @@ const StationLogin = () => {
               >
                 <option value="">Select Process Name</option>
                 {employeeProcess?.processOverviews?.map((process: any) => (
-                  <option key={process.processId} value={process.processId}>
-                    {process.processName}
-                  </option>
+               <option key={process.processId} value={process.processId}>
+                      {`${process.processName}`} ({`${process.machineName}`})
+                    </option>
                 ))}
               </select>
               {formik.touched.processId && formik.errors.processId && (

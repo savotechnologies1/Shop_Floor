@@ -573,7 +573,7 @@ const NotificationList = ({ onClose, onNotificationAction }) => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 mt-2 sm:mt-0">
+              {/* <div className="flex gap-2 mt-2 sm:mt-0">
                 <button
                   onClick={() => handleStatusChange(notification.id, true)}
                   className="px-3 py-1 bg-green-500 text-white rounded"
@@ -586,7 +586,7 @@ const NotificationList = ({ onClose, onNotificationAction }) => {
                 >
                   Cancel
                 </button>
-              </div>
+              </div> */}
             </div>
           ))
         ) : (
