@@ -153,7 +153,8 @@ const CommentBox: FC<CommentBoxProps> = ({ employeeInfo }) => {
   };
 
   // Best practice: Clean up the object URL when the component unmounts
-  useEffect(() => {acc
+  useEffect(() => {
+    return () => {
       if (preview) {
         URL.revokeObjectURL(preview);
       }
@@ -182,7 +183,7 @@ const CommentBox: FC<CommentBoxProps> = ({ employeeInfo }) => {
         </label>
 
         <button
-          className="bg-brand text-white px-4 py-2 rounded-sm text-sm md:text-base font-semibold w-full md:w-auto"
+          className="bg-blue-600 text-white px-4 py-2 rounded-sm text-sm md:text-base font-semibold w-full md:w-auto"
           onClick={handleSend}
         >
           Send
