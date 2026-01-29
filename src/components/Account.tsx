@@ -143,7 +143,7 @@ import home from "../assets/home.png";
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile } from "../pages/settings/https/profileApi";
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
-
+import { FiHome, FiUser } from "react-icons/fi";
 interface AccountProps {
   onClose: () => void;
 }
@@ -159,16 +159,14 @@ function Account({ onClose, profileDetail }: AccountProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("Dashboard");
   const navigate = useNavigate();
-
   const section = [
     {
       key: "Profile",
       label: "Profile",
-      icon: home,
+      icon: <FiUser size={20} />,
       path: "settings",
     },
   ];
-
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     navigate("/sign-in");
@@ -219,24 +217,23 @@ function Account({ onClose, profileDetail }: AccountProps) {
                   <li key={section.key}>
                     <Link to={`/${section.path}`}>
                       <button
-                        className={`flex items-center space-x-4 w-full px-2 py-3 rounded-md
-                          ${
-                            activeTab === section.key
-                              ? "bg-brand text-white"
-                              : "hover:bg-brand hover:text-white"
-                          }`}
+                        className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg transition-all duration-300
+        ${
+          activeTab === section.key
+            ? "bg-brand text-white"
+            : "text-gray-700 hover:bg-brand hover:text-white"
+        }`}
                         onClick={() => setActiveTab(section.key)}
                       >
-                        <img
-                          src={section.icon}
-                          alt={section.label}
-                          className="w-6"
-                        />
-                        {isOpen && (
-                          <span className="block transition-all duration-300">
-                            {section.label}
-                          </span>
-                        )}
+                        <span className="text-xl">{section.icon}</span>
+
+                        <span
+                          className={`text-sm font-medium transition-opacity duration-300 ${
+                            isOpen ? "opacity-100" : "opacity-0"
+                          }`}
+                        >
+                          {section.label}
+                        </span>
                       </button>
                     </Link>
                   </li>
