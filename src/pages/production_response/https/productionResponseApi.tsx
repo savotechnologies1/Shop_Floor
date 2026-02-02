@@ -307,6 +307,15 @@ export const selecEmployeeProcessApi = async () => {
   }
 };
 
+export const selectSupplier = async () => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await axiosInstance.get(`/select-supplier`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const stationLogin = async (userData: object) => {
   try {
     const response = await axiosInstance.post("/station-login", userData);
