@@ -470,54 +470,39 @@ interface FormValues {
 
 // Define the type for our form's initial values, excluding the 'type' field
 type PartFormValues = Omit<FormValues, "type">;
+const PartForm = () => {
+  const [partData, setPartData] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [supplierData, setSupplierData] = useState([]);
+  const [supplierSuggestions, setSupplierSuggestions] = useState([]);
 
-const PartForm: FC = () => {
-  // Use generics to type the state variables
-  const [partData, setPartData] = useState<Part[]>([]);
-  const [suggestions, setSuggestions] = useState<Part[]>([]);
-  const [supplierData, setSupplierData] = useState<Supplier[]>([]);
-  const [supplierSuggestions, setSupplierSuggestions] = useState<Supplier[]>(
-    []
-  );
-
-  // *** FIX: Explicitly type the initialValues object to match the Formik state ***
-  const initialValues: PartFormValues = {
-    searchPart: "",
-    partId: "", // Now correctly typed as string | number
-    supplier: "",
-    supplierId: "", // Now correctly typed as string | number
-    returnQuantity: "", // Now correctly typed as string | number
-    scrapStatus: "yes", // Now correctly typed as 'yes' | 'no'
-  };
-
-  // The generic is now inferred from the typed initialValues, no need to pass it explicitly
   const formik = useFormik({
-    initialValues, // Use the typed initialValues object
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log("Form Submitted:", values);
-
-      const payload: FormValues = {
+    initialValues: {
+      searchPart: "",
+      partId: "",
+      supplier: "",
+      supplierId: "",
+      returnQuantity: "",
+      scrapStatus: "yes",
+      type: "part",
+      defectDesc: "", // Key is already here
+    },
+    onSubmit: async (values, { setSubmitting }) => {
+      const payload = {
         ...values,
         type: "part",
-        returnQuantity: parseInt(String(values.returnQuantity), 10) || 0,
-        // Ensure IDs are not empty strings before submission, or handle in API
-        partId: values.partId || 0,
-        supplierId: values.supplierId || 0,
+        returnQuantity: parseInt(values.returnQuantity, 10) || 0,
+        // defectDesc is automatically included via ...values
       };
 
       try {
         setSubmitting(true);
-        console.log("Submitting payload:", payload);
         await ScrapEntryApi(payload);
-
-        // Success: Reset form and suggestions
-        resetForm();
+        formik.resetForm();
         setSuggestions([]);
         setSupplierSuggestions([]);
       } catch (error) {
         console.error("Submission failed:", error);
-        // Error is handled in ScrapEntryApi, so we just catch it here
-        // to prevent the form from resetting on failure.
       } finally {
         setSubmitting(false);
       }
@@ -527,22 +512,23 @@ const PartForm: FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const partsResponse = await selectPartNamber();
-        const suppliersResponse = await selectSupplier();
-        setPartData(partsResponse?.data || []);
-        setSupplierData(suppliersResponse || []);
+        const parts = await selectPartNamber();
+        const suppliers = await selectSupplier();
+        setPartData(parts?.data || []);
+        setSupplierData(suppliers || []);
       } catch (err) {
         console.error(err);
       }
     })();
   }, []);
 
+  // Filter logic for Part Suggestions
   useEffect(() => {
     if (formik.values.searchPart && !formik.values.partId) {
       const filtered = partData.filter((part) =>
-        part.partNumber
+        part?.partNumber
           .toLowerCase()
-          .includes(formik.values.searchPart.toLowerCase())
+          .includes(formik.values.searchPart.toLowerCase()),
       );
       setSuggestions(filtered);
     } else {
@@ -550,12 +536,13 @@ const PartForm: FC = () => {
     }
   }, [formik.values.searchPart, formik.values.partId, partData]);
 
+  // Filter logic for Supplier Suggestions
   useEffect(() => {
     if (formik.values.supplier && !formik.values.supplierId) {
       const filtered = supplierData.filter((supplier) =>
         supplier.name
           .toLowerCase()
-          .includes(formik.values.supplier.toLowerCase())
+          .includes(formik.values.supplier.toLowerCase()),
       );
       setSupplierSuggestions(filtered);
     } else {
@@ -563,14 +550,13 @@ const PartForm: FC = () => {
     }
   }, [formik.values.supplier, formik.values.supplierId, supplierData]);
 
-  // Type the function parameters for clarity and safety
-  const handleSuggestionClick = (part: Part) => {
+  const handleSuggestionClick = (part) => {
     formik.setFieldValue("searchPart", part.partNumber);
     formik.setFieldValue("partId", part.id);
     setSuggestions([]);
   };
 
-  const handleSupplierClick = (supplier: Supplier) => {
+  const handleSupplierClick = (supplier) => {
     formik.setFieldValue("supplier", supplier.name);
     formik.setFieldValue("supplierId", supplier.id);
     setSupplierSuggestions([]);
@@ -593,16 +579,16 @@ const PartForm: FC = () => {
             placeholder="Search part ....."
             className="border py-3 px-4 rounded-md w-full text-gray-600 placeholder-black"
             value={formik.values.searchPart}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e) => {
               formik.setFieldValue("searchPart", e.target.value);
-              formik.setFieldValue("partId", ""); // Reset ID when search text changes
+              formik.setFieldValue("partId", "");
             }}
             onFocus={() => {
               if (formik.values.searchPart) {
                 const filtered = partData.filter((part) =>
                   part.partNumber
                     .toLowerCase()
-                    .includes(formik.values.searchPart.toLowerCase())
+                    .includes(formik.values.searchPart.toLowerCase()),
                 );
                 setSuggestions(filtered);
               } else {
@@ -618,7 +604,7 @@ const PartForm: FC = () => {
               {suggestions.map((part) => (
                 <li
                   key={part.id}
-                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                  className="p-2 hover:bg-brand hover:text-white cursor-pointer"
                   onClick={() => handleSuggestionClick(part)}
                 >
                   {part.partNumber} (Stock: {part.stock})
@@ -636,13 +622,19 @@ const PartForm: FC = () => {
             placeholder="Search Supplier"
             className="border py-3 px-4 rounded-md w-full text-gray-600"
             value={formik.values.supplier}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e) => {
               formik.setFieldValue("supplier", e.target.value);
               formik.setFieldValue("supplierId", "");
             }}
             onFocus={() => {
-              // Show all suppliers on focus if input is empty
-              if (!formik.values.supplier) {
+              if (formik.values.supplier) {
+                const filtered = supplierData.filter((s) =>
+                  s.name
+                    .toLowerCase()
+                    .includes(formik.values.supplier.toLowerCase()),
+                );
+                setSupplierSuggestions(filtered);
+              } else {
                 setSupplierSuggestions(supplierData);
               }
             }}
@@ -655,7 +647,7 @@ const PartForm: FC = () => {
               {supplierSuggestions.map((supplier) => (
                 <li
                   key={supplier.id}
-                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                  className="p-2 hover:bg-brand hover:text-white cursor-pointer"
                   onClick={() => handleSupplierClick(supplier)}
                 >
                   {supplier.name}
@@ -675,8 +667,7 @@ const PartForm: FC = () => {
               className="border py-3 px-4 rounded-md w-full text-gray-600"
               {...formik.getFieldProps("returnQuantity")}
               min="0"
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                // Prevent non-numeric characters in number input
+              onKeyDown={(e) => {
                 if (["e", "E", "+", "-", "."].includes(e.key)) {
                   e.preventDefault();
                 }
@@ -695,11 +686,22 @@ const PartForm: FC = () => {
           </div>
         </div>
 
+        {/* ✅ NEW: Description / Defect Description Field */}
+        <div className="bg-white p-4 mt-4">
+          <label className="block font-semibold mb-1">Defect Description</label>
+          <textarea
+            rows={3}
+            placeholder="Describe the defect or reason for scrap..."
+            className="border py-3 px-4 rounded-md w-full text-gray-600 focus:outline-blue-500"
+            {...formik.getFieldProps("defectDesc")}
+          />
+        </div>
+
         {/* Buttons */}
         <div className="flex items-center justify-between bg-white p-6 mt-4">
           <button
             type="submit"
-            className="px-6 py-2 bg-blue-600 text-white text-md hover:bg-blue-800 transition rounded-md disabled:bg-gray-400"
+            className="px-6 py-2 bg-blue-600 text-white text-md hover:bg-blue-800 transition rounded-md"
             disabled={formik.isSubmitting}
           >
             {formik.isSubmitting ? "Saving..." : "Save Scrap"}
@@ -716,5 +718,4 @@ const PartForm: FC = () => {
     </div>
   );
 };
-
 export default PartForm;

@@ -60,6 +60,8 @@ import AllScrapEntries from "./pages/production_response/AllScrapEntries";
 import { BiLoader } from "react-icons/bi";
 import TimeSheet from "./pages/timeClock/TimeSheet";
 import StockOrderScheduleList from "./pages/order_schedule/StockOrderScheduleList";
+import EditPartScrapEntry from "./pages/production_response/EditPartScrapEntry";
+import EditProductScrapEntry from "./pages/production_response/EditProductScrapEntry";
 
 const App = () => {
   const { isLoading, token } = useAuth();
@@ -207,7 +209,14 @@ const App = () => {
             path="scrap-entry"
             element={token ? <ScrapEntry /> : <Training />}
           />
-
+          <Route
+            path="edit-part-scrap-entry/:id"
+            element={token ? <EditPartScrapEntry /> : <Training />}
+          />
+          <Route
+            path="edit-product-scrap-entry/:id"
+            element={token ? <EditProductScrapEntry /> : <Training />}
+          />
           {/* Protected Routes */}
           {/* <Route
             path="/"

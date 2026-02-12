@@ -159,6 +159,7 @@ const AllScrapEntries: React.FC = () => {
                 <th className="px-4 py-3">Part Number</th>
                 <th className="px-4 py-3">Supplier Name</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Defect Description</th>
                 <th className="px-4 py-3">Submit By</th>
                 <th className="px-4 py-3">Submit Date</th>
                 <th className="px-4 py-3">Actions</th>
@@ -170,11 +171,12 @@ const AllScrapEntries: React.FC = () => {
                   <td className="px-4 py-3">{item?.PartNumber?.partNumber}</td>
 
                   <td className="px-4 py-3">
-                    {item?.PartNumber.supplier.companyName} 
+                    {item?.PartNumber.supplier.companyName}
                   </td>
                   <td className="px-4 py-3">
                     {item.scrapStatus == true ? "yes" : "no"}
                   </td>
+                  <td className="px-4 py-3">{item.defectDesc}</td>
                   <td className="px-4 py-3">
                     {item.employeeDetails !== null
                       ? `${item?.employeeDetails.firstName} ${item?.employeeDetails.lastName}`

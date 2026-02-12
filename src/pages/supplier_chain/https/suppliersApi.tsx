@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/axiosInstance";
 import { AxiosError } from "axios";
 
-export const addSupplier = async (apiData:object) => {
+export const addSupplier = async (apiData: object) => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axiosInstance.post("/add-supplier", apiData);
@@ -10,7 +10,7 @@ export const addSupplier = async (apiData:object) => {
       toast.success(response.data.message);
     }
     return response.data;
-  }  catch (error: unknown) {
+  } catch (error: unknown) {
     const axiosError = error as AxiosError<{ message: string }>;
     if (axiosError.response?.data?.message) {
       toast.error(axiosError.response.data.message);
@@ -20,14 +20,22 @@ export const addSupplier = async (apiData:object) => {
   }
 };
 
-
 export const supplierList = async (page = 1, limit = 5) => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axiosInstance.get(
-      `/all-supplier?page=${page}&limit=${limit}`
+      `/all-supplier?page=${page}&limit=${limit}`,
     );
-    console.log('response.dataresponse.data',response.data)
+    console.log("response.dataresponse.data", response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const selectSupplier = async () => {
+  try {
+    const response = await axiosInstance.get(`/select-supplier`);
     return response.data;
   } catch (error) {
     throw error;
@@ -47,7 +55,7 @@ export const supplierList = async (page = 1, limit = 5) => {
 //   }
 // };
 
-export const supplierDetail = async (id:string) => {
+export const supplierDetail = async (id: string) => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axiosInstance.get(`/supplier-detail/${id}`);
@@ -65,16 +73,15 @@ export const editSupplier = async (data: object, id: string) => {
       toast.success(response.data.message);
     }
     return response;
-  }  catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      if (axiosError.response?.data?.message) {
-        toast.error(axiosError.response.data.message);
-      } else {
-        toast.error("Something went wrong");
-      }
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response.data.message);
+    } else {
+      toast.error("Something went wrong");
     }
+  }
 };
-
 
 export const deleteSupplier = async (id: string) => {
   try {
