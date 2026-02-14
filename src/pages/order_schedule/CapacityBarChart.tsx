@@ -77,7 +77,7 @@ const CapacityBarChart = () => {
 
   return (
     <div className="w-full h-[400px] mx-auto p-4 bg-white rounded-lg shadow-lg">
-      <Bar data={data} options={options} />
+      <h1 className="font-medium">Open Orders Process</h1> <Bar data={data} options={options} />
     </div>
   );
 };
