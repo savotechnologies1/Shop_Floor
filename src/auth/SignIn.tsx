@@ -301,8 +301,8 @@ const SignIn: FC = () => {
       <div className="hidden lg:block lg:w-1/2 relative bg-gray-100">
         <img
           src={signin}
-          alt="Containers"
-          className="w-full h-full object-cover min-h-[50vh] lg:min-h-screen"
+          alt="Logo"
+          className="w-30 2xl:w-36 h-full object-cover "
         />
       </div>
 
