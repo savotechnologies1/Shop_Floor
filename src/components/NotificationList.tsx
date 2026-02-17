@@ -6,9 +6,9 @@ export const getAllStationNotification = async (status) => {
   try {
     const query = status !== undefined ? `?status=${status}` : "";
     const response = await axiosInstance.get(
-      `/all-station-notification${query}`
+      `/all-station-notification${query}`,
     );
-    return response.data; // { message, data, counts }
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -18,7 +18,7 @@ export const updateNotificationStatus = async (id, status) => {
   try {
     const res = await axiosInstance.patch(
       `/change-station-notification-status/${id}`,
-      { status }
+      { status },
     );
     return res.data;
   } catch (error) {
@@ -26,324 +26,17 @@ export const updateNotificationStatus = async (id, status) => {
   }
 };
 
-// const NotificationList = () => {
-//   const [activeTab, setActiveTab] = useState("all");
-//   const [notifications, setNotifications] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [counts, setCounts] = useState({ all: 0, unread: 0, archived: 0 });
-//   const [message, setMessage] = useState("");
-
-//   const fetchNotifications = async () => {
-//     setLoading(true);
-//     try {
-//       let statusFilter;
-//       if (activeTab === "unread") statusFilter = false;
-//       if (activeTab === "archived") statusFilter = true;
-
-//       const res = await getAllStationNotification(statusFilter);
-//       setNotifications(res.data || []);
-//       setCounts(res.counts || { all: 0, unread: 0, archived: 0 });
-//       setMessage(res.message || ""); // ✅ message set
-//     } catch (error) {
-//       console.error("Error fetching notifications:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchNotifications();
-//   }, [activeTab]);
-
-//   const handleStatusChange = async (id, status) => {
-//     await updateNotificationStatus(id, status);
-//     fetchNotifications();
-//   };
-
-//   return (
-//     <div className="w-[420px] bg-white min-h-screen py-4 fixed right-0 top-0 z-20 overflow-auto">
-//       {/* Header */}
-//       <div className="flex justify-between items-center pb-2 mb-2 px-4">
-//         <h2 className="text-lg font-semibold">Notifications</h2>
-//         <div className="flex gap-2 items-center">
-//           <div className="text-sm text-green-600">✔</div>
-//           <div>
-//             <img src={setting} alt="Settings" />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* ✅ API message */}
-//       {message && <p className="text-sm text-gray-500 px-4 pb-2">{message}</p>}
-
-//       {/* Tabs */}
-//       <div className="flex justify-between px-2 py-4 bg-[#F4F6F8] items-center">
-//         <div className="flex gap-2">
-//           <button
-//             className={activeTab === "all" ? "text-black" : "text-gray-400"}
-//             onClick={() => setActiveTab("all")}
-//           >
-//             All
-//           </button>
-//           <p className="bg-black px-2 rounded-md text-white">{counts.all}</p>
-//         </div>
-
-//         <div className="flex gap-2">
-//           <button
-//             className={activeTab === "unread" ? "text-black" : "text-gray-400"}
-//             onClick={() => setActiveTab("unread")}
-//           >
-//             Unread
-//           </button>
-//           <p className="bg-[#00B8D929] px-2 rounded-md text-[#006C9C]">
-//             {counts.unread}
-//           </p>
-//         </div>
-
-//         <div className="flex gap-2">
-//           <button
-//             className={
-//               activeTab === "archived" ? "text-black" : "text-gray-400"
-//             }
-//             onClick={() => setActiveTab("archived")}
-//           >
-//             Archived
-//           </button>
-//           <p className="bg-[#22C55E29] px-2 rounded-md text-[#118D57]">
-//             {counts.archived}
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Notification list */}
-//       <div className="mt-2">
-//         {loading ? (
-//           <p className="text-center py-4 text-gray-500">Loading...</p>
-//         ) : notifications.length > 0 ? (
-//           notifications.map((notification) => (
-//             <div
-//               key={notification.id}
-//               className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 p-6 hover:bg-gray-100 border-b border-dashed"
-//             >
-//               {/* Image */}
-//               <div className="rounded-full bg-gray-100 p-3">
-//                 {notification.enqueryImg ? (
-//                   <img
-//                     src={`${BASE_URL}/uploads/PartEnquiryImg/${notification.enqueryImg}`}
-//                     alt="icon"
-//                     className="w-8 h-8 object-cover rounded-full"
-//                   />
-//                 ) : (
-//                   <div className="w-8 h-8 rounded-full bg-gray-300" />
-//                 )}
-//               </div>
-
-//               {/* Details */}
-//               <div className="flex-1">
-//                 <p className="text-sm sm:text-base font-medium text-[#052C89]">
-//                   {notification.comment || "No comment"}
-//                 </p>
-//                 <p className="text-xs sm:text-base text-gray-400">
-//                   {new Date(notification.createdAt).toLocaleDateString()} ·{" "}
-//                   {notification.status ? "Archived" : "Unread"}
-//                 </p>
-//               </div>
-
-//               {/* Actions */}
-//               <div className="flex gap-2 mt-2 sm:mt-0">
-//                 <button
-//                   onClick={() => handleStatusChange(notification.id, true)}
-//                   className="px-3 py-1 bg-green-500 text-white rounded"
-//                 >
-//                   OK
-//                 </button>
-//                 <button
-//                   onClick={() => handleStatusChange(notification.id, false)}
-//                   className="px-3 py-1 bg-red-500 text-white rounded"
-//                 >
-//                   Cancel
-//                 </button>
-//               </div>
-//             </div>
-//           ))
-//         ) : (
-//           <p className="text-center py-4 text-gray-500">
-//             No notifications found
-//           </p>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default NotificationList;
-
-// Add props for onClose and onNotificationAction
-// const NotificationList = ({ onClose, onNotificationAction }) => {
-//   const [activeTab, setActiveTab] = useState("all");
-//   const [notifications, setNotifications] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [counts, setCounts] = useState({ all: 0, unread: 0, archived: 0 });
-//   const [message, setMessage] = useState("");
-//   const BASE_URL = import.meta.env.VITE_SERVER_URL; // Make sure BASE_URL is accessible here
-
-//   const fetchNotifications = async () => {
-//     setLoading(true);
-//     try {
-//       let statusFilter;
-//       if (activeTab === "unread") statusFilter = false;
-//       if (activeTab === "archived") statusFilter = true;
-
-//       const res = await getAllStationNotification(statusFilter);
-//       setNotifications(res.data || []);
-//       setCounts(res.counts || { all: 0, unread: 0, archived: 0 });
-//       setMessage(res.message || "");
-//     } catch (error) {
-//       console.error("Error fetching notifications:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchNotifications();
-//   }, [activeTab]);
-
-//   const handleStatusChange = async (id, status) => {
-//     await updateNotificationStatus(id, status);
-//     fetchNotifications();
-//     if (onNotificationAction) {
-//       onNotificationAction(); // Call the function passed from Navbar to refresh the count
-//     }
-//   };
-
-//   return (
-//     <div className="w-[420px] bg-white min-h-screen py-4 fixed right-0 top-0 z-20 overflow-auto">
-//       {/* Header */}
-//       <div className="flex justify-between items-center pb-2 mb-2 px-4">
-//         <h2 className="text-lg font-semibold">Notifications</h2>
-//         <div className="flex gap-2 items-center">
-//           <div className="text-sm text-green-600">✔</div>
-//           <div>
-//             <img src={setting} alt="Settings" />
-//           </div>
-//         </div>
-//       </div>
-
-//       {message && <p className="text-sm text-gray-500 px-4 pb-2">{message}</p>}
-
-//       {/* Tabs */}
-//       <div className="flex justify-between px-2 py-4 bg-[#F4F6F8] items-center">
-//         <div className="flex gap-2">
-//           <button
-//             className={activeTab === "all" ? "text-black" : "text-gray-400"}
-//             onClick={() => setActiveTab("all")}
-//           >
-//             All
-//           </button>
-//           <p className="bg-black px-2 rounded-md text-white">{counts.all}</p>
-//         </div>
-
-//         <div className="flex gap-2">
-//           <button
-//             className={activeTab === "unread" ? "text-black" : "text-gray-400"}
-//             onClick={() => setActiveTab("unread")}
-//           >
-//             Unread
-//           </button>
-//           <p className="bg-[#00B8D929] px-2 rounded-md text-[#006C9C]">
-//             {counts.unread}
-//           </p>
-//         </div>
-
-//         <div className="flex gap-2">
-//           <button
-//             className={
-//               activeTab === "archived" ? "text-black" : "text-gray-400"
-//             }
-//             onClick={() => setActiveTab("archived")}
-//           >
-//             Archived
-//           </button>
-//           <p className="bg-[#22C55E29] px-2 rounded-md text-[#118D57]">
-//             {counts.archived}
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Notification list */}
-//       <div className="mt-2">
-//         {loading ? (
-//           <p className="text-center py-4 text-gray-500">Loading...</p>
-//         ) : notifications.length > 0 ? (
-//           notifications.map((notification) => (
-//             <div
-//               key={notification.id}
-//               className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 p-6 hover:bg-gray-100 border-b border-dashed"
-//             >
-//               {/* Image */}
-//               <div className="rounded-full bg-gray-100 p-3">
-//                 {notification.enqueryImg ? (
-//                   <img
-//                     src={`${BASE_URL}/uploads/PartEnquiryImg/${notification.enqueryImg}`}
-//                     alt="icon"
-//                     className="w-8 h-8 object-cover rounded-full"
-//                   />
-//                 ) : (
-//                   <div className="w-8 h-8 rounded-full bg-gray-300" />
-//                 )}
-//               </div>
-
-//               {/* Details */}
-//               <div className="flex-1">
-//                 <p className="text-sm sm:text-base font-medium text-[#052C89]">
-//                   {notification.comment || "No comment"}
-//                 </p>
-//                 <p className="text-xs sm:text-base text-gray-400">
-//                   {new Date(notification.createdAt).toLocaleDateString()} ·{" "}
-//                   {notification.status ? "Archived" : "Unread"}
-//                 </p>
-//               </div>
-
-//               {/* Actions */}
-//               <div className="flex gap-2 mt-2 sm:mt-0">
-//                 <button
-//                   onClick={() => handleStatusChange(notification.id, true)}
-//                   className="px-3 py-1 bg-green-500 text-white rounded"
-//                 >
-//                   OK
-//                 </button>
-//                 <button
-//                   onClick={() => handleStatusChange(notification.id, false)}
-//                   className="px-3 py-1 bg-red-500 text-white rounded"
-//                 >
-//                   Cancel
-//                 </button>
-//               </div>
-//             </div>
-//           ))
-//         ) : (
-//           <p className="text-center py-4 text-gray-500">
-//             No notifications found
-//           </p>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
 const NotificationList = ({ onClose, onNotificationAction }) => {
   const [activeTab, setActiveTab] = useState("all");
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState({ all: 0, unread: 0, archived: 0 });
   const [message, setMessage] = useState("");
-  
-  // --- Modal ke liye new states ---
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
 
-  const BASE_URL = import.meta.env.VITE_SERVER_URL; 
+  const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
   const fetchNotifications = async () => {
     setLoading(true);
@@ -371,91 +64,82 @@ const NotificationList = ({ onClose, onNotificationAction }) => {
     await updateNotificationStatus(id, status);
     fetchNotifications();
     if (onNotificationAction) {
-      onNotificationAction(); 
+      onNotificationAction();
     }
   };
 
-  // --- Modal open karne ka function ---
-  const openImageModal = (imgSrc) => {
-    setSelectedImage(imgSrc);
+  const openModal = (imgName) => {
+    setSelectedImage(`${BASE_URL}/uploads/PartEnquiryImg/${imgName}`);
     setIsModalOpen(true);
   };
 
   return (
-    <div className="w-[420px] bg-white min-h-screen py-4 fixed right-0 top-0 z-20 overflow-auto shadow-lg">
-      
-      {/* --- Image Modal Overlay --- */}
+    <div className="w-[420px] bg-white min-h-screen py-4 fixed right-0 top-0 z-20 overflow-auto shadow-xl border-l">
       {isModalOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-80 p-4"
-          onClick={() => setIsModalOpen(false)} // Bahar click karne par close hoga
+          onClick={() => setIsModalOpen(false)}
         >
-          <div className="relative">
-            <button 
+          <div className="relative max-w-4xl max-h-full">
+            <button
               className="absolute -top-10 right-0 text-white text-3xl font-bold"
               onClick={() => setIsModalOpen(false)}
             >
-              ×
+              &times;
             </button>
-            <img 
-              src={selectedImage} 
-              alt="Full Preview" 
-              className="max-w-full max-h-[90vh] rounded shadow-lg"
-              onClick={(e) => e.stopPropagation()} // Image par click karne se close na ho
+            <img
+              src={selectedImage}
+              alt="Enlarged"
+              className="max-w-full max-h-[90vh] rounded-lg shadow-lg"
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
         </div>
       )}
-
-      {/* Header */}
       <div className="flex justify-between items-center pb-2 mb-2 px-4">
         <h2 className="text-lg font-semibold">Notifications</h2>
-        <div className="flex gap-2 items-center">
-          <div className="text-sm text-green-600">✔</div>
-          <div>
-            <img src={setting} alt="Settings" />
-          </div>
-          {/* Close button for list */}
-          <button onClick={onClose} className="ml-2 text-gray-500 text-xl">✕</button>
-        </div>
+        <button onClick={onClose} className="text-gray-500 hover:text-black">
+          ✕
+        </button>
       </div>
 
       {message && <p className="text-sm text-gray-500 px-4 pb-2">{message}</p>}
 
-      {/* Tabs */}
-      <div className="flex justify-between px-2 py-4 bg-[#F4F6F8] items-center">
-        <div className="flex gap-2">
+      <div className="flex justify-between px-4 py-4 bg-[#F4F6F8] items-center">
+        <div className="flex gap-2 items-center">
           <button
-            className={activeTab === "all" ? "text-black" : "text-gray-400"}
+            className={`text-sm font-semibold cursor-pointer ${activeTab === "all" ? "text-black" : "text-gray-400"}`}
             onClick={() => setActiveTab("all")}
           >
             All
           </button>
-          <p className="bg-black px-2 rounded-md text-white">{counts.all}</p>
+          <p className="bg-black px-2 py-0.5 rounded-md text-white text-xs">
+            {counts.all}
+          </p>
         </div>
 
-        <div className="flex gap-2">
+        {/* Unread Tab */}
+        <div className="flex gap-2 items-center">
           <button
-            className={activeTab === "unread" ? "text-black" : "text-gray-400"}
+            className={`text-sm font-semibold cursor-pointer ${activeTab === "unread" ? "text-black" : "text-gray-400"}`}
             onClick={() => setActiveTab("unread")}
           >
             Unread
           </button>
-          <p className="bg-[#00B8D929] px-2 rounded-md text-[#006C9C]">
+          <p className="bg-[#00B8D929] px-2 py-0.5 rounded-md text-[#006C9C] text-xs font-bold">
             {counts.unread}
           </p>
         </div>
 
-        <div className="flex gap-2">
+        {/* Archived Tab */}
+        <div className="flex gap-2 items-center">
           <button
-            className={
-              activeTab === "archived" ? "text-black" : "text-gray-400"
-            }
+            className={`text-sm font-semibold cursor-pointer ${activeTab === "archived" ? "text-black" : "text-gray-400"}`}
             onClick={() => setActiveTab("archived")}
           >
             Archived
           </button>
-          <p className="bg-[#22C55E29] px-2 rounded-md text-[#118D57]">
+          <p className="bg-[#22C55E29] px-2 py-0.5 rounded-md text-[#118D57] text-xs font-bold">
             {counts.archived}
           </p>
         </div>
@@ -464,33 +148,33 @@ const NotificationList = ({ onClose, onNotificationAction }) => {
       {/* Notification list */}
       <div className="mt-2">
         {loading ? (
-          <p className="text-center py-4 text-gray-500">Loading...</p>
+          <p className="text-center py-10 text-gray-500">Loading...</p>
         ) : notifications.length > 0 ? (
           notifications.map((notification) => (
             <div
               key={notification.id}
-              className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 p-6 hover:bg-gray-100 border-b border-dashed"
+              className="flex flex-col sm:flex-row sm:items-start sm:space-x-3 p-4 hover:bg-gray-100 border-b border-dashed"
             >
               {/* Image with Click Event */}
-              <div className="rounded-full bg-gray-100 p-1">
+              <div className="flex-shrink-0">
                 {notification.enqueryImg ? (
                   <img
                     src={`${BASE_URL}/uploads/PartEnquiryImg/${notification.enqueryImg}`}
                     alt="icon"
-                    className="w-8 h-8 object-cover rounded-full cursor-pointer hover:opacity-80"
-                    onClick={() => openImageModal(`${BASE_URL}/uploads/PartEnquiryImg/${notification.enqueryImg}`)}
+                    className="w-12 h-12 object-cover rounded-full cursor-pointer hover:scale-105 transition-transform border"
+                    onClick={() => openModal(notification.enqueryImg)}
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gray-300" />
+                  <div className="w-12 h-12 rounded-full bg-gray-300" />
                 )}
               </div>
 
               {/* Details */}
-              <div className="flex-1">
-                <p className="text-sm sm:text-base font-medium text-[#052C89]">
+              <div className="flex-1 mt-1">
+                <p className="text-sm font-medium text-[#052C89]">
                   {notification.comment || "No comment"}
                 </p>
-                <p className="text-xs sm:text-base text-gray-400">
+                <p className="text-xs text-gray-400 mt-1">
                   {new Date(notification.createdAt).toLocaleDateString()} ·{" "}
                   {notification.status ? "Archived" : "Unread"}
                 </p>
@@ -500,13 +184,13 @@ const NotificationList = ({ onClose, onNotificationAction }) => {
               <div className="flex gap-2 mt-2 sm:mt-0">
                 <button
                   onClick={() => handleStatusChange(notification.id, true)}
-                  className="px-3 py-1 bg-green-500 text-white rounded"
+                  className="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600"
                 >
                   OK
                 </button>
                 <button
                   onClick={() => handleStatusChange(notification.id, false)}
-                  className="px-3 py-1 bg-red-500 text-white rounded"
+                  className="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600"
                 >
                   Cancel
                 </button>
@@ -514,7 +198,7 @@ const NotificationList = ({ onClose, onNotificationAction }) => {
             </div>
           ))
         ) : (
-          <p className="text-center py-4 text-gray-500">
+          <p className="text-center py-10 text-gray-500 font-medium">
             No notifications found
           </p>
         )}
