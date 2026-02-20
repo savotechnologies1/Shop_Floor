@@ -310,7 +310,24 @@ const SignIn: FC = () => {
       <div className="w-full lg:w-1/2 bg-white flex items-center justify-center py-8 lg:py-0 relative">
         {/* Logos */}
         <div className="absolute top-6 right-6 hidden lg:block">
-          <img className="w-40" src={logo} alt="Company Logo" />
+         <img
+  src={logo}
+  alt="Logo"
+  className="
+    h-8 
+    sm:h-10 
+    md:h-12 
+    lg:h-14 
+    xl:h-16 
+    2xl:h-20 
+    w-auto 
+    max-w-[120px] 
+    sm:max-w-[150px] 
+    md:max-w-[180px] 
+    lg:max-w-[220px] 
+    object-contain
+  "
+/>
         </div>
         <div className="absolute top-4 left-0 right-0 mx-auto lg:hidden">
           <img className="w-32 mx-auto" src={logo} alt="Company Logo" />

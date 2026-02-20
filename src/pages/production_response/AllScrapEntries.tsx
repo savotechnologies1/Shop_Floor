@@ -200,11 +200,11 @@ const AllScrapEntries: React.FC = () => {
     </td>
 
     {/* 6. Date */}
-    <td className="px-4 py-3">
-      <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-600">
-        {new Date(item.createdAt).toLocaleDateString()}
-      </span>
-    </td>
+   <td className="px-4 py-3">
+                    <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-600">
+                      {item.createdAt ? format(new Date(item.createdAt), "MM/dd/yyyy") : "N/A"}
+                    </span>
+                  </td>
 
     {/* 7. Actions */}
     <td className="px-2 py-3 md:px-3 md:py-4 flex gap-2 md:gap-4 items-center">
