@@ -49,6 +49,15 @@ const AllScrapEntries: React.FC = () => {
     }
   };
 
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      // Pehle yahan 'en-GB' tha (DD/MM/YYYY), ab 'en-US' hai (MM/DD/YYYY)
+      return new Intl.DateTimeFormat("en-US").format(new Date(dateString));
+    } catch (error) {
+      return "Invalid Date";
+    }
+  };
   const handleSelectChange = (event) => {
     const newValue = event.target.value;
     setSelectedValue(newValue);
@@ -202,8 +211,8 @@ const AllScrapEntries: React.FC = () => {
     {/* 6. Date */}
    <td className="px-4 py-3">
                     <span className="px-2 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-600">
-                      {item.createdAt ? format(new Date(item.createdAt), "MM/dd/yyyy") : "N/A"}
-                    </span>
+                    
+                                {formatDate(item.createdAt)}   </span>
                   </td>
 
     {/* 7. Actions */}
