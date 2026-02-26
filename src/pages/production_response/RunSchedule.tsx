@@ -475,7 +475,7 @@
 // //     }
 // //     const now = new Date();
 // //     const diffMs = now - startTime;
-    
+
 // //     // Math.max use kiya hai taaki agar difference 0 se chota ho toh 0 dikhaye
 // //     const diffMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
 
@@ -694,15 +694,15 @@
 // //     order_date,
 // //   } = jobData;
 // //   console.log("partpart", jobData);
-  
+
 // // // 1. Pehle current job ko row mein daalein
 // // // Current Job details
 // // // 1. Current Job
 // // const rows = [
-// //   { 
+// //   {
 // //     status: "Current",
-// //     part: jobData.partNumber || "N/A", 
-// //     date: jobData.order_date 
+// //     part: jobData.partNumber || "N/A",
+// //     date: jobData.order_date
 // //   },
 // // ];
 
@@ -713,7 +713,7 @@
 // //     status: "Upcoming",
 // //     part: nextJob.partNumber,
 // //     // JSON mein 'scheudleDate' field ka use kar rahe hain
-// //     date: nextJob.scheudleDate 
+// //     date: nextJob.scheudleDate
 // //   });
 // // }
 // //   return (
@@ -765,7 +765,7 @@
 // //             <td className="border border-white px-2 py-1 text-xs sm:text-sm">
 // //               {row.part}
 // //             </td>
-           
+
 // //             <td className="border border-white px-2 py-1 text-xs sm:text-sm">
 // //               {row.date.includes('T') ? formatDate(row.date) : row.date}
 // //             </td>
@@ -953,9 +953,9 @@
 // // {activeVideo && (
 // //   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
 // //     {/* Close Button: Pure screen par kahin bhi click karne se band ho jaye uske liye overlay wrapper */}
-// //     <div 
-// //       className="absolute inset-0" 
-// //       onClick={() => setActiveVideo(null)} 
+// //     <div
+// //       className="absolute inset-0"
+// //       onClick={() => setActiveVideo(null)}
 // //     ></div>
 
 // //     <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10">
@@ -1464,7 +1464,7 @@
 //     }
 //     const now = new Date();
 //     const diffMs = now - startTime;
-    
+
 //     // Math.max use kiya hai taaki agar difference 0 se chota ho toh 0 dikhaye
 //     const diffMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
 
@@ -1683,15 +1683,15 @@
 //     order_date,
 //   } = jobData;
 //   console.log("partpart", jobData);
-  
+
 // // 1. Pehle current job ko row mein daalein
 // // Current Job details
 // // 1. Current Job
 // // const rows = [
-// //   { 
+// //   {
 // //     status: "Current",
-// //     part: jobData.partNumber || "N/A", 
-// //     date: jobData.order_date 
+// //     part: jobData.partNumber || "N/A",
+// //     date: jobData.order_date
 // //   },
 // // ];
 
@@ -1702,13 +1702,13 @@
 // //     status: "Upcoming",
 // //     part: nextJob.partNumber,
 // //     // JSON mein 'scheudleDate' field ka use kar rahe hain
-// //     date: nextJob.scheudleDate 
+// //     date: nextJob.scheudleDate
 // //   });
 // // }
 // const rows = [
-//   { 
+//   {
 //     status: "Current",
-//     part: jobData.partNumber || "N/A", 
+//     part: jobData.partNumber || "N/A",
 //     date: jobData.order_date || "" // Fallback empty string
 //   },
 // ];
@@ -1721,7 +1721,7 @@
 //     part: nextJob.partNumber || "N/A",
 //     // Backend mein spelling 'scheudleDate' hai, lekin JSON mein missing hai
 //     // Isliye safe access karein
-//     date: nextJob.scheudleDate || "No Date" 
+//     date: nextJob.scheudleDate || "No Date"
 //   });
 // }
 //   return (
@@ -1773,7 +1773,7 @@
 //             <td className="border border-white px-2 py-1 text-xs sm:text-sm">
 //               {row.part}
 //             </td>
-           
+
 //             <td className="border border-white px-2 py-1 text-xs sm:text-sm">
 //               {row.date.includes('T') ? formatDate(row.date) : row.date}
 //             </td>
@@ -1961,9 +1961,9 @@
 // {activeVideo && (
 //   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
 //     {/* Close Button: Pure screen par kahin bhi click karne se band ho jaye uske liye overlay wrapper */}
-//     <div 
-//       className="absolute inset-0" 
-//       onClick={() => setActiveVideo(null)} 
+//     <div
+//       className="absolute inset-0"
+//       onClick={() => setActiveVideo(null)}
 //     ></div>
 
 //     <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10">
@@ -2429,7 +2429,7 @@ interface JobData {
   order_date: string;
   delivery_date: string;
   upcommingOrder: string;
-   workInstructionSteps: WorkInstructionStep[]; // Yeh line add karein
+  workInstructionSteps: WorkInstructionStep[]; // Yeh line add karein
   part: Part;
   order: Order;
   employeeInfo: EmployeeInfo;
@@ -2462,6 +2462,7 @@ const formatDate = (dateString: string | undefined): string => {
 //     return "N/A";
 //   }
 // };
+
 const formatCycleTime = (dateString) => {
   if (!dateString) return "N/A";
 
@@ -2474,29 +2475,44 @@ const formatCycleTime = (dateString) => {
     const now = new Date();
     const diffMs = now - startTime;
 
-    // Difference negative na ho isliye Math.max(0, ...)
+    // Total minutes nikaalein
     const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
 
-    if (totalMinutes < 60) {
-      // Agar 60 min se kam hai toh sirf minutes dikhao
-      return `${totalMinutes} min`;
-    } else {
-      // Agar 60 min ya usse zyada hai toh hours aur minutes me convert karo
-      const hours = Math.floor(totalMinutes / 60);
-      const remainingMinutes = totalMinutes % 60;
+    // 1. Agar 24 ghante (1440 min) se zyada hai
+    if (totalMinutes >= 1440) {
+      const days = Math.floor(totalMinutes / 1440);
+      const remainingMinutesAfterDays = totalMinutes % 1440;
+      const hours = Math.floor(remainingMinutesAfterDays / 60);
+      const mins = remainingMinutesAfterDays % 60;
 
-      if (remainingMinutes === 0) {
+      let result = `${days} day${days > 1 ? "s" : ""}`;
+      if (hours > 0) result += ` ${hours} hr`;
+      if (mins > 0) result += ` ${mins} min`;
+
+      return result;
+    }
+
+    // 2. Agar 1 ghante (60 min) se zyada hai
+    else if (totalMinutes >= 60) {
+      const hours = Math.floor(totalMinutes / 60);
+      const mins = totalMinutes % 60;
+
+      if (mins === 0) {
         return `${hours} hr`;
       } else {
-        return `${hours} hr ${remainingMinutes} min`;
+        return `${hours} hr ${mins} min`;
       }
+    }
+
+    // 3. Agar sirf minutes hain
+    else {
+      return `${totalMinutes} min`;
     }
   } catch (error) {
     console.error("Could not format cycle time:", dateString, error);
     return "N/A";
   }
 };
-
 const RunSchedule = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -2609,35 +2625,35 @@ const RunSchedule = () => {
   //     setIsCompleting(false);
   //   }
   // };
-const handleCompleteOrder = async () => {
-  if (!jobData || isCompleting) return;
-  setIsCompleting(true);
-  try {
-    // 1. Define the variables clearly
-    const stationUserId = jobData.employeeInfo?.id;
-    const adminName = "Admin";
-    const currentPartId = jobData.part_id || jobData.customPartId;
-    const parentProductId = jobData.order?.partId || jobData.productId;
+  const handleCompleteOrder = async () => {
+    if (!jobData || isCompleting) return;
+    setIsCompleting(true);
+    try {
+      // 1. Define the variables clearly
+      const stationUserId = jobData.employeeInfo?.id;
+      const adminName = "Admin";
+      const currentPartId = jobData.part_id || jobData.customPartId;
+      const parentProductId = jobData.order?.partId || jobData.productId;
 
-    // 2. Call the function with arguments in the EXACT order defined in completeOrder
-    await completeOrder(
-      jobData.productionId, // Arg 1: id (This goes into the URL /complete-order/${id})
-      jobData.order_id,     // Arg 2: orderId
-      jobData.order_type,   // Arg 3: order_type
-      currentPartId,        // Arg 4: partId
-      stationUserId,        // Arg 5: employeeId
-      parentProductId,      // Arg 6: productId
-      jobData.partNumber,   // Arg 7: type (Sending the Part Number string here)
-      adminName             // Arg 8: completedBy
-    );
+      // 2. Call the function with arguments in the EXACT order defined in completeOrder
+      await completeOrder(
+        jobData.productionId, // Arg 1: id (This goes into the URL /complete-order/${id})
+        jobData.order_id, // Arg 2: orderId
+        jobData.order_type, // Arg 3: order_type
+        currentPartId, // Arg 4: partId
+        stationUserId, // Arg 5: employeeId
+        parentProductId, // Arg 6: productId
+        jobData.partNumber, // Arg 7: type (Sending the Part Number string here)
+        jobData.employeeInfo.id, // Arg 8: completedBy
+      );
 
-    fetchJobDetails(id);
-  } catch (error) {
-    console.error("Completion Error:", error);
-  } finally {
-    setIsCompleting(false);
-  }
-};
+      fetchJobDetails(id);
+    } catch (error) {
+      console.error("Completion Error:", error);
+    } finally {
+      setIsCompleting(false);
+    }
+  };
   const handleScrapOrder = async () => {
     if (!jobData) return;
     try {
@@ -2663,13 +2679,21 @@ const handleCompleteOrder = async () => {
     if (!jobData) return;
 
     try {
-      const response = await stationLogoutApi(jobData.productionId);
+      // ID ke saath-saath body mein data bhi bhejein
+      const logoutData = {
+        completedQuantity: jobData.employeeCompletedQty,
+        scrapQuantity: jobData.employeeScrapQty,
+      };
+
+      // Apni API function mein dusra argument (body) pass karein
+      const response = await stationLogoutApi(jobData.productionId, logoutData);
+
       if (response && response.status === 200) {
         localStorage.removeItem("stationUserId");
         navigate("/station-login");
       }
     } catch (error) {
-      throw error;
+      console.error("Logout Error:", error);
     }
   };
 
@@ -2706,47 +2730,47 @@ const handleCompleteOrder = async () => {
     order_date,
   } = jobData;
   console.log("partpart", jobData);
-  
-// 1. Pehle current job ko row mein daalein
-// Current Job details
-// 1. Current Job
-// const rows = [
-//   { 
-//     status: "Current",
-//     part: jobData.partNumber || "N/A", 
-//     date: jobData.order_date 
-//   },
-// ];
 
-// // 2. Sirf 1 Upcoming Job (Agar data available hai)
-// if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
-//   const nextJob = jobData.incomingJobs[0]; // Pehla item uthaya
-//   rows.push({
-//     status: "Upcoming",
-//     part: nextJob.partNumber,
-//     // JSON mein 'scheudleDate' field ka use kar rahe hain
-//     date: nextJob.scheudleDate 
-//   });
-// }
-const rows = [
-  { 
-    status: "Current",
-    part: jobData.partNumber || "N/A", 
-    date: jobData.order_date || "" // Fallback empty string
-  },
-];
+  // 1. Pehle current job ko row mein daalein
+  // Current Job details
+  // 1. Current Job
+  // const rows = [
+  //   {
+  //     status: "Current",
+  //     part: jobData.partNumber || "N/A",
+  //     date: jobData.order_date
+  //   },
+  // ];
 
-// 2. Sirf 1 Upcoming Job
-if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
-  const nextJob = jobData.incomingJobs[0];
-  rows.push({
-    status: "Upcoming",
-    part: nextJob.partNumber || "N/A",
-    // Backend mein spelling 'scheudleDate' hai, lekin JSON mein missing hai
-    // Isliye safe access karein
-    date: nextJob.scheudleDate || "No Date" 
-  });
-}
+  // // 2. Sirf 1 Upcoming Job (Agar data available hai)
+  // if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
+  //   const nextJob = jobData.incomingJobs[0]; // Pehla item uthaya
+  //   rows.push({
+  //     status: "Upcoming",
+  //     part: nextJob.partNumber,
+  //     // JSON mein 'scheudleDate' field ka use kar rahe hain
+  //     date: nextJob.scheudleDate
+  //   });
+  // }
+  const rows = [
+    {
+      status: "Current",
+      part: jobData.partNumber || "N/A",
+      date: jobData.order_date || "", // Fallback empty string
+    },
+  ];
+
+  // 2. Sirf 1 Upcoming Job
+  if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
+    const nextJob = jobData.incomingJobs[0];
+    rows.push({
+      status: "Upcoming",
+      part: nextJob.partNumber || "N/A",
+      // Backend mein spelling 'scheudleDate' hai, lekin JSON mein missing hai
+      // Isliye safe access karein
+      date: nextJob.scheudleDate || "No Date",
+    });
+  }
   return (
     <div className="bg-[#F5F6FA] min-h-screen flex flex-col">
       <div className="bg-[#243C75] relative ">
@@ -2769,8 +2793,9 @@ if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold break-words leading-snug text-white px-2">
                   Process Name :
                   <span className="text-md font-medium">
-                    {part?.process?.processName ||jobData.process.processName} ({" "}
-                    {part?.process?.machineName ||jobData.process.machineName})
+                    {part?.process?.processName || jobData.process.processName}{" "}
+                    ({" "}
+                    {part?.process?.machineName || jobData.process.machineName})
                   </span>
                 </p>
               </div>
@@ -2781,31 +2806,43 @@ if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
                 className="w-20 sm:w-24 md:w-28 lg:w-32 object-contain"
               />
 
-            <div className="absolute inset-0 flex items-center justify-center px-2 sm:px-3 md:px-4 mt-5">
-  <div className="bg-opacity-50 rounded-md overflow-y-auto w-full max-h-[150px]"> {/* Scrolling add ki hai taaki zyada parts fits ho sakein */}
-    <table className="border border-white text-white text-center w-full min-w-[280px]">
-      <thead className="sticky top-0 bg-[#243C75]">
-        <tr className="font-semibold">
-          <th className="border border-white px-2 py-1 text-xs sm:text-sm">Part Number</th>
-          <th className="border border-white px-2 py-1 text-xs sm:text-sm">Type/Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, i) => (
-          <tr key={i} className={i === 0 ? "bg-green-600/30" : ""}> {/* Current job ko highlight karne ke liye */}
-            <td className="border border-white px-2 py-1 text-xs sm:text-sm">
-              {row.part}
-            </td>
-           
-            <td className="border border-white px-2 py-1 text-xs sm:text-sm">
-              {row.date.includes('T') ? formatDate(row.date) : row.date}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
+              <div className="absolute inset-0 flex items-center justify-center px-2 sm:px-3 md:px-4 mt-5">
+                <div className="bg-opacity-50 rounded-md overflow-y-auto w-full max-h-[150px]">
+                  {" "}
+                  {/* Scrolling add ki hai taaki zyada parts fits ho sakein */}
+                  <table className="border border-white text-white text-center w-full min-w-[280px]">
+                    <thead className="sticky top-0 bg-[#243C75]">
+                      <tr className="font-semibold">
+                        <th className="border border-white px-2 py-1 text-xs sm:text-sm">
+                          Part Number
+                        </th>
+                        <th className="border border-white px-2 py-1 text-xs sm:text-sm">
+                          Date
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rows.map((row, i) => (
+                        <tr
+                          key={i}
+                          className={i === 0 ? "bg-green-600/30" : ""}
+                        >
+                          {" "}
+                          {/* Current job ko highlight karne ke liye */}
+                          <td className="border border-white px-2 py-1 text-xs sm:text-sm">
+                            {row.part}
+                          </td>
+                          <td className="border border-white px-2 py-1 text-xs sm:text-sm">
+                            {row.date.includes("T")
+                              ? formatDate(row.date)
+                              : row.date}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
           {/* <div className="absolute inset-0 flex items-center justify-center px-3 md:px-6">
@@ -2849,72 +2886,73 @@ if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
 
       <div className="container mx-auto p-4 md:p-6 flex-grow">
         <CommentBox employeeInfo={employeeInfo} />
-<div className="py-4 flex flex-col gap-4">
-  {/* Yahan change kiya: part.WorkInstruction ki jagah jobData.workInstructionSteps */}
-  {jobData.workInstructionSteps && jobData.workInstructionSteps.length > 0 ? (
-    jobData.workInstructionSteps.map((step, index) => (
-      <div
-        key={step.id || index}
-        className="flex flex-col md:flex-row gap-4 md:gap-10 items-start bg-white rounded-lg shadow-sm p-4 border border-gray-100"
-      >
-        {/* MEDIA SECTION */}
-        <div className="flex flex-wrap gap-3 flex-shrink-0">
-          {/* IMAGE: step.images directly access karein */}
-          {step.images && step.images.length > 0 && (
-            <img
-              className="rounded-md w-40 h-40 object-cover border"
-              src={`${BASE_URL}/uploads/workInstructionImg/${step.images[0].imagePath}`}
-              alt={step.title}
-            />
+        <div className="py-4 flex flex-col gap-4">
+          {/* Yahan change kiya: part.WorkInstruction ki jagah jobData.workInstructionSteps */}
+          {jobData.workInstructionSteps &&
+          jobData.workInstructionSteps.length > 0 ? (
+            jobData.workInstructionSteps.map((step, index) => (
+              <div
+                key={step.id || index}
+                className="flex flex-col md:flex-row gap-4 md:gap-10 items-start bg-white rounded-lg shadow-sm p-4 border border-gray-100"
+              >
+                {/* MEDIA SECTION */}
+                <div className="flex flex-wrap gap-3 flex-shrink-0">
+                  {/* IMAGE: step.images directly access karein */}
+                  {step.images && step.images.length > 0 && (
+                    <img
+                      className="rounded-md w-40 h-40 object-cover border"
+                      src={`${BASE_URL}/uploads/workInstructionImg/${step.images[0].imagePath}`}
+                      alt={step.title}
+                    />
+                  )}
+
+                  {/* VIDEO: step.videos directly access karein */}
+                  {/* Video Section */}
+                  {step.videos?.length > 0 && (
+                    <div
+                      className="relative w-40 h-40 bg-black rounded-md overflow-hidden cursor-pointer group border"
+                      onClick={() =>
+                        setActiveVideo(
+                          `${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}`,
+                        )
+                      }
+                    >
+                      {/* Video Thumbnail (Preview) */}
+                      <video className="w-full h-full object-cover opacity-60">
+                        <source
+                          src={`${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}#t=0.1`}
+                        />
+                      </video>
+
+                      {/* Play Icon Layer */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-white/30 backdrop-blur-md p-3 rounded-full group-hover:scale-110 transition-transform">
+                          <FaPlay className="text-white text-2xl" />
+                        </div>
+                      </div>
+                      <span className="absolute bottom-2 left-2 text-[10px] text-white bg-black/50 px-2 py-0.5 rounded">
+                        Click to Play
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <p className="font-semibold text-lg text-gray-800 break-words mb-1">
+                    {step.title}
+                  </p>
+                  <p className="text-gray-600 break-words leading-relaxed">
+                    {step.instruction}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500 p-4">
+              No instructions available for this part.
+            </div>
           )}
-
-          {/* VIDEO: step.videos directly access karein */}
-        {/* Video Section */}
-{step.videos?.length > 0 && (
-  <div
-    className="relative w-40 h-40 bg-black rounded-md overflow-hidden cursor-pointer group border"
-    onClick={() =>
-      setActiveVideo(
-        `${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}`
-      )
-    }
-  >
-    {/* Video Thumbnail (Preview) */}
-    <video className="w-full h-full object-cover opacity-60">
-      <source
-        src={`${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}#t=0.1`}
-      />
-    </video>
-
-    {/* Play Icon Layer */}
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="bg-white/30 backdrop-blur-md p-3 rounded-full group-hover:scale-110 transition-transform">
-        <FaPlay className="text-white text-2xl" />
-      </div>
-    </div>
-    <span className="absolute bottom-2 left-2 text-[10px] text-white bg-black/50 px-2 py-0.5 rounded">
-      Click to Play
-    </span>
-  </div>
-)}
         </div>
-
-        <div className="flex-1">
-          <p className="font-semibold text-lg text-gray-800 break-words mb-1">
-            {step.title}
-          </p>
-          <p className="text-gray-600 break-words leading-relaxed">
-            {step.instruction}
-          </p>
-        </div>
-      </div>
-    ))
-  ) : (
-    <div className="text-center text-gray-500 p-4">
-      No instructions available for this part.
-    </div>
-  )}
-</div>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
           <button
             className="bg-brand text-white px-4 py-2 rounded-md text-sm md:text-base font-semibold w-full sm:w-auto"
@@ -2980,40 +3018,41 @@ if (jobData.incomingJobs && jobData.incomingJobs.length > 0) {
             </div>
           </div>
         </div>
-      </div>{/* --- VIDEO PLAYER MODAL --- */}
-{activeVideo && (
-  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
-    {/* Close Button: Pure screen par kahin bhi click karne se band ho jaye uske liye overlay wrapper */}
-    <div 
-      className="absolute inset-0" 
-      onClick={() => setActiveVideo(null)} 
-    ></div>
-
-    <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10">
-      {/* Top Bar with Title and Close Button */}
-      <div className="absolute top-0 left-0 right-0 p-4 flex justify-end items-center bg-gradient-to-b from-black/70 to-transparent z-20">
-        <button
-          onClick={() => setActiveVideo(null)}
-          className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-all"
-        >
-          <IoClose size={30} />
-        </button>
       </div>
+      {/* --- VIDEO PLAYER MODAL --- */}
+      {activeVideo && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+          {/* Close Button: Pure screen par kahin bhi click karne se band ho jaye uske liye overlay wrapper */}
+          <div
+            className="absolute inset-0"
+            onClick={() => setActiveVideo(null)}
+          ></div>
 
-      {/* Actual Video Player */}
-      <div className="aspect-video w-full flex items-center justify-center">
-        <video
-          src={activeVideo}
-          controls
-          autoPlay
-          className="w-full h-full"
-        >
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    </div>
-  </div>
-)}
+          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10">
+            {/* Top Bar with Title and Close Button */}
+            <div className="absolute top-0 left-0 right-0 p-4 flex justify-end items-center bg-gradient-to-b from-black/70 to-transparent z-20">
+              <button
+                onClick={() => setActiveVideo(null)}
+                className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-all"
+              >
+                <IoClose size={30} />
+              </button>
+            </div>
+
+            {/* Actual Video Player */}
+            <div className="aspect-video w-full flex items-center justify-center">
+              <video
+                src={activeVideo}
+                controls
+                autoPlay
+                className="w-full h-full"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

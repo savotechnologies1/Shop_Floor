@@ -2149,6 +2149,7 @@ const formatCycleTime = (dateString) => {
     return "N/A";
   }
 };
+
 const RunWithScan = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -2189,15 +2190,12 @@ const RunWithScan = () => {
     if (!jobData || isCompleting) return;
     setIsCompleting(true);
     try {
-      await axiosInstance.post(
-        `${BASE_URL}/api/shopFloor/scan-complete/${id}`,
-        {
-          orderId: jobData.order_id,
-          partId: jobData.part_id,
-          employeeId: jobData.employeeInfo.id,
-          order_type: jobData.order_type,
-        },
-      );
+      await axiosInstance.post(`${BASE_URL}/api/admin/scan-complete/${id}`, {
+        orderId: jobData.order_id,
+        partId: jobData.part_id,
+        employeeId: jobData.employeeInfo.id,
+        order_type: jobData.order_type,
+      });
       fetchJobDetails(id);
     } catch (error) {
       console.error("Complete Scan Failed:", error);
@@ -2210,7 +2208,7 @@ const RunWithScan = () => {
   const handleScanScrap = useCallback(async () => {
     if (!jobData) return;
     try {
-      await axiosInstance.post(`${BASE_URL}/api/shopFloor/scan-scrap/${id}`, {
+      await axiosInstance.post(`${BASE_URL}/api/admin/scan-scrap/${id}`, {
         orderId: jobData.order_id,
         partId: jobData.part_id,
         employeeId: jobData.employeeInfo.id,
@@ -2240,15 +2238,27 @@ const RunWithScan = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleScanComplete, handleScanScrap]);
 
-  const stationLogout = useCallback(async () => {
+  const stationLogout = async () => {
     if (!jobData) return;
+
     try {
-      const response = await stationLogoutApi(jobData.productionId);
-      if (response && response.status === 200) navigate("/station-login");
+      // ID ke saath-saath body mein data bhi bhejein
+      const logoutData = {
+        completedQuantity: jobData?.employeeCompletedQty,
+        scrapQuantity: jobData?.employeeScrapQty,
+      };
+
+      // Apni API function mein dusra argument (body) pass karein
+      const response = await stationLogoutApi(jobData.productionId, logoutData);
+
+      if (response && response.status === 200) {
+        localStorage.removeItem("stationUserId");
+        navigate("/station-login");
+      }
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Logout Error:", error);
     }
-  }, [jobData, navigate]);
+  };
 
   const formatDate = (d: any) =>
     !d
@@ -2259,40 +2269,56 @@ const RunWithScan = () => {
           year: "numeric",
         });
 
-const formatCycleTime = (dateString) => {
-  if (!dateString) return "N/A";
+  const formatCycleTime = (dateString) => {
+    if (!dateString) return "N/A";
 
-  try {
-    const startTime = new Date(dateString);
-    if (isNaN(startTime.getTime())) {
-      return "Invalid Time";
-    }
-
-    const now = new Date();
-    const diffMs = now - startTime;
-
-    // Difference negative na ho isliye Math.max(0, ...)
-    const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
-
-    if (totalMinutes < 60) {
-      // Agar 60 min se kam hai toh sirf minutes dikhao
-      return `${totalMinutes} min`;
-    } else {
-      // Agar 60 min ya usse zyada hai toh hours aur minutes me convert karo
-      const hours = Math.floor(totalMinutes / 60);
-      const remainingMinutes = totalMinutes % 60;
-
-      if (remainingMinutes === 0) {
-        return `${hours} hr`;
-      } else {
-        return `${hours} hr ${remainingMinutes} min`;
+    try {
+      const startTime = new Date(dateString);
+      if (isNaN(startTime.getTime())) {
+        return "Invalid Time";
       }
+
+      const now = new Date();
+      const diffMs = now - startTime;
+
+      // Total minutes nikaalein
+      const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+
+      // 1. Agar 24 ghante (1440 min) se zyada hai
+      if (totalMinutes >= 1440) {
+        const days = Math.floor(totalMinutes / 1440);
+        const remainingMinutesAfterDays = totalMinutes % 1440;
+        const hours = Math.floor(remainingMinutesAfterDays / 60);
+        const mins = remainingMinutesAfterDays % 60;
+
+        let result = `${days} day${days > 1 ? "s" : ""}`;
+        if (hours > 0) result += ` ${hours} hr`;
+        if (mins > 0) result += ` ${mins} min`;
+
+        return result;
+      }
+
+      // 2. Agar 1 ghante (60 min) se zyada hai
+      else if (totalMinutes >= 60) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        if (mins === 0) {
+          return `${hours} hr`;
+        } else {
+          return `${hours} hr ${mins} min`;
+        }
+      }
+
+      // 3. Agar sirf minutes hain
+      else {
+        return `${totalMinutes} min`;
+      }
+    } catch (error) {
+      console.error("Could not format cycle time:", dateString, error);
+      return "N/A";
     }
-  } catch (error) {
-    console.error("Could not format cycle time:", dateString, error);
-    return "N/A";
-  }
-};
+  };
 
   if (loading)
     return (
@@ -2351,11 +2377,9 @@ const formatCycleTime = (dateString) => {
                 <div className="bg-opacity-50 rounded-md overflow-x-auto w-full text-white">
                   <table className="border border-white text-center w-full min-w-[280px]">
                     <thead>
-                      <tr className="font-semibold uppercase text-xs">
+                      <tr className="font-semibold  text-xs">
                         <th className="border border-white px-2 py-1">Part</th>
-                        <th className="border border-white px-2 py-1">
-                          Schedule date
-                        </th>
+                        <th className="border border-white px-2 py-1">Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -2496,7 +2520,7 @@ const formatCycleTime = (dateString) => {
               <p className="text-sm">{`${jobData.employeeInfo?.firstName} ${jobData.employeeInfo?.lastName}`}</p>
             </div>
             <div className="flex flex-col items-center">
-              <p className="text-xs">Done</p>
+              <p className="text-xs">Qty</p>
               <p className="text-sm font-bold">
                 {jobData.employeeCompletedQty}
               </p>
