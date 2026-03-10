@@ -41,6 +41,21 @@ interface JobData {
   order: { orderNumber: string; orderDate: string };
 }
 
+interface JobData {
+  productionId: string;
+  part_id: string; // Added for training check
+  customPartId: string; // Added for training check
+  workInstructionSteps: Step[];
+  part: {
+    partNumber: string;
+    partDescription: string;
+  };
+  employeeInfo: { firstName: string; lastName: string };
+  process: { processName: string };
+  cycleTime: string;
+  order: { orderNumber: string; orderDate: string };
+}
+
 const Training = () => {
   const navigate = useNavigate();
   const { id: processId } = useParams<{ id: string }>();
@@ -122,7 +137,13 @@ const Training = () => {
       return "N/A";
     }
   };
-
+  // Examples:
+  // 45 minutes -> "45 min"
+  // 150 minutes -> "2 hr 30 min"
+  // 1440 minutes -> "1 d"
+  // 1500 minutes -> "1 d 1 hr"
+  // 1510 minutes -> "1 d 1 hr 10 min"
+  // 2. Training Certification Check
   const verifyTraining = async (productId: string) => {
     if (
       !stationUserId ||
@@ -145,6 +166,7 @@ const Training = () => {
     }
   };
 
+  // 3. Fetch Job and Instructions
   const fetchJobDetails = async () => {
     if (!processId || !stationUserId) {
       navigate("/station-login");
@@ -265,7 +287,7 @@ const Training = () => {
                         <th className="border border-white px-2 py-1">
                           Part Number (Learning)
                         </th>
-                        <th className="border border-white px-2 py-1">Date</th>
+                        <th className="border border-white px-2 py-1"> Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -429,14 +451,14 @@ const Training = () => {
 
           {/* Right Side: Employee & Performance Stats */}
           <div className="flex gap-4 md:gap-10 justify-center">
-            <div className="flex flex-col items-center text-white">
-              {/* <p className="text-xs md:text-sm font-semibold opacity-70">Employee</p>
+            {/* <div className="flex flex-col items-center text-white">
+              <p className="text-xs md:text-sm font-semibold opacity-70">Employee</p>
               <p className="text-sm md:text-base">
                 {jobData.employeeInfo 
                   ? `${jobData.employeeInfo.firstName} ${jobData.employeeInfo.lastName}` 
                   : "Worker"}
-              </p> */}
-            </div>
+              </p>
+            </div> */}
             <div className="flex flex-col items-center text-white">
               <p className="text-xs md:text-sm font-semibold opacity-70">
                 Completed
@@ -489,6 +511,7 @@ const Training = () => {
 };
 
 export default Training;
+
 // const Training = () => {
 //   const navigate = useNavigate();
 //   const { id: processId } = useParams<{ id: string }>();
