@@ -1,12 +1,14 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FaCircle } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { applyVacationReq } from "./https/timeClock";
+import DatePicker from "react-datepicker";
 
 const VacationRequest = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm();
 
@@ -17,14 +19,12 @@ const VacationRequest = () => {
   return (
     <div>
       <div className="p-7  mt-8">
-        {/* Title */}
         <div>
           <h1 className="font-bold text-[20px] md:text-[24px] text-black">
             Vacation Request
           </h1>
         </div>
 
-        {/* Breadcrumb */}
         <div className="flex justify-between mt-2 items-center">
           <div className="flex gap-4 items-center ">
             <p className={`text-xs  text-black`}>
@@ -43,14 +43,10 @@ const VacationRequest = () => {
           </div>
         </div>
 
-        {/* Form */}
         <div className="mt-4 bg-white p-2 sm:p-6 w-full rounded-2xl xl:w-2/3">
-          {/* Start Date and End Date */}
-
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className=" bg-white  w-full rounded-2xl ">
-              {/* Start Date and End Date */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-2 mb-6">
+              {/* <div className="flex flex-col sm:flex-row gap-4 mt-2 mb-6">
                 <div className="w-full">
                   <label className="font-semibold">Start Date</label>
                   <input
@@ -83,8 +79,56 @@ const VacationRequest = () => {
                     </p>
                   )}
                 </div>
-              </div>
+              </div> */}
+              <div className="flex flex-col sm:flex-row gap-4 mt-2 mb-6">
+                {/* Start Date */}
+                <div className="w-full">
+                  <label className="font-semibold block mb-2">Start Date</label>
+                  <Controller
+                    control={control}
+                    name="startDate"
+                    rules={{ required: "Start date is required" }}
+                    render={({ field }) => (
+                      <DatePicker
+                        placeholderText="MM/DD/YYYY"
+                        className="border py-4 px-4 rounded-md w-full"
+                        selected={field.value}
+                        onChange={(date) => field.onChange(date)}
+                        dateFormat="MM/dd/yyyy"
+                      />
+                    )}
+                  />
+                  {errors.startDate && (
+                    <p className="text-red-500 text-sm">
+                      {String(errors.startDate.message)}
+                    </p>
+                  )}
+                </div>
 
+                {/* End Date */}
+                <div className="w-full">
+                  <label className="font-semibold block mb-2">End Date</label>
+                  <Controller
+                    control={control}
+                    name="endDate"
+                    rules={{ required: "End date is required" }}
+                    render={({ field }) => (
+                      <DatePicker
+                        placeholderText="MM/DD/YYYY"
+                        className="border py-4 px-4 rounded-md w-full"
+                        selected={field.value}
+                        onChange={(date) => field.onChange(date)}
+                        dateFormat="MM/dd/yyyy" // यहाँ फॉर्मेट सेट किया गया है
+                      />
+                    )}
+                  />
+                  {errors.endDate && (
+                    <p className="text-red-500 text-sm">
+                      {String(errors.endDate.message)}
+                    </p>
+                  )}
+                </div>
+              </div>
               {/* How Many Hours */}
               <label className="font-semibold">How Many Hours</label>
               <div className="mt-2 w-full mb-6">

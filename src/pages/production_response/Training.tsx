@@ -14,7 +14,6 @@ import { formatDate } from "date-fns";
 import { FaPlay, FaSpinner } from "react-icons/fa";
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
-// --- Interfaces ---
 interface Image {
   imagePath: string;
 }
@@ -41,21 +40,6 @@ interface JobData {
   order: { orderNumber: string; orderDate: string };
 }
 
-interface JobData {
-  productionId: string;
-  part_id: string; // Added for training check
-  customPartId: string; // Added for training check
-  workInstructionSteps: Step[];
-  part: {
-    partNumber: string;
-    partDescription: string;
-  };
-  employeeInfo: { firstName: string; lastName: string };
-  process: { processName: string };
-  cycleTime: string;
-  order: { orderNumber: string; orderDate: string };
-}
-
 const Training = () => {
   const navigate = useNavigate();
   const { id: processId } = useParams<{ id: string }>();
@@ -64,7 +48,6 @@ const Training = () => {
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
-  // 1. Station User ID Helper
   const getUserId = () => {
     const rawData = localStorage.getItem("stationUserId");
     if (!rawData) return null;
@@ -95,14 +78,9 @@ const Training = () => {
       if (isNaN(startTime.getTime())) {
         return "Invalid Time";
       }
-
       const now = new Date();
       const diffMs = now - startTime;
-
-      // Total minutes nikaalein
       const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
-
-      // 1. Agar 24 ghante (1440 min) se zyada hai
       if (totalMinutes >= 1440) {
         const days = Math.floor(totalMinutes / 1440);
         const remainingMinutesAfterDays = totalMinutes % 1440;
@@ -114,10 +92,7 @@ const Training = () => {
         if (mins > 0) result += ` ${mins} min`;
 
         return result;
-      }
-
-      // 2. Agar 1 ghante (60 min) se zyada hai
-      else if (totalMinutes >= 60) {
+      } else if (totalMinutes >= 60) {
         const hours = Math.floor(totalMinutes / 60);
         const mins = totalMinutes % 60;
 
@@ -126,10 +101,7 @@ const Training = () => {
         } else {
           return `${hours} hr ${mins} min`;
         }
-      }
-
-      // 3. Agar sirf minutes hain
-      else {
+      } else {
         return `${totalMinutes} min`;
       }
     } catch (error) {
@@ -137,13 +109,6 @@ const Training = () => {
       return "N/A";
     }
   };
-  // Examples:
-  // 45 minutes -> "45 min"
-  // 150 minutes -> "2 hr 30 min"
-  // 1440 minutes -> "1 d"
-  // 1500 minutes -> "1 d 1 hr"
-  // 1510 minutes -> "1 d 1 hr 10 min"
-  // 2. Training Certification Check
   const verifyTraining = async (productId: string) => {
     if (
       !stationUserId ||
@@ -166,7 +131,6 @@ const Training = () => {
     }
   };
 
-  // 3. Fetch Job and Instructions
   const fetchJobDetails = async () => {
     if (!processId || !stationUserId) {
       navigate("/station-login");
@@ -194,7 +158,6 @@ const Training = () => {
     }
   };
 
-  // 4. Handle Step Learning
   const handleStepClick = async (stepId: string) => {
     if (!jobData || !jobData.productionId || completedSteps.has(stepId)) return;
     setCompletedSteps((prev) => new Set(prev).add(stepId));

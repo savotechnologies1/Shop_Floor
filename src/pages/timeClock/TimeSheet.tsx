@@ -288,7 +288,7 @@ const TimeSheet: FC = () => {
         currentPage,
         pageSize,
         currentFilter,
-        searchQuery
+        searchQuery,
       );
       const apiData: ApiResponse = response.data; // Access .data property from axios response
       setTimeSheetData(apiData.data);
@@ -297,7 +297,7 @@ const TimeSheet: FC = () => {
       setError(
         err.response?.data?.message || // Access backend error message if available
           err.message ||
-          "An unknown error occurred while fetching the timesheet."
+          "An unknown error occurred while fetching the timesheet.",
       );
       console.error("Fetch Error:", err);
     } finally {
@@ -324,32 +324,29 @@ const TimeSheet: FC = () => {
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentFilter(event.target.value);
-    setCurrentPage(1); // Reset to page 1 when filter changes
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-    // No need to reset page here, the debounce useEffect will handle fetching
   };
 
-  // Debounce search input
   useEffect(() => {
     const handler = setTimeout(() => {
-      // Only fetch if the search query has actually changed or if it's the initial load
       if (searchQuery !== undefined) {
-        setCurrentPage(1); // Reset to page 1 when search query changes
-        fetchTimeSheet(); // Trigger fetch with the new search query
+        setCurrentPage(1);
+        fetchTimeSheet();
       }
-    }, 500); // 500ms delay
+    }, 500);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [searchQuery, fetchTimeSheet]); // Depend on searchQuery and fetchTimeSheet
+  }, [searchQuery, fetchTimeSheet]);
 
   const tableHeaders = [
     "Date",
-    "Employee Name", // Added this header
+    "Employee Name",
     "Login Time",
     "Lunch Start",
     "Lunch End",
@@ -358,10 +355,32 @@ const TimeSheet: FC = () => {
     "Exception End",
     "Vacation",
   ];
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "-";
 
+    const date = new Date(dateStr);
+
+    if (isNaN(date.getTime())) return dateStr;
+
+    return date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
+  const formatDateTime = (dateStr: string | null) => {
+    if (!dateStr || dateStr === "-") return "-";
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+
+    return date.toLocaleString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
   return (
     <div className="p-4 sm:p-6 bg-gray-50 min-h-screen mt-8">
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Time List</h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -369,9 +388,7 @@ const TimeSheet: FC = () => {
         </p>
       </div>
 
-      {/* Main Content Card */}
       <div className="mt-6 bg-white shadow-md rounded-lg p-4 sm:p-6">
-        {/* Filters and Search */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
           <div>
             <label
@@ -383,7 +400,7 @@ const TimeSheet: FC = () => {
             <select
               id="filter"
               className="mt-1 block w-full sm:w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              value={currentFilter} // Controlled component
+              value={currentFilter}
               onChange={handleFilterChange}
             >
               <option value="This Week">This Week</option>
@@ -396,10 +413,9 @@ const TimeSheet: FC = () => {
               type="text"
               placeholder="Search by Date, Employee Name, or Email..."
               className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              value={searchQuery} // Controlled component
+              value={searchQuery}
               onChange={handleSearchChange}
             />
-            {/* Search Icon */}
             <svg
               className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
               xmlns="http://www.w3.org/2000/svg"
@@ -417,7 +433,6 @@ const TimeSheet: FC = () => {
           </div>
         </div>
 
-        {/* Table */}
         <div className="mt-6 overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -454,19 +469,16 @@ const TimeSheet: FC = () => {
                 </tr>
               ) : timeSheetData.length > 0 ? (
                 timeSheetData.map((entry) => (
-                  // Use a unique key like employeeId-date
                   <tr key={`${entry.employeeId}-${entry.date}`}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                      {entry.date}
+                      {formatDate(entry.date)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                       {entry.employeeName}
-                      <p className="text-gray-500 text-xs">
-                        ({entry.employeeEmail})
-                      </p>
+                      <p className="text-gray-500 text-xs">({entry.email})</p>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {entry.loginTime || "-"}
+                      {formatDateTime(entry.loginTime)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {entry.lunchStart || "-"}
@@ -475,7 +487,7 @@ const TimeSheet: FC = () => {
                       {entry.lunchEnd || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {entry.logout || "-"}
+                      {formatDateTime(entry.logout) || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {entry.exceptionStart || "-"}
@@ -484,7 +496,7 @@ const TimeSheet: FC = () => {
                       {entry.exceptionEnd || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {entry.vacation}
+                      {entry.vacationStatus}
                     </td>
                   </tr>
                 ))

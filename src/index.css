@@ -2,13 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap'); */
-
-
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 
   -webkit-font-smoothing: antialiased;
-  
+}
+input[type="date"]::-webkit-datetime-edit {
+  color: transparent;
+}
+input[type="date"]:focus::-webkit-datetime-edit {
+  color: black !important;
+}
+/* React Datepicker ko full width banane ke liye */
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container input {
+  width: 100% !important;
 }
