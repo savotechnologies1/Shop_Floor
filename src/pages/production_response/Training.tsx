@@ -40,14 +40,18 @@ interface JobData {
   order: { orderNumber: string; orderDate: string };
 }
 
+
+
 const Training = () => {
   const navigate = useNavigate();
   const { id: processId } = useParams<{ id: string }>();
+
   const [jobData, setJobData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
+  // --- Helpers ---
   const getUserId = () => {
     const rawData = localStorage.getItem("stationUserId");
     if (!rawData) return null;
@@ -70,67 +74,26 @@ const Training = () => {
     });
   };
 
-  const formatCycleTime = (dateString) => {
-    if (!dateString) return "N/A";
-
+  const formatCycleTime = (dateString: any) => {
+    if (!dateString) return "0 min";
     try {
       const startTime = new Date(dateString);
-      if (isNaN(startTime.getTime())) {
-        return "Invalid Time";
-      }
       const now = new Date();
-      const diffMs = now - startTime;
+      const diffMs = now.getTime() - startTime.getTime();
       const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+
       if (totalMinutes >= 1440) {
-        const days = Math.floor(totalMinutes / 1440);
-        const remainingMinutesAfterDays = totalMinutes % 1440;
-        const hours = Math.floor(remainingMinutesAfterDays / 60);
-        const mins = remainingMinutesAfterDays % 60;
-
-        let result = `${days} day${days > 1 ? "s" : ""}`;
-        if (hours > 0) result += ` ${hours} hr`;
-        if (mins > 0) result += ` ${mins} min`;
-
-        return result;
+        return `${Math.floor(totalMinutes / 1440)} days`;
       } else if (totalMinutes >= 60) {
-        const hours = Math.floor(totalMinutes / 60);
-        const mins = totalMinutes % 60;
-
-        if (mins === 0) {
-          return `${hours} hr`;
-        } else {
-          return `${hours} hr ${mins} min`;
-        }
-      } else {
-        return `${totalMinutes} min`;
+        return `${Math.floor(totalMinutes / 60)} hr ${totalMinutes % 60} min`;
       }
-    } catch (error) {
-      console.error("Could not format cycle time:", dateString, error);
-      return "N/A";
-    }
-  };
-  const verifyTraining = async (productId: string) => {
-    if (
-      !stationUserId ||
-      !processId ||
-      !productId ||
-      stationUserId === "undefined"
-    )
-      return;
-    try {
-      const response = await traningStatus({
-        stationUserId: String(stationUserId),
-        processId: String(processId),
-        productId: String(productId),
-      });
-      if (response?.isTrained) {
-        navigate(`/station-login`);
-      }
-    } catch (error) {
-      console.error("Training check failed:", error);
+      return `${totalMinutes} min`;
+    } catch {
+      return "0 min";
     }
   };
 
+  // --- Logic: Fetch Training Details ---
   const fetchJobDetails = async () => {
     if (!processId || !stationUserId) {
       navigate("/station-login");
@@ -142,24 +105,34 @@ const Training = () => {
         processId,
         stationUserId,
       );
+
+      if (response?.allCompleted) {
+        alert("Congratulations! You have completed all training sessions.");
+        localStorage.removeItem("stationUserId");
+        navigate("/station-login");
+        return;
+      }
+
       if (response?.data) {
         setJobData(response.data);
-        const pId = response.data.part_id || response.data.customPartId;
-        if (pId) await verifyTraining(pId);
+        setCompletedSteps(new Set()); // Reset progress for new part
+        window.scrollTo(0, 0);
       } else {
-        alert("No trainable jobs available.");
         navigate("/station-login");
       }
     } catch (error: any) {
       console.error("Fetch error:", error);
-      if (error?.status === 404) navigate("/station-login");
+      alert("Error fetching training details.");
+      navigate("/station-login");
     } finally {
       setLoading(false);
     }
   };
 
+  // --- Logic: Individual Step Progress ---
   const handleStepClick = async (stepId: string) => {
-    if (!jobData || !jobData.productionId || completedSteps.has(stepId)) return;
+    if (!jobData?.productionId || completedSteps.has(stepId)) return;
+
     setCompletedSteps((prev) => new Set(prev).add(stepId));
     try {
       await updateStepTime({
@@ -171,16 +144,32 @@ const Training = () => {
     }
   };
 
+  // --- Logic: Complete Part & Move to Next ---
   const handleCompleteTraining = async () => {
-    if (!jobData) return;
+    if (!jobData?.productionId) return;
+
     try {
-      const response = await completeTraningApi(jobData.productionId);
-      if (response?.status === 200) {
-        alert("Congratulations! Training Completed.");
-        navigate(`/station-login`);
+      setLoading(true);
+      const completeRes = await completeTraningApi(jobData.productionId);
+
+      if (completeRes) {
+        const response = await stationTrainingProcessDetail(
+          processId,
+          stationUserId,
+        );
+
+        if (response?.allCompleted) {
+          localStorage.removeItem("stationUserId");
+          navigate("/station-login");
+        } else if (response?.data) {
+          setJobData(response.data);
+          setCompletedSteps(new Set());
+        }
       }
-    } catch (error: any) {
-      console.error("Error completing training:", error);
+    } catch (error) {
+      console.error("Error moving to next part:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -191,9 +180,10 @@ const Training = () => {
   if (loading)
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <FaSpinner />
+        <FaSpinner className="animate-spin text-2xl text-brand" />
       </div>
     );
+
   if (!jobData)
     return (
       <div className="min-h-screen flex justify-center items-center">
@@ -202,36 +192,30 @@ const Training = () => {
     );
 
   const allSteps = jobData.workInstructionSteps || [];
-  const rows = [
-    {
-      status: "Current",
-      part: jobData.part?.partNumber || "N/A",
-      date: jobData.order_date,
-    },
-  ];
+  const incomingPart = jobData.incomingJobs?.[0]?.partNumber || "Last Part";
 
   return (
-    <div className="bg-[#F5F6FA] min-h-screen flex flex-col">
-      {/* HEADER SECTION (Consistent with RunSchedule) */}
+    <div className="bg-[#F5F6FA] min-h-screen flex flex-col font-sans">
+      {/* --- HEADER SECTION --- */}
       <div className="bg-[#243C75] relative">
-        <div className="flex items-center gap-2 text-white bg-[#17274C] w-full justify-end p-2">
+        <div className="flex items-center gap-2 text-white bg-[#17274C] w-full justify-end p-2 px-6">
           <button
             onClick={() => navigate("/station-login")}
-            className="text-xs md:text-sm font-semibold flex items-center gap-1"
+            className="text-xs md:text-sm font-semibold flex items-center gap-1 hover:text-blue-300 transition-colors"
           >
             Log out <IoLogOutOutline size={20} />
           </button>
         </div>
 
-        <div className="container p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="container mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4 max-w-7xl">
           <div className="w-full lg:w-1/2 xl:w-2/3 relative flex flex-col">
-            <div className="relative w-full max-w-xl mx-auto">
+            <div className="relative w-full max-w-xl mx-auto md:mx-0">
               <div className="w-full mb-8">
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white px-2">
+                <p className="text-xl md:text-2xl font-bold text-white px-2">
                   Training Mode:
-                  <span className="text-md font-medium ml-2">
-                    {jobData.process?.processName} (
-                    {jobData.process?.machineName})
+                  <span className="text-md font-medium ml-2 text-blue-200">
+                    {jobData.processName} (
+                    {jobData.process?.machineName || "Station"})
                   </span>
                 </p>
               </div>
@@ -242,50 +226,59 @@ const Training = () => {
                 className="w-20 sm:w-24 md:w-28 lg:w-32 object-contain"
               />
 
-              <div className="absolute inset-0 flex items-center justify-center px-2 mt-5">
-                <div className="bg-opacity-50 rounded-md overflow-y-auto w-full max-h-[150px]">
-                  <table className="border border-white text-white text-center w-full min-w-[280px]">
-                    <thead className="sticky top-0 bg-[#243C75]">
+              <div className="absolute inset-0 flex flex-col items-center justify-center px-2 mt-8">
+                {/* --- CURRENT PART TABLE --- */}
+                <div className="bg-opacity-50 rounded-md w-full max-w-md">
+                  <table className="border border-white text-white text-center w-full">
+                    <thead className="bg-[#243C75]">
                       <tr className="font-semibold text-xs sm:text-sm">
                         <th className="border border-white px-2 py-1">
                           Part Number (Learning)
                         </th>
-                        <th className="border border-white px-2 py-1"> Date</th>
+                        <th className="border border-white px-2 py-1">Date</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {rows.map((row, i) => (
-                        <tr key={i} className="bg-blue-600/30">
-                          <td className="border border-white px-2 py-1 text-xs sm:text-sm">
-                            {row.part}
-                          </td>
-                          <td className="border border-white px-2 py-1 text-xs sm:text-sm">
-                            {row.date.includes("T")
-                              ? formatDate(row.date)
-                              : row.date}
-                          </td>
-                        </tr>
-                      ))}
+                      <tr className="bg-blue-600/30">
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {jobData.partNumber || "N/A"}
+                        </td>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm">
+                          {formatDate(new Date().toISOString())}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {incomingPart}
+                        </td>
+                        <td className="text-xs font-mono font-bold  px-2 py-0.5 rounded">
+                          Not Available
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
+
+                {/* --- UPCOMING PART DISPLAY (Requested) --- */}
               </div>
             </div>
           </div>
 
-          <div className="text-white flex flex-col gap-1">
+          <div className="text-white flex flex-col gap-1 items-center md:items-end">
             <p className="text-sm font-bold uppercase text-blue-300">
               Training Progress
             </p>
-            <p className="text-3xl font-black">
+            <p className="text-5xl font-black">
               {completedSteps.size} / {allSteps.length}
             </p>
-            <p className="text-sm">Steps Completed</p>
+            <p className="text-sm opacity-80 uppercase tracking-tighter">
+              Steps Completed
+            </p>
           </div>
         </div>
       </div>
 
-      {/* INSTRUCTIONS SECTION */}
+      {/* --- INSTRUCTIONS SECTION --- */}
       <div className="container mx-auto p-4 md:p-6 flex-grow max-w-6xl">
         <div className="py-4 flex flex-col gap-4">
           {allSteps.map((step: any, index: number) => (
@@ -296,7 +289,6 @@ const Training = () => {
                 ${completedSteps.has(step.id) ? "border-green-500 bg-green-50" : "border-gray-100 hover:border-brand"}
               `}
             >
-              {/* STEP NUMBER */}
               <div
                 className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full font-bold 
                 ${completedSteps.has(step.id) ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"}`}
@@ -304,21 +296,19 @@ const Training = () => {
                 {index + 1}
               </div>
 
-              {/* MEDIA SECTION (Images & Videos) */}
               <div className="flex flex-wrap gap-3 flex-shrink-0">
                 {step.images?.length > 0 && (
                   <img
-                    className="rounded-md w-32 h-32 md:w-40 md:h-40 object-cover border"
+                    className="rounded-md w-32 h-32 md:w-40 md:h-40 object-cover border shadow-sm"
                     src={`${BASE_URL}/uploads/workInstructionImg/${step.images[0].imagePath}`}
                     alt={step.title}
                   />
                 )}
-
                 {step.videos?.length > 0 && (
                   <div
                     className="relative w-32 h-32 md:w-40 md:h-40 bg-black rounded-md overflow-hidden group border"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent marking step as learned when just playing video
+                      e.stopPropagation();
                       setActiveVideo(
                         `${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}`,
                       );
@@ -338,14 +328,13 @@ const Training = () => {
                 )}
               </div>
 
-              {/* TEXT SECTION */}
               <div className="flex-1">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-lg text-gray-800 mb-1">
+                  <h3 className="font-bold text-lg text-gray-800 mb-1 uppercase">
                     {step.title}
                   </h3>
                   {completedSteps.has(step.id) && (
-                    <span className="text-green-600 font-bold text-sm">
+                    <span className="text-green-600 font-bold text-xs uppercase tracking-widest">
                       ✓ LEARNED
                     </span>
                   )}
@@ -358,104 +347,1250 @@ const Training = () => {
           ))}
         </div>
 
-        {/* BOTTOM ACTION */}
+        {/* --- BOTTOM ACTION --- */}
         <div className="flex flex-col items-center mt-10 mb-10">
           <button
             onClick={handleCompleteTraining}
             disabled={
-              completedSteps.size < allSteps.length || allSteps.length === 0
+              loading ||
+              completedSteps.size < allSteps.length ||
+              allSteps.length === 0
             }
-            className={`px-10 py-3 rounded-md font-bold text-lg transition-all
+            className={`px-16 py-4 rounded-md font-bold text-lg transition-all shadow-lg
               ${
-                completedSteps.size < allSteps.length
+                completedSteps.size < allSteps.length || loading
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-brand text-white px-4 py-2 rounded-md text-sm md:text-base font-semibold w-full sm:w-auto"
+                  : "bg-[#243C75] text-white hover:bg-opacity-90 active:scale-95"
               }
             `}
           >
-            Complete Training
+            {loading ? "Processing..." : "Complete Training"}
           </button>
-          {/* {completedSteps.size < allSteps.length && (
-            <p className="text-red-500 mt-2 text-sm">Please complete all {allSteps.length} steps to finish.</p>
-          )} */}
         </div>
       </div>
 
-      {/* VIDEO PLAYER MODAL */}
+      {/* --- FOOTER BAR --- */}
       <div className="bg-[#243C75] w-full mt-auto">
         <div className="container mx-auto p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Left Side: Order & Process Stats */}
-          <div className="text-white flex gap-4 md:gap-10 items-center flex-wrap justify-center">
-            <div className="flex flex-col items-center">
-              <p className="text-xs md:text-sm opacity-70">Process</p>
+          <div className="text-white flex gap-10 items-center">
+            <div className="flex flex-col items-start">
+              <p className="text-[10px] md:text-xs opacity-70 uppercase font-bold tracking-wider">
+                Current Process
+              </p>
               <p className="text-sm md:text-base font-semibold">
-                {jobData.process?.processName || "N/A"}
+                {jobData.processName || "N/A"}
               </p>
             </div>
-            {/* <div className="flex flex-col items-center">
-              <p className="text-green-500 text-xs md:text-sm">Total Qty</p>
-              <p className="text-green-500 text-sm md:text-base font-bold">
-                {jobData.scheduleQuantity || 0}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-green-500 text-xs md:text-sm">Remaining Qty</p>
-              <p className="text-green-500 text-sm md:text-base font-bold">
-                {jobData.remainingQty || 0}
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-red-500 text-xs md:text-sm">Scrap</p>
-              <p className="text-red-500 text-sm md:text-base font-bold">
-                {jobData.scrapQuantity || 0}
-              </p>
-            </div> */}
           </div>
 
-          {/* Right Side: Employee & Performance Stats */}
-          <div className="flex gap-4 md:gap-10 justify-center">
-            {/* <div className="flex flex-col items-center text-white">
-              <p className="text-xs md:text-sm font-semibold opacity-70">Employee</p>
-              <p className="text-sm md:text-base">
-                {jobData.employeeInfo 
-                  ? `${jobData.employeeInfo.firstName} ${jobData.employeeInfo.lastName}` 
-                  : "Worker"}
-              </p>
-            </div> */}
+          <div className="flex gap-10 items-center">
             <div className="flex flex-col items-center text-white">
-              <p className="text-xs md:text-sm font-semibold opacity-70">
-                Completed
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase">
+                Employee
               </p>
-              <p className="text-sm md:text-base">
-                {jobData.employeeCompletedQty || 0}
+              <p className="text-sm md:text-base font-bold">
+                {jobData?.employeeName}
               </p>
             </div>
-            <div className="flex flex-col items-center text-white">
-              <p className="text-xs md:text-sm font-semibold opacity-70">
-                Cycle Time
+            <div className="flex flex-col items-center text-white border-l border-white/20 pl-10">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-widest">
+                Session Timer
               </p>
-              <p className="text-sm md:text-base font-mono">
+              <p className="text-sm md:text-base font-mono bg-black/20 px-3 py-1 rounded">
                 {formatCycleTime(jobData?.cycleTime)}
               </p>
             </div>
           </div>
         </div>
       </div>
-      {/* --- FOOTER SECTION END --- */}
 
-      {/* Video Player Modal (Same as before) */}
+      {/* --- VIDEO MODAL --- */}
       {activeVideo && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
           <div
             className="absolute inset-0"
             onClick={() => setActiveVideo(null)}
           ></div>
-          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10">
-            {/* Close & Video Player */}
+          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10 border border-white/10">
             <div className="absolute top-0 right-0 p-4 z-20">
               <button
                 onClick={() => setActiveVideo(null)}
-                className="text-white bg-white/10 p-2 rounded-full"
+                className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+              >
+                <IoClose size={30} />
+              </button>
+            </div>
+            <video
+              src={activeVideo}
+              controls
+              autoPlay
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Training = () => {
+  const navigate = useNavigate();
+  const { id: processId } = useParams<{ id: string }>();
+
+  const [jobData, setJobData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
+  // --- Helpers ---
+  const getUserId = () => {
+    const rawData = localStorage.getItem("stationUserId");
+    if (!rawData) return null;
+    try {
+      const parsed = JSON.parse(rawData);
+      return typeof parsed === "object" ? parsed.id : parsed;
+    } catch {
+      return rawData;
+    }
+  };
+
+  const stationUserId = getUserId();
+
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return "Not Available";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const formatCycleTime = (dateString: any) => {
+    if (!dateString) return "0 min";
+    try {
+      const startTime = new Date(dateString);
+      const now = new Date();
+      const diffMs = now.getTime() - startTime.getTime();
+      const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+
+      if (totalMinutes >= 1440) {
+        return `${Math.floor(totalMinutes / 1440)} days`;
+      } else if (totalMinutes >= 60) {
+        return `${Math.floor(totalMinutes / 60)} hr ${totalMinutes % 60} min`;
+      }
+      return `${totalMinutes} min`;
+    } catch {
+      return "0 min";
+    }
+  };
+
+  // --- Logic: Fetch Training Details ---
+  const fetchJobDetails = async () => {
+    if (!processId || !stationUserId) {
+      navigate("/station-login");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await stationTrainingProcessDetail(
+        processId,
+        stationUserId,
+      );
+
+      if (response?.allCompleted) {
+        alert("Congratulations! You have completed all training sessions.");
+        localStorage.removeItem("stationUserId");
+        navigate("/station-login");
+        return;
+      }
+
+      if (response?.data) {
+        setJobData(response.data);
+        setCompletedSteps(new Set()); // Reset progress for new part
+        window.scrollTo(0, 0);
+      } else {
+        navigate("/station-login");
+      }
+    } catch (error: any) {
+      console.error("Fetch error:", error);
+      alert("Error fetching training details.");
+      navigate("/station-login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Logic: Individual Step Progress ---
+  const handleStepClick = async (stepId: string) => {
+    if (!jobData?.productionId || completedSteps.has(stepId)) return;
+
+    setCompletedSteps((prev) => new Set(prev).add(stepId));
+    try {
+      await updateStepTime({
+        productionId: String(jobData.productionId),
+        stepId: String(stepId),
+      });
+    } catch (error) {
+      console.error("Failed to update step time:", error);
+    }
+  };
+
+  // --- Logic: Complete Part & Move to Next ---
+  const handleCompleteTraining = async () => {
+    if (!jobData?.productionId) return;
+
+    try {
+      setLoading(true);
+      const completeRes = await completeTraningApi(jobData.productionId);
+
+      if (completeRes) {
+        const response = await stationTrainingProcessDetail(
+          processId,
+          stationUserId,
+        );
+
+        if (response?.allCompleted) {
+          localStorage.removeItem("stationUserId");
+          navigate("/station-login");
+        } else if (response?.data) {
+          setJobData(response.data);
+          setCompletedSteps(new Set());
+        }
+      }
+    } catch (error) {
+      console.error("Error moving to next part:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobDetails();
+  }, [processId]);
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <FaSpinner className="animate-spin text-2xl text-brand" />
+      </div>
+    );
+
+  if (!jobData)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        No Jobs Found.
+      </div>
+    );
+
+  const allSteps = jobData.workInstructionSteps || [];
+  const incomingPart = jobData.incomingJobs?.[0]?.partNumber || "Last Part";
+
+  return (
+    <div className="bg-[#F5F6FA] min-h-screen flex flex-col font-sans">
+      {/* --- HEADER SECTION --- */}
+      <div className="bg-[#243C75] relative">
+        <div className="flex items-center gap-2 text-white bg-[#17274C] w-full justify-end p-2 px-6">
+          <button
+            onClick={() => navigate("/station-login")}
+            className="text-xs md:text-sm font-semibold flex items-center gap-1 hover:text-blue-300 transition-colors"
+          >
+            Log out <IoLogOutOutline size={20} />
+          </button>
+        </div>
+
+        <div className="container mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4 max-w-7xl">
+          <div className="w-full lg:w-1/2 xl:w-2/3 relative flex flex-col">
+            <div className="relative w-full max-w-xl mx-auto md:mx-0">
+              <div className="w-full mb-8">
+                <p className="text-xl md:text-2xl font-bold text-white px-2">
+                  Training Mode:
+                  <span className="text-md font-medium ml-2 text-blue-200">
+                    {jobData.processName} (
+                    {jobData.process?.machineName || "Station"})
+                  </span>
+                </p>
+              </div>
+
+              <img
+                src={belt}
+                alt="Belt"
+                className="w-20 sm:w-24 md:w-28 lg:w-32 object-contain"
+              />
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center px-2 mt-8">
+                {/* --- CURRENT PART TABLE --- */}
+                <div className="bg-opacity-50 rounded-md w-full max-w-md">
+                  <table className="border border-white text-white text-center w-full">
+                    <thead className="bg-[#243C75]">
+                      <tr className="font-semibold text-xs sm:text-sm">
+                        <th className="border border-white px-2 py-1">
+                          Part Number (Learning)
+                        </th>
+                        <th className="border border-white px-2 py-1">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-blue-600/30">
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {jobData.partNumber || "N/A"}
+                        </td>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm">
+                          {formatDate(new Date().toISOString())}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {incomingPart}
+                        </td>
+                        <td className="text-xs font-mono font-bold  px-2 py-0.5 rounded">
+                          Not Available
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* --- UPCOMING PART DISPLAY (Requested) --- */}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-white flex flex-col gap-1 items-center md:items-end">
+            <p className="text-sm font-bold uppercase text-blue-300">
+              Training Progress
+            </p>
+            <p className="text-5xl font-black">
+              {completedSteps.size} / {allSteps.length}
+            </p>
+            <p className="text-sm opacity-80 uppercase tracking-tighter">
+              Steps Completed
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* --- INSTRUCTIONS SECTION --- */}
+      <div className="container mx-auto p-4 md:p-6 flex-grow max-w-6xl">
+        <div className="py-4 flex flex-col gap-4">
+          {allSteps.map((step: any, index: number) => (
+            <div
+              key={step.id || index}
+              onClick={() => handleStepClick(step.id)}
+              className={`flex flex-col md:flex-row gap-4 md:gap-6 items-start bg-white rounded-lg shadow-sm p-4 border-2 transition-all cursor-pointer
+                ${completedSteps.has(step.id) ? "border-green-500 bg-green-50" : "border-gray-100 hover:border-brand"}
+              `}
+            >
+              <div
+                className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full font-bold 
+                ${completedSteps.has(step.id) ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"}`}
+              >
+                {index + 1}
+              </div>
+
+              <div className="flex flex-wrap gap-3 flex-shrink-0">
+                {step.images?.length > 0 && (
+                  <img
+                    className="rounded-md w-32 h-32 md:w-40 md:h-40 object-cover border shadow-sm"
+                    src={`${BASE_URL}/uploads/workInstructionImg/${step.images[0].imagePath}`}
+                    alt={step.title}
+                  />
+                )}
+                {step.videos?.length > 0 && (
+                  <div
+                    className="relative w-32 h-32 md:w-40 md:h-40 bg-black rounded-md overflow-hidden group border"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveVideo(
+                        `${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}`,
+                      );
+                    }}
+                  >
+                    <video className="w-full h-full object-cover opacity-60">
+                      <source
+                        src={`${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}#t=0.1`}
+                      />
+                    </video>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/30 backdrop-blur-md p-3 rounded-full group-hover:scale-110 transition-transform">
+                        <FaPlay className="text-white text-xl" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="flex justify-between items-start">
+                  <h3 className="font-bold text-lg text-gray-800 mb-1 uppercase">
+                    {step.title}
+                  </h3>
+                  {completedSteps.has(step.id) && (
+                    <span className="text-green-600 font-bold text-xs uppercase tracking-widest">
+                      ✓ LEARNED
+                    </span>
+                  )}
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  {step.instruction}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* --- BOTTOM ACTION --- */}
+        <div className="flex flex-col items-center mt-10 mb-10">
+          <button
+            onClick={handleCompleteTraining}
+            disabled={
+              loading ||
+              completedSteps.size < allSteps.length ||
+              allSteps.length === 0
+            }
+            className={`px-16 py-4 rounded-md font-bold text-lg transition-all shadow-lg
+              ${
+                completedSteps.size < allSteps.length || loading
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#243C75] text-white hover:bg-opacity-90 active:scale-95"
+              }
+            `}
+          >
+            {loading ? "Processing..." : "Complete Training"}
+          </button>
+        </div>
+      </div>
+
+      {/* --- FOOTER BAR --- */}
+      <div className="bg-[#243C75] w-full mt-auto">
+        <div className="container mx-auto p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-white flex gap-10 items-center">
+            <div className="flex flex-col items-start">
+              <p className="text-[10px] md:text-xs opacity-70 uppercase font-bold tracking-wider">
+                Current Process
+              </p>
+              <p className="text-sm md:text-base font-semibold">
+                {jobData.processName || "N/A"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-10 items-center">
+            <div className="flex flex-col items-center text-white">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase">
+                Employee
+              </p>
+              <p className="text-sm md:text-base font-bold">
+                {jobData?.employeeName}
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-white border-l border-white/20 pl-10">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-widest">
+                Session Timer
+              </p>
+              <p className="text-sm md:text-base font-mono bg-black/20 px-3 py-1 rounded">
+                {formatCycleTime(jobData?.cycleTime)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* --- VIDEO MODAL --- */}
+      {activeVideo && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
+          <div
+            className="absolute inset-0"
+            onClick={() => setActiveVideo(null)}
+          ></div>
+          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10 border border-white/10">
+            <div className="absolute top-0 right-0 p-4 z-20">
+              <button
+                onClick={() => setActiveVideo(null)}
+                className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+              >
+                <IoClose size={30} />
+              </button>
+            </div>
+            <video
+              src={activeVideo}
+              controls
+              autoPlay
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+const Training = () => {
+  const navigate = useNavigate();
+  const { id: processId } = useParams<{ id: string }>();
+
+  const [jobData, setJobData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
+  // --- Helpers ---
+  const getUserId = () => {
+    const rawData = localStorage.getItem("stationUserId");
+    if (!rawData) return null;
+    try {
+      const parsed = JSON.parse(rawData);
+      return typeof parsed === "object" ? parsed.id : parsed;
+    } catch {
+      return rawData;
+    }
+  };
+
+  const stationUserId = getUserId();
+
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return "Not Available";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const formatCycleTime = (dateString: any) => {
+    if (!dateString) return "0 min";
+    try {
+      const startTime = new Date(dateString);
+      const now = new Date();
+      const diffMs = now.getTime() - startTime.getTime();
+      const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+
+      if (totalMinutes >= 1440) {
+        return `${Math.floor(totalMinutes / 1440)} days`;
+      } else if (totalMinutes >= 60) {
+        return `${Math.floor(totalMinutes / 60)} hr ${totalMinutes % 60} min`;
+      }
+      return `${totalMinutes} min`;
+    } catch {
+      return "0 min";
+    }
+  };
+
+  // --- Logic: Fetch Training Details ---
+  const fetchJobDetails = async () => {
+    if (!processId || !stationUserId) {
+      navigate("/station-login");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await stationTrainingProcessDetail(
+        processId,
+        stationUserId,
+      );
+
+      if (response?.allCompleted) {
+        alert("Congratulations! You have completed all training sessions.");
+        localStorage.removeItem("stationUserId");
+        navigate("/station-login");
+        return;
+      }
+
+      if (response?.data) {
+        setJobData(response.data);
+        setCompletedSteps(new Set()); // Reset progress for new part
+        window.scrollTo(0, 0);
+      } else {
+        navigate("/station-login");
+      }
+    } catch (error: any) {
+      console.error("Fetch error:", error);
+      alert("Error fetching training details.");
+      navigate("/station-login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Logic: Individual Step Progress ---
+  const handleStepClick = async (stepId: string) => {
+    if (!jobData?.productionId || completedSteps.has(stepId)) return;
+
+    setCompletedSteps((prev) => new Set(prev).add(stepId));
+    try {
+      await updateStepTime({
+        productionId: String(jobData.productionId),
+        stepId: String(stepId),
+      });
+    } catch (error) {
+      console.error("Failed to update step time:", error);
+    }
+  };
+
+  // --- Logic: Complete Part & Move to Next ---
+  const handleCompleteTraining = async () => {
+    if (!jobData?.productionId) return;
+
+    try {
+      setLoading(true);
+      const completeRes = await completeTraningApi(jobData.productionId);
+
+      if (completeRes) {
+        const response = await stationTrainingProcessDetail(
+          processId,
+          stationUserId,
+        );
+
+        if (response?.allCompleted) {
+          localStorage.removeItem("stationUserId");
+          navigate("/station-login");
+        } else if (response?.data) {
+          setJobData(response.data);
+          setCompletedSteps(new Set());
+        }
+      }
+    } catch (error) {
+      console.error("Error moving to next part:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobDetails();
+  }, [processId]);
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <FaSpinner className="animate-spin text-2xl text-brand" />
+      </div>
+    );
+
+  if (!jobData)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        No Jobs Found.
+      </div>
+    );
+
+  const allSteps = jobData.workInstructionSteps || [];
+  const incomingPart = jobData.incomingJobs?.[0]?.partNumber || "Last Part";
+
+  return (
+    <div className="bg-[#F5F6FA] min-h-screen flex flex-col font-sans">
+      {/* --- HEADER SECTION --- */}
+      <div className="bg-[#243C75] relative">
+        <div className="flex items-center gap-2 text-white bg-[#17274C] w-full justify-end p-2 px-6">
+          <button
+            onClick={() => navigate("/station-login")}
+            className="text-xs md:text-sm font-semibold flex items-center gap-1 hover:text-blue-300 transition-colors"
+          >
+            Log out <IoLogOutOutline size={20} />
+          </button>
+        </div>
+
+        <div className="container mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4 max-w-7xl">
+          <div className="w-full lg:w-1/2 xl:w-2/3 relative flex flex-col">
+            <div className="relative w-full max-w-xl mx-auto md:mx-0">
+              <div className="w-full mb-8">
+                <p className="text-xl md:text-2xl font-bold text-white px-2">
+                  Training Mode:
+                  <span className="text-md font-medium ml-2 text-blue-200">
+                    {jobData.processName} (
+                    {jobData.process?.machineName || "Station"})
+                  </span>
+                </p>
+              </div>
+
+              <img
+                src={belt}
+                alt="Belt"
+                className="w-20 sm:w-24 md:w-28 lg:w-32 object-contain"
+              />
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center px-2 mt-8">
+                {/* --- CURRENT PART TABLE --- */}
+                <div className="bg-opacity-50 rounded-md w-full max-w-md">
+                  <table className="border border-white text-white text-center w-full">
+                    <thead className="bg-[#243C75]">
+                      <tr className="font-semibold text-xs sm:text-sm">
+                        <th className="border border-white px-2 py-1">
+                          Part Number (Learning)
+                        </th>
+                        <th className="border border-white px-2 py-1">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-blue-600/30">
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {jobData.partNumber || "N/A"}
+                        </td>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm">
+                          {formatDate(new Date().toISOString())}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {incomingPart}
+                        </td>
+                        <td className="text-xs font-mono font-bold  px-2 py-0.5 rounded">
+                          Not Available
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* --- UPCOMING PART DISPLAY (Requested) --- */}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-white flex flex-col gap-1 items-center md:items-end">
+            <p className="text-sm font-bold uppercase text-blue-300">
+              Training Progress
+            </p>
+            <p className="text-5xl font-black">
+              {completedSteps.size} / {allSteps.length}
+            </p>
+            <p className="text-sm opacity-80 uppercase tracking-tighter">
+              Steps Completed
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* --- INSTRUCTIONS SECTION --- */}
+      <div className="container mx-auto p-4 md:p-6 flex-grow max-w-6xl">
+        <div className="py-4 flex flex-col gap-4">
+          {allSteps.map((step: any, index: number) => (
+            <div
+              key={step.id || index}
+              onClick={() => handleStepClick(step.id)}
+              className={`flex flex-col md:flex-row gap-4 md:gap-6 items-start bg-white rounded-lg shadow-sm p-4 border-2 transition-all cursor-pointer
+                ${completedSteps.has(step.id) ? "border-green-500 bg-green-50" : "border-gray-100 hover:border-brand"}
+              `}
+            >
+              <div
+                className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full font-bold 
+                ${completedSteps.has(step.id) ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"}`}
+              >
+                {index + 1}
+              </div>
+
+              <div className="flex flex-wrap gap-3 flex-shrink-0">
+                {step.images?.length > 0 && (
+                  <img
+                    className="rounded-md w-32 h-32 md:w-40 md:h-40 object-cover border shadow-sm"
+                    src={`${BASE_URL}/uploads/workInstructionImg/${step.images[0].imagePath}`}
+                    alt={step.title}
+                  />
+                )}
+                {step.videos?.length > 0 && (
+                  <div
+                    className="relative w-32 h-32 md:w-40 md:h-40 bg-black rounded-md overflow-hidden group border"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveVideo(
+                        `${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}`,
+                      );
+                    }}
+                  >
+                    <video className="w-full h-full object-cover opacity-60">
+                      <source
+                        src={`${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}#t=0.1`}
+                      />
+                    </video>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/30 backdrop-blur-md p-3 rounded-full group-hover:scale-110 transition-transform">
+                        <FaPlay className="text-white text-xl" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="flex justify-between items-start">
+                  <h3 className="font-bold text-lg text-gray-800 mb-1 uppercase">
+                    {step.title}
+                  </h3>
+                  {completedSteps.has(step.id) && (
+                    <span className="text-green-600 font-bold text-xs uppercase tracking-widest">
+                      ✓ LEARNED
+                    </span>
+                  )}
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  {step.instruction}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* --- BOTTOM ACTION --- */}
+        <div className="flex flex-col items-center mt-10 mb-10">
+          <button
+            onClick={handleCompleteTraining}
+            disabled={
+              loading ||
+              completedSteps.size < allSteps.length ||
+              allSteps.length === 0
+            }
+            className={`px-16 py-4 rounded-md font-bold text-lg transition-all shadow-lg
+              ${
+                completedSteps.size < allSteps.length || loading
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#243C75] text-white hover:bg-opacity-90 active:scale-95"
+              }
+            `}
+          >
+            {loading ? "Processing..." : "Complete Training"}
+          </button>
+        </div>
+      </div>
+
+      {/* --- FOOTER BAR --- */}
+      <div className="bg-[#243C75] w-full mt-auto">
+        <div className="container mx-auto p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-white flex gap-10 items-center">
+            <div className="flex flex-col items-start">
+              <p className="text-[10px] md:text-xs opacity-70 uppercase font-bold tracking-wider">
+                Current Process
+              </p>
+              <p className="text-sm md:text-base font-semibold">
+                {jobData.processName || "N/A"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-10 items-center">
+            <div className="flex flex-col items-center text-white">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase">
+                Employee
+              </p>
+              <p className="text-sm md:text-base font-bold">
+                {jobData?.employeeName}
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-white border-l border-white/20 pl-10">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-widest">
+                Session Timer
+              </p>
+              <p className="text-sm md:text-base font-mono bg-black/20 px-3 py-1 rounded">
+                {formatCycleTime(jobData?.cycleTime)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* --- VIDEO MODAL --- */}
+      {activeVideo && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
+          <div
+            className="absolute inset-0"
+            onClick={() => setActiveVideo(null)}
+          ></div>
+          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10 border border-white/10">
+            <div className="absolute top-0 right-0 p-4 z-20">
+              <button
+                onClick={() => setActiveVideo(null)}
+                className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
+              >
+                <IoClose size={30} />
+              </button>
+            </div>
+            <video
+              src={activeVideo}
+              controls
+              autoPlay
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+const Training = () => {
+  const navigate = useNavigate();
+  const { id: processId } = useParams<{ id: string }>();
+
+  const [jobData, setJobData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
+  // --- Helpers ---
+  const getUserId = () => {
+    const rawData = localStorage.getItem("stationUserId");
+    if (!rawData) return null;
+    try {
+      const parsed = JSON.parse(rawData);
+      return typeof parsed === "object" ? parsed.id : parsed;
+    } catch {
+      return rawData;
+    }
+  };
+
+  const stationUserId = getUserId();
+
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return "Not Available";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const formatCycleTime = (dateString: any) => {
+    if (!dateString) return "0 min";
+    try {
+      const startTime = new Date(dateString);
+      const now = new Date();
+      const diffMs = now.getTime() - startTime.getTime();
+      const totalMinutes = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+
+      if (totalMinutes >= 1440) {
+        return `${Math.floor(totalMinutes / 1440)} days`;
+      } else if (totalMinutes >= 60) {
+        return `${Math.floor(totalMinutes / 60)} hr ${totalMinutes % 60} min`;
+      }
+      return `${totalMinutes} min`;
+    } catch {
+      return "0 min";
+    }
+  };
+
+  // --- Logic: Fetch Training Details ---
+  const fetchJobDetails = async () => {
+    if (!processId || !stationUserId) {
+      navigate("/station-login");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await stationTrainingProcessDetail(
+        processId,
+        stationUserId,
+      );
+
+      if (response?.allCompleted) {
+        alert("Congratulations! You have completed all training sessions.");
+        localStorage.removeItem("stationUserId");
+        navigate("/station-login");
+        return;
+      }
+
+      if (response?.data) {
+        setJobData(response.data);
+        setCompletedSteps(new Set()); // Reset progress for new part
+        window.scrollTo(0, 0);
+      } else {
+        navigate("/station-login");
+      }
+    } catch (error: any) {
+      console.error("Fetch error:", error);
+      alert("Error fetching training details.");
+      navigate("/station-login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Logic: Individual Step Progress ---
+  const handleStepClick = async (stepId: string) => {
+    if (!jobData?.productionId || completedSteps.has(stepId)) return;
+
+    setCompletedSteps((prev) => new Set(prev).add(stepId));
+    try {
+      await updateStepTime({
+        productionId: String(jobData.productionId),
+        stepId: String(stepId),
+      });
+    } catch (error) {
+      console.error("Failed to update step time:", error);
+    }
+  };
+
+  // --- Logic: Complete Part & Move to Next ---
+  const handleCompleteTraining = async () => {
+    if (!jobData?.productionId) return;
+
+    try {
+      setLoading(true);
+      const completeRes = await completeTraningApi(jobData.productionId);
+
+      if (completeRes) {
+        const response = await stationTrainingProcessDetail(
+          processId,
+          stationUserId,
+        );
+
+        if (response?.allCompleted) {
+          localStorage.removeItem("stationUserId");
+          navigate("/station-login");
+        } else if (response?.data) {
+          setJobData(response.data);
+          setCompletedSteps(new Set());
+        }
+      }
+    } catch (error) {
+      console.error("Error moving to next part:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobDetails();
+  }, [processId]);
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <FaSpinner className="animate-spin text-2xl text-brand" />
+      </div>
+    );
+
+  if (!jobData)
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        No Jobs Found.
+      </div>
+    );
+
+  const allSteps = jobData.workInstructionSteps || [];
+  const incomingPart = jobData.incomingJobs?.[0]?.partNumber || "Last Part";
+
+  return (
+    <div className="bg-[#F5F6FA] min-h-screen flex flex-col font-sans">
+      {/* --- HEADER SECTION --- */}
+      <div className="bg-[#243C75] relative">
+        <div className="flex items-center gap-2 text-white bg-[#17274C] w-full justify-end p-2 px-6">
+          <button
+            onClick={() => navigate("/station-login")}
+            className="text-xs md:text-sm font-semibold flex items-center gap-1 hover:text-blue-300 transition-colors"
+          >
+            Log out <IoLogOutOutline size={20} />
+          </button>
+        </div>
+
+        <div className="container mx-auto p-4 flex flex-col md:flex-row items-center justify-between gap-4 max-w-7xl">
+          <div className="w-full lg:w-1/2 xl:w-2/3 relative flex flex-col">
+            <div className="relative w-full max-w-xl mx-auto md:mx-0">
+              <div className="w-full mb-8">
+                <p className="text-xl md:text-2xl font-bold text-white px-2">
+                  Training Mode:
+                  <span className="text-md font-medium ml-2 text-blue-200">
+                    {jobData.processName} (
+                    {jobData.process?.machineName || "Station"})
+                  </span>
+                </p>
+              </div>
+
+              <img
+                src={belt}
+                alt="Belt"
+                className="w-20 sm:w-24 md:w-28 lg:w-32 object-contain"
+              />
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center px-2 mt-8">
+                {/* --- CURRENT PART TABLE --- */}
+                <div className="bg-opacity-50 rounded-md w-full max-w-md">
+                  <table className="border border-white text-white text-center w-full">
+                    <thead className="bg-[#243C75]">
+                      <tr className="font-semibold text-xs sm:text-sm">
+                        <th className="border border-white px-2 py-1">
+                          Part Number (Learning)
+                        </th>
+                        <th className="border border-white px-2 py-1">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-blue-600/30">
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {jobData.partNumber || "N/A"}
+                        </td>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm">
+                          {formatDate(new Date().toISOString())}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="border border-white px-2 py-1 text-xs sm:text-sm font-bold">
+                          {incomingPart}
+                        </td>
+                        <td className="text-xs font-mono font-bold  px-2 py-0.5 rounded">
+                          Not Available
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* --- UPCOMING PART DISPLAY (Requested) --- */}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-white flex flex-col gap-1 items-center md:items-end">
+            <p className="text-sm font-bold uppercase text-blue-300">
+              Training Progress
+            </p>
+            <p className="text-5xl font-black">
+              {completedSteps.size} / {allSteps.length}
+            </p>
+            <p className="text-sm opacity-80 uppercase tracking-tighter">
+              Steps Completed
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* --- INSTRUCTIONS SECTION --- */}
+      <div className="container mx-auto p-4 md:p-6 flex-grow max-w-6xl">
+        <div className="py-4 flex flex-col gap-4">
+          {allSteps.map((step: any, index: number) => (
+            <div
+              key={step.id || index}
+              onClick={() => handleStepClick(step.id)}
+              className={`flex flex-col md:flex-row gap-4 md:gap-6 items-start bg-white rounded-lg shadow-sm p-4 border-2 transition-all cursor-pointer
+                ${completedSteps.has(step.id) ? "border-green-500 bg-green-50" : "border-gray-100 hover:border-brand"}
+              `}
+            >
+              <div
+                className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full font-bold 
+                ${completedSteps.has(step.id) ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"}`}
+              >
+                {index + 1}
+              </div>
+
+              <div className="flex flex-wrap gap-3 flex-shrink-0">
+                {step.images?.length > 0 && (
+                  <img
+                    className="rounded-md w-32 h-32 md:w-40 md:h-40 object-cover border shadow-sm"
+                    src={`${BASE_URL}/uploads/workInstructionImg/${step.images[0].imagePath}`}
+                    alt={step.title}
+                  />
+                )}
+                {step.videos?.length > 0 && (
+                  <div
+                    className="relative w-32 h-32 md:w-40 md:h-40 bg-black rounded-md overflow-hidden group border"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveVideo(
+                        `${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}`,
+                      );
+                    }}
+                  >
+                    <video className="w-full h-full object-cover opacity-60">
+                      <source
+                        src={`${BASE_URL}/uploads/workInstructionVideo/${step.videos[0].videoPath}#t=0.1`}
+                      />
+                    </video>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-white/30 backdrop-blur-md p-3 rounded-full group-hover:scale-110 transition-transform">
+                        <FaPlay className="text-white text-xl" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="flex justify-between items-start">
+                  <h3 className="font-bold text-lg text-gray-800 mb-1 uppercase">
+                    {step.title}
+                  </h3>
+                  {completedSteps.has(step.id) && (
+                    <span className="text-green-600 font-bold text-xs uppercase tracking-widest">
+                      ✓ LEARNED
+                    </span>
+                  )}
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  {step.instruction}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* --- BOTTOM ACTION --- */}
+        <div className="flex flex-col items-center mt-10 mb-10">
+          <button
+            onClick={handleCompleteTraining}
+            disabled={
+              loading ||
+              completedSteps.size < allSteps.length ||
+              allSteps.length === 0
+            }
+            className={`px-16 py-4 rounded-md font-bold text-lg transition-all shadow-lg
+              ${
+                completedSteps.size < allSteps.length || loading
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-[#243C75] text-white hover:bg-opacity-90 active:scale-95"
+              }
+            `}
+          >
+            {loading ? "Processing..." : "Complete Training"}
+          </button>
+        </div>
+      </div>
+
+      {/* --- FOOTER BAR --- */}
+      <div className="bg-[#243C75] w-full mt-auto">
+        <div className="container mx-auto p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-white flex gap-10 items-center">
+            <div className="flex flex-col items-start">
+              <p className="text-[10px] md:text-xs opacity-70 uppercase font-bold tracking-wider">
+                Current Process
+              </p>
+              <p className="text-sm md:text-base font-semibold">
+                {jobData.processName || "N/A"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-10 items-center">
+            <div className="flex flex-col items-center text-white">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase">
+                Employee
+              </p>
+              <p className="text-sm md:text-base font-bold">
+                {jobData?.employeeName}
+              </p>
+            </div>
+            <div className="flex flex-col items-center text-white border-l border-white/20 pl-10">
+              <p className="text-[10px] md:text-xs font-bold opacity-70 uppercase tracking-widest">
+                Session Timer
+              </p>
+              <p className="text-sm md:text-base font-mono bg-black/20 px-3 py-1 rounded">
+                {formatCycleTime(jobData?.cycleTime)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* --- VIDEO MODAL --- */}
+      {activeVideo && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
+          <div
+            className="absolute inset-0"
+            onClick={() => setActiveVideo(null)}
+          ></div>
+          <div className="relative w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-2xl z-10 border border-white/10">
+            <div className="absolute top-0 right-0 p-4 z-20">
+              <button
+                onClick={() => setActiveVideo(null)}
+                className="text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
               >
                 <IoClose size={30} />
               </button>
