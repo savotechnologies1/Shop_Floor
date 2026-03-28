@@ -5183,8 +5183,7 @@ const RunSchedule = () => {
         jobData.employeeInfo.id,
       );
       if (response?.data?.isOrderFinished) {
-        alert("Order Finished!");
-        navigate("/station-process");
+        navigate("/station-login");
       } else {
         // !!! FIX: Turant timer ko 0 karne ke liye state manually update karein !!!
         setJobData((prev) =>
