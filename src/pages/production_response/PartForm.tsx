@@ -371,7 +371,6 @@ const PartForm = () => {
 
   useEffect(() => {
     const query = formik.values.searchPart.trim().toLowerCase();
-
     if (query && !formik.values.partId) {
       const filtered = partData.filter((p) =>
         p.partNumber?.toLowerCase().includes(query),

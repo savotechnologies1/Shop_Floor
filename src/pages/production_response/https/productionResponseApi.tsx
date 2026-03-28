@@ -1225,7 +1225,7 @@
 //   } catch (error: any) {
 //     console.log("errorerror", error.response);
 //     toast.error(error.response.data.message);
-//     throw error; // <-- IMPORTANT: Add this line
+//     throw error;
 //   }
 // };
 
