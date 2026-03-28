@@ -1,3 +1,297 @@
+// // import { toast } from "react-toastify";
+// // import axiosInstance from "../../../utils/axiosInstance";
+// // import { AxiosError } from "axios";
+
+// // export const selecEmployeeProcessApi = async () => {
+// //   try {
+// //     const response = await axiosInstance.get(
+// //       `/select-schedule-employee-process`
+// //     );
+// //     if (response.status === 200) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response.data;
+// //   } catch (error: any) {
+// //     // toast.error(error.response.data.message);
+// //   }
+// // };
+
+// // export const stationLogin = async (userData: object) => {
+// //   try {
+// //     const response = await axiosInstance.post("/station-login", userData);
+// //     if (response.status === 201) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error.response.data.message);
+// //   }
+// // };
+
+// // export const stationProcessDetail = async (
+// //   id: string,
+// //   stationUserId: string
+// // ) => {
+// //   console.log("stationUserIdstationUserId11", stationUserId);
+
+// //   try {
+// //     const response = await axiosInstance.get(
+// //       `/get-schedule-process-information/${id}?stationUserId=${stationUserId}`
+// //     );
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+
+// // export const stationLogoutApi = async (id: string) => {
+// //   try {
+// //     const response = await axiosInstance.post(`/station-logout/${id}`);
+// //     if (response.status === 200) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error.response.data.message);
+// //   }
+// // };
+
+// // export const completeOrder = async (
+// //   id: string,
+// //   orderId: string,
+// //   order_type: string,
+// //   partId: string,
+// //   employeeId: string,
+// //   productId: string,
+// //   type: string,
+// //   completedBy: string
+// // ) => {
+// //   try {
+// //     const response = await axiosInstance.put(`/complete-order/${id}`, {
+// //       orderId,
+// //       order_type,
+// //       partId,
+// //       employeeId,
+// //       productId,
+// //       type,
+// //       completedBy,
+// //     });
+
+// //     if (response.status === 201) {
+// //       toast.success(response.data.message);
+// //     }
+
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error?.response?.data?.message || "Something went wrong");
+// //   }
+// // };
+
+// // export const stationTrainingProcessDetail = async (
+// //   id: string,
+// //   stationUserId: string
+// // ) => {
+// //   try {
+// //     const response = await axiosInstance.get(
+// //       `/get-training-schedule/${id}?stationUserId=${stationUserId}`
+// //     );
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+// // export const traningStatus = async (data: { stationUserId: string, processId: string, productId: string }) => {
+// //   try {
+// //     const response = await axiosInstance.get(`/trainig-status`, {
+// //       params: {
+// //         stationUserId: data.stationUserId,
+// //         processId: data.processId,
+// //         productId: data.productId
+// //       }
+// //     });
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+// // export const completeTraningApi = async (id: string) => {
+// //   try {
+// //     const response = await axiosInstance.put(`/complete-traning/${id}`);
+
+// //     if (response.status === 201) {
+// //       toast.success(response.data.message);
+// //     }
+
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error?.response?.data?.message || "Something went wrong");
+// //   }
+// // };
+
+// // export const updateStepTime = async (data: { productionId: string; stepId: string }) => {
+// //   try {
+// //     // Data ko body ke roop mein bhejein (second parameter)
+// //     const response = await axiosInstance.post(`/production-response/update-step-time`, data);
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+
+// // export const scrapOrder = async (
+// //   id: string,
+// //   orderId: string,
+// //   order_type: string,
+// //   partId: string,
+// //   employeeId: string
+// // ) => {
+// //   try {
+// //     const response = await axiosInstance.put(`/scrap-order/${id}`, {
+// //       orderId,
+// //       order_type,
+// //       partId,
+// //       employeeId,
+// //     });
+
+// //     if (response.status === 201) {
+// //       toast.success(response.data.message);
+// //     }
+
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error?.response?.data?.message || "Something went wrong");
+// //   }
+// // };
+
+// // export const processPartScan = async (
+// //   productionId: string,
+// //   scannedBarcode: string,
+// //   employeeId: string
+// // ) => {
+// //   const response = await axiosInstance.post(
+// //     `/production/${productionId}/scan`,
+// //     {
+// //       barcode: scannedBarcode,
+// //       employeeId: employeeId,
+// //     }
+// //   );
+// //   return response.data;
+// // };
+
+// // export const ScrapEntryApi = async (userData: object) => {
+// //   try {
+// //     const response = await axiosInstance.post("/add-scrap-entry", userData);
+// //     if (response.status === 201) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response;
+// //   } catch (error: any) {
+// //     console.log("errorerror", error.response);
+// //     toast.error(error.response.data.message);
+// //     throw error; // <-- IMPORTANT: Add this line
+// //   }
+// // };
+
+// // export const allScrapEntries = async (
+// //   page = 1,
+// //   limit = 5,
+// //   selectedValue: string,
+// //   debouncedSearchVal: string
+// // ) => {
+// //   // eslint-disable-next-line no-useless-catch
+// //   try {
+// //     const response = await axiosInstance.get(
+// //       `/all-scrap-entry?page=${page}&limit=${limit}&filterScrap=${selectedValue}&search=${debouncedSearchVal}`
+// //     );
+
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+
+// // export const selectPartNamber = async () => {
+// //   try {
+// //     const response = await axiosInstance.get(`/select-schedule-part-number`);
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+
+// // export const selectProductNumber = async () => {
+// //   try {
+// //     const response = await axiosInstance.get(`/select-schedule-product-number`);
+// //     return response.data.data;
+// //   } catch (error: unknown) {
+// //     const axiosError = error as AxiosError<{ message: string }>;
+// //     if (axiosError.response?.data?.message) {
+// //       toast.error(axiosError.response.data.message);
+// //     } else {
+// //     }
+// //     return [];
+// //   }
+// // };
+
+// // export const scrapEntryDetail = async (id: string) => {
+// //   // eslint-disable-next-line no-useless-catch
+// //   try {
+// //     const response = await axiosInstance.get(`/scrap-entry-detail/${id}`);
+// //     return response;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+
+// // export const updateScrapEntry = async (id: string, data: object) => {
+// //   try {
+// //     const response = await axiosInstance.put(`/update-scrap-entry/${id}`, data);
+// //     if (response.status === 200) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error.response.data.message);
+// //   }
+// // };
+
+// // export const sendStationNotification = async (data: object) => {
+// //   try {
+// //     const response = await axiosInstance.post(`/send-notification`, data, {
+// //       headers: {
+// //         "Content-Type": "multipart/form-data",
+// //       },
+// //     });
+// //     if (response.status === 201) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error.response.data.message);
+// //   }
+// // };
+
+// // export const deleteScrapEntry = async (id: string) => {
+// //   try {
+// //     const response = await axiosInstance.patch(`/delete-scrap-entry/${id}`);
+// //     if (response.status === 200) {
+// //       toast.success(response.data.message);
+// //     }
+// //     return response;
+// //   } catch (error: any) {
+// //     toast.error(error.response.data.message);
+// //   }
+// // };
+
+// // export const selectSupplier = async () => {
+// //   // eslint-disable-next-line no-useless-catch
+// //   try {
+// //     const response = await axiosInstance.get(`/select-supplier`);
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
 // import { toast } from "react-toastify";
 // import axiosInstance from "../../../utils/axiosInstance";
 // import { AxiosError } from "axios";
@@ -5,17 +299,23 @@
 // export const selecEmployeeProcessApi = async () => {
 //   try {
 //     const response = await axiosInstance.get(
-//       `/select-schedule-employee-process`
+//       `/select-schedule-employee-process`,
 //     );
-//     if (response.status === 200) {
-//       toast.success(response.data.message);
-//     }
 //     return response.data;
 //   } catch (error: any) {
 //     // toast.error(error.response.data.message);
 //   }
 // };
 
+// export const selectSupplier = async () => {
+//   // eslint-disable-next-line no-useless-catch
+//   try {
+//     const response = await axiosInstance.get(`/select-supplier`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 // export const stationLogin = async (userData: object) => {
 //   try {
 //     const response = await axiosInstance.post("/station-login", userData);
@@ -30,13 +330,11 @@
 
 // export const stationProcessDetail = async (
 //   id: string,
-//   stationUserId: string
+//   stationUserId: string,
 // ) => {
-//   console.log("stationUserIdstationUserId11", stationUserId);
-
 //   try {
 //     const response = await axiosInstance.get(
-//       `/get-schedule-process-information/${id}?stationUserId=${stationUserId}`
+//       `/get-schedule-process-information/${id}?stationUserId=${stationUserId}`,
 //     );
 //     return response.data;
 //   } catch (error) {
@@ -44,9 +342,58 @@
 //   }
 // };
 
-// export const stationLogoutApi = async (id: string) => {
+// export const stationTrainingProcessDetail = async (
+//   id: string,
+//   stationUserId: string,
+// ) => {
 //   try {
-//     const response = await axiosInstance.post(`/station-logout/${id}`);
+//     const response = await axiosInstance.get(
+//       `/get-training-schedule/${id}?stationUserId=${stationUserId}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const traningStatus = async (data: {
+//   stationUserId: string;
+//   processId: string;
+//   productId: string;
+// }) => {
+//   try {
+//     const response = await axiosInstance.get(`/trainig-status`, {
+//       params: {
+//         stationUserId: data.stationUserId,
+//         processId: data.processId,
+//         productId: data.productId,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// // export const traningStatus = async (params: { stationUserId: string, processId: string, productId: string }) => {
+// //   try {
+// //     // URL ko dhyan se check karein
+// //     const response = await axiosInstance.get(`/trainig-status/${params.processId}`, {
+// //       params: {
+// //         stationId: params.stationUserId, // Yeh string honi chahiye, object nahi
+// //         productId: params.productId
+// //       }
+// //     });
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+
+// export const stationLogoutApi = async (id: string, logoutData) => {
+//   try {
+//     const response = await axiosInstance.post(`/station-logout/${id}`, {
+//       logoutData,
+//     });
 //     if (response.status === 200) {
 //       toast.success(response.data.message);
 //     }
@@ -64,7 +411,7 @@
 //   employeeId: string,
 //   productId: string,
 //   type: string,
-//   completedBy: string
+//   completedBy: string,
 // ) => {
 //   try {
 //     const response = await axiosInstance.put(`/complete-order/${id}`, {
@@ -86,34 +433,6 @@
 //     toast.error(error?.response?.data?.message || "Something went wrong");
 //   }
 // };
-
-// export const stationTrainingProcessDetail = async (
-//   id: string,
-//   stationUserId: string
-// ) => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `/get-training-schedule/${id}?stationUserId=${stationUserId}`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// export const traningStatus = async (data: { stationUserId: string, processId: string, productId: string }) => {
-//   try {
-//     const response = await axiosInstance.get(`/trainig-status`, {
-//       params: {
-//         stationUserId: data.stationUserId,
-//         processId: data.processId,
-//         productId: data.productId
-//       }
-//     });
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 // export const completeTraningApi = async (id: string) => {
 //   try {
 //     const response = await axiosInstance.put(`/complete-traning/${id}`);
@@ -128,22 +447,47 @@
 //   }
 // };
 
-// export const updateStepTime = async (data: { productionId: string; stepId: string }) => {
+// // export const updateStepTime = async (
+// //   productionId: string,
+// //   stepId: string,
+// //   prevStepId: string
+// // ) => {
+// //   try {
+// //     const response = await axiosInstance.put(
+// //       `/production-response/update-step-time`,,
+// //       { stepId, prevStepId }
+// //     );
+
+// //     if (response.status === 200) {
+// //       toast.success("Step marked as completed.");
+// //     }
+
+// //     return response.data;
+// //   } catch (error: any) {
+// //     toast.error(error?.response?.data?.message || "Failed to update step.");
+// //   }
+// // };
+// export const updateStepTime = async (data: {
+//   productionId: string;
+//   stepId: string;
+// }) => {
 //   try {
 //     // Data ko body ke roop mein bhejein (second parameter)
-//     const response = await axiosInstance.post(`/production-response/update-step-time`, data);
+//     const response = await axiosInstance.post(
+//       `/production-response/update-step-time`,
+//       data,
+//     );
 //     return response.data;
 //   } catch (error) {
 //     throw error;
 //   }
 // };
-
 // export const scrapOrder = async (
 //   id: string,
 //   orderId: string,
 //   order_type: string,
 //   partId: string,
-//   employeeId: string
+//   employeeId: string,
 // ) => {
 //   try {
 //     const response = await axiosInstance.put(`/scrap-order/${id}`, {
@@ -166,14 +510,14 @@
 // export const processPartScan = async (
 //   productionId: string,
 //   scannedBarcode: string,
-//   employeeId: string
+//   employeeId: string,
 // ) => {
 //   const response = await axiosInstance.post(
 //     `/production/${productionId}/scan`,
 //     {
 //       barcode: scannedBarcode,
 //       employeeId: employeeId,
-//     }
+//     },
 //   );
 //   return response.data;
 // };
@@ -196,12 +540,11 @@
 //   page = 1,
 //   limit = 5,
 //   selectedValue: string,
-//   debouncedSearchVal: string
+//   debouncedSearchVal: string,
 // ) => {
-//   // eslint-disable-next-line no-useless-catch
 //   try {
 //     const response = await axiosInstance.get(
-//       `/all-scrap-entry?page=${page}&limit=${limit}&filterScrap=${selectedValue}&search=${debouncedSearchVal}`
+//       `/all-scrap-entry?page=${page}&limit=${limit}&filterScrap=${selectedValue}&search=${debouncedSearchVal}`,
 //     );
 
 //     return response.data;
@@ -210,6 +553,14 @@
 //   }
 // };
 
+// export const selectPartNamber1 = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-parts`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 // export const selectPartNamber = async () => {
 //   try {
 //     const response = await axiosInstance.get(`/select-schedule-part-number`);
@@ -219,6 +570,14 @@
 //   }
 // };
 
+// export const selectProductNamber1 = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-products`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 // export const selectProductNumber = async () => {
 //   try {
 //     const response = await axiosInstance.get(`/select-schedule-product-number`);
@@ -234,7 +593,6 @@
 // };
 
 // export const scrapEntryDetail = async (id: string) => {
-//   // eslint-disable-next-line no-useless-catch
 //   try {
 //     const response = await axiosInstance.get(`/scrap-entry-detail/${id}`);
 //     return response;
@@ -278,13 +636,15 @@
 //       toast.success(response.data.message);
 //     }
 //     return response;
-//   } catch (error: any) {
+//   } catch (error: unknown) {
 //     toast.error(error.response.data.message);
 //   }
 // };
+// import { toast } from "react-toastify";
+// import axiosInstance from "../../../utils/axiosInstance";
+// import { AxiosError } from "axios";
 
 // export const selectSupplier = async () => {
-//   // eslint-disable-next-line no-useless-catch
 //   try {
 //     const response = await axiosInstance.get(`/select-supplier`);
 //     return response.data;
@@ -292,9 +652,682 @@
 //     throw error;
 //   }
 // };
+// export const selecEmployeeProcessApi = async () => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/select-schedule-employee-process`,
+//     );
+//     return response.data;
+//   } catch (error: any) {}
+// };
+
+// export const stationLogin = async (userData: object) => {
+//   try {
+//     const response = await axiosInstance.post("/station-login", userData);
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const stationProcessDetail = async (
+//   id: string,
+//   stationUserId: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/get-schedule-process-information/${id}?stationUserId=${stationUserId}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const stationTrainingProcessDetail = async (
+//   id: string,
+//   stationUserId: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/get-training-schedule/${id}?stationUserId=${stationUserId}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const traningStatus = async (data: {
+//   stationUserId: string;
+//   processId: string;
+//   productId: string;
+// }) => {
+//   try {
+//     const response = await axiosInstance.get(`/trainig-status`, {
+//       params: {
+//         stationUserId: data.stationUserId,
+//         processId: data.processId,
+//         productId: data.productId,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const stationLogoutApi = async (id: string, logoutData) => {
+//   try {
+//     const response = await axiosInstance.post(`/station-logout/${id}`, {
+//       logoutData,
+//     });
+//     if (response.status === 200) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const completeOrder = async (
+//   id: string,
+//   orderId: string,
+//   order_type: string,
+//   partId: string,
+//   employeeId: string,
+//   productId: string,
+//   type: string,
+//   completedBy: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.put(`/complete-order/${id}`, {
+//       orderId,
+//       order_type,
+//       partId,
+//       employeeId,
+//       productId,
+//       type,
+//       completedBy,
+//     });
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+// export const completeTraningApi = async (id: string) => {
+//   try {
+//     const response = await axiosInstance.put(`/complete-traning/${id}`);
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+
+// export const updateStepTime = async (data: {
+//   productionId: string;
+//   stepId: string;
+// }) => {
+//   try {
+//     const response = await axiosInstance.post(
+//       `/production-response/update-step-time`,
+//       data,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const scrapOrder = async (
+//   id: string,
+//   orderId: string,
+//   order_type: string,
+//   partId: string,
+//   employeeId: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.put(`/scrap-order/${id}`, {
+//       orderId,
+//       order_type,
+//       partId,
+//       employeeId,
+//     });
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+
+// export const processPartScan = async (
+//   productionId: string,
+//   scannedBarcode: string,
+//   employeeId: string,
+// ) => {
+//   const response = await axiosInstance.post(
+//     `/production/${productionId}/scan`,
+//     {
+//       barcode: scannedBarcode,
+//       employeeId: employeeId,
+//     },
+//   );
+//   return response.data;
+// };
+
+// export const ScrapEntryApi = async (userData: object) => {
+//   try {
+//     const response = await axiosInstance.post("/add-scrap-entry", userData);
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//     throw error;
+//   }
+// };
+
+// export const allScrapEntries = async (
+//   page = 1,
+//   limit = 5,
+//   selectedValue: string,
+//   debouncedSearchVal: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/all-scrap-entry?page=${page}&limit=${limit}&filterScrap=${selectedValue}&search=${debouncedSearchVal}`,
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const selectPartNamber = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-schedule-part-number`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const selectPartNamber1 = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-parts`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const selectProductNumber = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-schedule-product-number`);
+//     return response.data.data;
+//   } catch (error: unknown) {
+//     const axiosError = error as AxiosError<{ message: string }>;
+//     if (axiosError.response?.data?.message) {
+//       toast.error(axiosError.response.data.message);
+//     } else {
+//     }
+//     return [];
+//   }
+// };
+
+// export const selectProductNamber1 = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-products`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const scrapEntryDetail = async (id: string) => {
+//   try {
+//     const response = await axiosInstance.get(`/scrap-entry-detail/${id}`);
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const updateScrapEntry = async (id: string, data: object) => {
+//   try {
+//     const response = await axiosInstance.put(`/update-scrap-entry/${id}`, data);
+//     if (response.status === 200) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const sendStationNotification = async (data: object) => {
+//   try {
+//     const response = await axiosInstance.post(`/send-notification`, data, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const deleteScrapEntry = async (id: string) => {
+//   try {
+//     const response = await axiosInstance.patch(`/delete-scrap-entry/${id}`);
+//     if (response.status === 200) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: unknown) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+// import { toast } from "react-toastify";
+// import axiosInstance from "../../../utils/axiosInstance";
+// import { AxiosError } from "axios";
+
+// export const selecEmployeeProcessApi = async () => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/select-schedule-employee-process`,
+//     );
+//     return response.data;
+//   } catch (error: any) {
+//     // toast.error(error.response.data.message);
+//   }
+// };
+
+// export const stationLogin = async (userData: object) => {
+//   try {
+//     const response = await axiosInstance.post("/station-login", userData);
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const stationProcessDetail = async (
+//   id: string,
+//   stationUserId: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/get-schedule-process-information/${id}?stationUserId=${stationUserId}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const stationTrainingProcessDetail = async (
+//   id: string,
+//   stationUserId: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/get-training-schedule/${id}?stationUserId=${stationUserId}`,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const traningStatus = async (data: {
+//   stationUserId: string;
+//   processId: string;
+//   productId: string;
+// }) => {
+//   try {
+//     const response = await axiosInstance.get(`/trainig-status`, {
+//       params: {
+//         stationUserId: data.stationUserId,
+//         processId: data.processId,
+//         productId: data.productId,
+//       },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// // export const traningStatus = async (params: { stationUserId: string, processId: string, productId: string }) => {
+// //   try {
+// //     // URL ko dhyan se check karein
+// //     const response = await axiosInstance.get(`/trainig-status/${params.processId}`, {
+// //       params: {
+// //         stationId: params.stationUserId, // Yeh string honi chahiye, object nahi
+// //         productId: params.productId
+// //       }
+// //     });
+// //     return response.data;
+// //   } catch (error) {
+// //     throw error;
+// //   }
+// // };
+// export const stationLogoutApi = async (id: string, logoutData) => {
+//   try {
+//     const response = await axiosInstance.post(`/station-logout/${id}`, {
+//       logoutData,
+//     });
+//     if (response.status === 200) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+// export const completeOrder = async (
+//   id: string,
+//   orderId: string,
+//   order_type: string,
+//   partId: string,
+//   employeeId: string,
+//   productId: string,
+//   type: string,
+//   completedBy: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.put(`/complete-order/${id}`, {
+//       orderId,
+//       order_type,
+//       partId,
+//       employeeId,
+//       productId,
+//       type,
+//       completedBy,
+//     });
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+
+// export const selectPartNamber1 = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-parts`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const selectProductNamber1 = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-products`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const completeScanOrder = async (
+//   id: string,
+//   orderId: string,
+//   order_type: string,
+//   partId: string,
+//   employeeId: string,
+//   productId: string,
+//   type: string,
+//   completedBy: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.put(`/scan-complete/${id}`, {
+//       orderId,
+//       order_type,
+//       partId,
+//       employeeId,
+//       productId,
+//       type,
+//       completedBy,
+//     });
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+// export const completeTraningApi = async (id: string) => {
+//   try {
+//     const response = await axiosInstance.put(`/complete-traning/${id}`);
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+
+// // export const updateStepTime = async (
+// //   productionId: string,
+// //   stepId: string,
+// //   prevStepId: string
+// // ) => {
+// //   try {
+// //     const response = await axiosInstance.put(
+// //       `/production-response/update-step-time`,,
+// //       { stepId, prevStepId }
+// //     );
+
+// //     if (response.status === 200) {
+// //       toast.success("Step marked as completed.");
+// //     }
+
+// //     return response.data;
+// //   } catch (error: any) {
+// //     toast.error(error?.response?.data?.message || "Failed to update step.");
+// //   }
+// // };
+// export const updateStepTime = async (data: {
+//   productionId: string;
+//   stepId: string;
+// }) => {
+//   try {
+//     // Data ko body ke roop mein bhejein (second parameter)
+//     const response = await axiosInstance.post(
+//       `/production-response/update-step-time`,
+//       data,
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// export const scrapOrder = async (
+//   id: string,
+//   orderId: string,
+//   order_type: string,
+//   partId: string,
+//   employeeId: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.put(`/scrap-order/${id}`, {
+//       orderId,
+//       order_type,
+//       partId,
+//       employeeId,
+//     });
+
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error?.response?.data?.message || "Something went wrong");
+//   }
+// };
+
+// export const processPartScan = async (
+//   productionId: string,
+//   scannedBarcode: string,
+//   employeeId: string,
+// ) => {
+//   const response = await axiosInstance.post(
+//     `/production/${productionId}/scan`,
+//     {
+//       barcode: scannedBarcode,
+//       employeeId: employeeId,
+//     },
+//   );
+//   return response.data;
+// };
+
+// export const ScrapEntryApi = async (userData: object) => {
+//   try {
+//     const response = await axiosInstance.post("/add-scrap-entry", userData);
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     console.log("errorerror", error.response);
+//     toast.error(error.response.data.message);
+//     throw error; // <-- IMPORTANT: Add this line
+//   }
+// };
+
+// export const allScrapEntries = async (
+//   page = 1,
+//   limit = 5,
+//   selectedValue: string,
+//   debouncedSearchVal: string,
+// ) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/all-scrap-entry?page=${page}&limit=${limit}&filterScrap=${selectedValue}&search=${debouncedSearchVal}`,
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const selectPartNamber = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-schedule-part-number`);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const selectProductNumber = async () => {
+//   try {
+//     const response = await axiosInstance.get(`/select-schedule-product-number`);
+//     return response.data.data;
+//   } catch (error: unknown) {
+//     const axiosError = error as AxiosError<{ message: string }>;
+//     if (axiosError.response?.data?.message) {
+//       toast.error(axiosError.response.data.message);
+//     } else {
+//     }
+//     return [];
+//   }
+// };
+
+// export const scrapEntryDetail = async (id: string) => {
+//   try {
+//     const response = await axiosInstance.get(`/scrap-entry-detail/${id}`);
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// export const updateScrapEntry = async (id: string, data: object) => {
+//   try {
+//     const response = await axiosInstance.put(`/update-scrap-entry/${id}`, data);
+//     if (response.status === 200) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const sendStationNotification = async (data: object) => {
+//   try {
+//     const response = await axiosInstance.post(`/send-notification`, data, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     if (response.status === 201) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: any) {
+//     toast.error(error.response.data.message);
+//   }
+// };
+
+// export const deleteScrapEntry = async (id: string) => {
+//   try {
+//     const response = await axiosInstance.patch(`/delete-scrap-entry/${id}`);
+//     if (response.status === 200) {
+//       toast.success(response.data.message);
+//     }
+//     return response;
+//   } catch (error: unknown) {
+//     toast.error(error.response.data.message);
+//   }
+// };
 import { toast } from "react-toastify";
 import axiosInstance from "../../../utils/axiosInstance";
-import { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+
+// Helper to extract error message safely
+const getErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.message || "An unexpected error occurred";
+  }
+  return "An unexpected error occurred";
+};
 
 export const selecEmployeeProcessApi = async () => {
   try {
@@ -302,29 +1335,20 @@ export const selecEmployeeProcessApi = async () => {
       `/select-schedule-employee-process`,
     );
     return response.data;
-  } catch (error: any) {
-    // toast.error(error.response.data.message);
+  } catch (error) {
+    console.error(getErrorMessage(error));
   }
 };
 
-export const selectSupplier = async () => {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const response = await axiosInstance.get(`/select-supplier`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-export const stationLogin = async (userData: object) => {
+export const stationLogin = async (userData: Record<string, any>) => {
   try {
     const response = await axiosInstance.post("/station-login", userData);
     if (response.status === 201) {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: any) {
-    toast.error(error.response.data.message);
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
 
@@ -355,6 +1379,7 @@ export const stationTrainingProcessDetail = async (
     throw error;
   }
 };
+
 export const traningStatus = async (data: {
   stationUserId: string;
   processId: string;
@@ -374,22 +1399,10 @@ export const traningStatus = async (data: {
   }
 };
 
-// export const traningStatus = async (params: { stationUserId: string, processId: string, productId: string }) => {
-//   try {
-//     // URL ko dhyan se check karein
-//     const response = await axiosInstance.get(`/trainig-status/${params.processId}`, {
-//       params: {
-//         stationId: params.stationUserId, // Yeh string honi chahiye, object nahi
-//         productId: params.productId
-//       }
-//     });
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
-export const stationLogoutApi = async (id: string, logoutData) => {
+export const stationLogoutApi = async (
+  id: string,
+  logoutData: Record<string, any>,
+) => {
   try {
     const response = await axiosInstance.post(`/station-logout/${id}`, {
       logoutData,
@@ -398,8 +1411,8 @@ export const stationLogoutApi = async (id: string, logoutData) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: any) {
-    toast.error(error.response.data.message);
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
 
@@ -429,10 +1442,60 @@ export const completeOrder = async (
     }
 
     return response;
-  } catch (error: any) {
-    toast.error(error?.response?.data?.message || "Something went wrong");
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
+
+export const selectPartNamber1 = async () => {
+  try {
+    const response = await axiosInstance.get(`/select-parts`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const selectProductNamber1 = async () => {
+  try {
+    const response = await axiosInstance.get(`/select-products`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const completeScanOrder = async (
+  id: string,
+  orderId: string,
+  order_type: string,
+  partId: string,
+  employeeId: string,
+  productId: string,
+  type: string,
+  completedBy: string,
+) => {
+  try {
+    const response = await axiosInstance.put(`/scan-complete/${id}`, {
+      orderId,
+      order_type,
+      partId,
+      employeeId,
+      productId,
+      type,
+      completedBy,
+    });
+
+    if (response.status === 201) {
+      toast.success(response.data.message);
+    }
+
+    return response;
+  } catch (error) {
+    toast.error(getErrorMessage(error));
+  }
+};
+
 export const completeTraningApi = async (id: string) => {
   try {
     const response = await axiosInstance.put(`/complete-traning/${id}`);
@@ -442,37 +1505,16 @@ export const completeTraningApi = async (id: string) => {
     }
 
     return response;
-  } catch (error: any) {
-    toast.error(error?.response?.data?.message || "Something went wrong");
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
 
-// export const updateStepTime = async (
-//   productionId: string,
-//   stepId: string,
-//   prevStepId: string
-// ) => {
-//   try {
-//     const response = await axiosInstance.put(
-//       `/production-response/update-step-time`,,
-//       { stepId, prevStepId }
-//     );
-
-//     if (response.status === 200) {
-//       toast.success("Step marked as completed.");
-//     }
-
-//     return response.data;
-//   } catch (error: any) {
-//     toast.error(error?.response?.data?.message || "Failed to update step.");
-//   }
-// };
 export const updateStepTime = async (data: {
   productionId: string;
   stepId: string;
 }) => {
   try {
-    // Data ko body ke roop mein bhejein (second parameter)
     const response = await axiosInstance.post(
       `/production-response/update-step-time`,
       data,
@@ -482,6 +1524,7 @@ export const updateStepTime = async (data: {
     throw error;
   }
 };
+
 export const scrapOrder = async (
   id: string,
   orderId: string,
@@ -502,8 +1545,8 @@ export const scrapOrder = async (
     }
 
     return response;
-  } catch (error: any) {
-    toast.error(error?.response?.data?.message || "Something went wrong");
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
 
@@ -512,27 +1555,30 @@ export const processPartScan = async (
   scannedBarcode: string,
   employeeId: string,
 ) => {
-  const response = await axiosInstance.post(
-    `/production/${productionId}/scan`,
-    {
-      barcode: scannedBarcode,
-      employeeId: employeeId,
-    },
-  );
-  return response.data;
+  try {
+    const response = await axiosInstance.post(
+      `/production/${productionId}/scan`,
+      {
+        barcode: scannedBarcode,
+        employeeId: employeeId,
+      },
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const ScrapEntryApi = async (userData: object) => {
+export const ScrapEntryApi = async (userData: Record<string, any>) => {
   try {
     const response = await axiosInstance.post("/add-scrap-entry", userData);
     if (response.status === 201) {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: any) {
-    console.log("errorerror", error.response);
-    toast.error(error.response.data.message);
-    throw error; // <-- IMPORTANT: Add this line
+  } catch (error) {
+    toast.error(getErrorMessage(error));
+    throw error;
   }
 };
 
@@ -553,14 +1599,6 @@ export const allScrapEntries = async (
   }
 };
 
-export const selectPartNamber1 = async () => {
-  try {
-    const response = await axiosInstance.get(`/select-parts`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
 export const selectPartNamber = async () => {
   try {
     const response = await axiosInstance.get(`/select-schedule-part-number`);
@@ -570,23 +1608,13 @@ export const selectPartNamber = async () => {
   }
 };
 
-export const selectProductNamber1 = async () => {
-  try {
-    const response = await axiosInstance.get(`/select-products`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
 export const selectProductNumber = async () => {
   try {
     const response = await axiosInstance.get(`/select-schedule-product-number`);
     return response.data.data;
   } catch (error: unknown) {
-    const axiosError = error as AxiosError<{ message: string }>;
-    if (axiosError.response?.data?.message) {
-      toast.error(axiosError.response.data.message);
-    } else {
+    if (axios.isAxiosError(error) && error.response?.data?.message) {
+      toast.error(error.response.data.message);
     }
     return [];
   }
@@ -601,19 +1629,22 @@ export const scrapEntryDetail = async (id: string) => {
   }
 };
 
-export const updateScrapEntry = async (id: string, data: object) => {
+export const updateScrapEntry = async (
+  id: string,
+  data: Record<string, any>,
+) => {
   try {
     const response = await axiosInstance.put(`/update-scrap-entry/${id}`, data);
     if (response.status === 200) {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: any) {
-    toast.error(error.response.data.message);
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
 
-export const sendStationNotification = async (data: object) => {
+export const sendStationNotification = async (data: FormData) => {
   try {
     const response = await axiosInstance.post(`/send-notification`, data, {
       headers: {
@@ -624,8 +1655,8 @@ export const sendStationNotification = async (data: object) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: any) {
-    toast.error(error.response.data.message);
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
 
@@ -636,7 +1667,7 @@ export const deleteScrapEntry = async (id: string) => {
       toast.success(response.data.message);
     }
     return response;
-  } catch (error: unknown) {
-    toast.error(error.response.data.message);
+  } catch (error) {
+    toast.error(getErrorMessage(error));
   }
 };
