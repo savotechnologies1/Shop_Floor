@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import {
   ScrapEntryApi,
+  selectCustomer,
   selectProductNamber1,
   selectProductNumber,
 } from "./https/productionResponseApi";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { selectCustomer } from "../order_schedule/https/schedulingApis";
 import { toast } from "react-toastify";
 
 const ProductForm = () => {

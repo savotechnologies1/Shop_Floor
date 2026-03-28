@@ -275,8 +275,8 @@ import { useFormik } from "formik";
 import {
   ScrapEntryApi,
   selectPartNamber1,
+  selectSupplier,
 } from "./https/productionResponseApi";
-import { selectSupplier } from "../supplier_chain/https/suppliersApi";
 import { toast } from "react-toastify";
 
 interface Supplier {
