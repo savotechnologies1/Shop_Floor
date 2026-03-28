@@ -295,12 +295,12 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaCircle } from "react-icons/fa";
 import {
   scrapEntryDetail,
+  selectCustomer,
   selectProductNamber1,
   selectProductNumber,
   updateScrapEntry,
 } from "./https/productionResponseApi";
 import { BASE_URL } from "../../utils/axiosInstance";
-import { selectCustomer } from "../order_schedule/https/schedulingApis";
 import { toast } from "react-toastify";
 const EditProductScrapEntry = () => {
   const { id } = useParams();
@@ -359,7 +359,7 @@ const EditProductScrapEntry = () => {
       try {
         const [productsRes, customersRes, detailRes] = await Promise.all([
           selectProductNamber1(),
-          selectCustomer(),
+          selectCustomerr(),
           scrapEntryDetail(safeId),
         ]);
 

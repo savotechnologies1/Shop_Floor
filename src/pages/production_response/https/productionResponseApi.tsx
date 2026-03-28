@@ -1671,3 +1671,29 @@ export const deleteScrapEntry = async (id: string) => {
     toast.error(getErrorMessage(error));
   }
 };
+
+
+export const selectSupplier = async () => {
+  try {
+    const response = await axiosInstance.get(`/select-supplier`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const selectCustomer = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `/select-customer-for-stock-order`,
+    );
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<{ message: string }>;
+    if (axiosError.response?.data?.message) {
+      toast.error(axiosError.response.data.message);
+    } else {
+      toast.error("Failed to fetch customers.");
+    }
+    return [];
+  }
+};
