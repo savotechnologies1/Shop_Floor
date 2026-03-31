@@ -252,6 +252,7 @@ interface TimeSheetEntry {
   exceptionStart: string | null;
   exceptionEnd: string | null;
   vacation: string;
+  vacationStatus:string
 }
 
 interface PaginationInfo {
@@ -475,7 +476,7 @@ const TimeSheet: FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                       {entry.employeeName}
-                      <p className="text-gray-500 text-xs">({entry.email})</p>
+                      <p className="text-gray-500 text-xs">({entry.employeeEmail})</p>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDateTime(entry.loginTime)}
