@@ -138,7 +138,7 @@ const App = () => {
 
     <PartProvider>
       <ToastContainer />
-      <Router basename="/Shopfloor">
+      <Router basename="/">
         <Routes>
           {/* Public Routes */}
           <Route path="sign-in" element={<SignIn />} />
